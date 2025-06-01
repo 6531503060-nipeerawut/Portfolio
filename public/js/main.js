@@ -83,4 +83,22 @@ document.addEventListener("DOMContentLoaded", () => {
       );
     });
   }
+
+  const navbarCollapse = document.querySelector(".navbar-collapse");
+  const navbarToggler = document.querySelector(".navbar-toggler");
+
+  navLinks.forEach(link => {
+    link.addEventListener("click", () => {
+      if (navbarCollapse.classList.contains("show")) {
+        new bootstrap.Collapse(navbarCollapse).hide();
+      }
+    });
+  });
+
+  document.addEventListener("click", (event) => {
+    const isClickInside = navbarCollapse.contains(event.target) || navbarToggler.contains(event.target);
+    if (!isClickInside && navbarCollapse.classList.contains("show")) {
+      new bootstrap.Collapse(navbarCollapse).hide();
+    }
+  });
 });

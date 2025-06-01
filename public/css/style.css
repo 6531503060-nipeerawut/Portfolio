@@ -174,32 +174,22 @@ nav {
     width: 100%;
 }
 
-.menu-toggle {
-    display: none;
-    flex-direction: column;
-    cursor: pointer;
-    padding: 5px;
+.navbar-toggler {
+    border: 0.1px solid var(--current-text);
+    border-radius: 4px;
+    padding: 6px 10px;
 }
 
-.menu-toggle span {
-    width: 25px;
-    height: 3px;
-    background-color: var(--current-text);
-    margin: 3px 0;
-    transition: 0.3s;
-    border-radius: 2px;
+.navbar-toggler-icon {
+    filter: invert(40%) sepia(100%) saturate(500%) hue-rotate(180deg);
 }
 
-.menu-toggle.active span:nth-child(1) {
-    transform: rotate(-45deg) translate(-5px, 6px);
-}
-
-.menu-toggle.active span:nth-child(2) {
-    opacity: 0;
-}
-
-.menu-toggle.active span:nth-child(3) {
-    transform: rotate(45deg) translate(-5px, -6px);
+.navbar-toggler:focus,
+.navbar-toggler:active {
+    outline: none;
+    box-shadow: none;
+    border: 0.1px solid var(--current-text);
+    /* คงขนาดกรอบไว้เหมือนเดิม */
 }
 
 .card-preview {
@@ -279,7 +269,7 @@ nav {
     border-radius: 50%;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    max-width: 300px;
+    max-width: 500px;
     width: 100%;
     height: auto;
 }
@@ -794,17 +784,19 @@ nav {
     }
 
     .navbar-nav {
-  flex-direction: row;
-}
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
 
     .navbar-nav .nav-item {
         width: 100%;
         text-align: center;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
     }
 
     .navbar-nav .nav-link {
-        padding: 16px 10px;
+        color: var(--current-text);
+        padding: 14px 10px;
         font-size: 18px;
         width: 100%;
         display: block;
@@ -813,6 +805,18 @@ nav {
 
     .navbar-nav .nav-link:hover {
         background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .collapse.navbar-collapse {
+        background-color: var(--current-background);
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        padding: 1rem 0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        z-index: 999;
+        transition: all 0.3s ease;
     }
 
     .card-preview {
