@@ -993,9 +993,14 @@ html[data-theme="dark"] .contact-item {
     }
 
     .mode-toggle-container {
-        top: auto;
-        bottom: 16px;
-        right: 14px;
+        position: fixed;
+        top: 78px;
+        right: 16px;
+        bottom: auto;
+        left: auto;
+        z-index: 900;
+        transform: scale(0.92);
+        transform-origin: top right;
     }
 
     #home {
