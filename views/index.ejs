@@ -1,312 +1,864 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" id="themeColor" content="#05070f" />
+
+  <title>Peerawut Nipakornpan — Software Engineer</title>
+  <meta name="description"
+    content="Peerawut Nipakornpan is a full-stack software engineer working across Angular, Ionic, Deno edge functions and PostgreSQL — shipping course, billing, notification and B2B systems into production." />
+  <meta name="author" content="Peerawut Nipakornpan" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Peerawut Nipakornpan — Software Engineer" />
+  <meta property="og:description"
+    content="Full-stack software engineer. I design the schema, write the API, and build the screens that use them." />
+  <meta property="og:url" content="<%= origin %>/" />
+  <meta property="og:image" content="<%= origin %>/images/Profile.jpg" />
+  <meta property="og:image:alt" content="Portrait of Peerawut Nipakornpan" />
+  <meta name="twitter:card" content="summary_large_image" />
+
   <link rel="icon" type="image/png" href="/images/favicon.png" />
-  <title>Peerawut Nipakornpan | Portfolio</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+  <link rel="apple-touch-icon" href="/images/favicon.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
     rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="/css/style.css" />
+
+  <noscript>
+    <style>
+      /* Scroll-reveal is driven by an observer; without JS, show everything.
+         The role line and the statistics render their real values already. */
+      .reveal { opacity: 1 !important; transform: none !important; }
+      .hero__role .caret { display: none; }
+    </style>
+  </noscript>
+
+  <script>
+    // Resolve the palette before first paint so the page never flashes the wrong theme.
+    (function () {
+      try {
+        var saved = localStorage.getItem("portfolio-theme");
+        var theme = saved === "light" || saved === "dark"
+          ? saved
+          : (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+        document.documentElement.setAttribute("data-theme", theme);
+        document.getElementById("themeColor")
+          .setAttribute("content", theme === "dark" ? "#05070f" : "#eceff8");
+      } catch (e) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+    })();
+  </script>
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg navbar-light sticky-top">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#home">Portfolio</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+  <a class="skip-link" href="#main">Skip to content</a>
 
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"
-            data-preview="<h6>Welcome</h6><p>Discover my portfolio, background, selected projects, and contact information.</p>">
-            <a class="nav-link" href="#home">Home</a>
-            <div class="card-preview"></div>
-          </li>
+  <!-- Ambient layers: aurora blobs, blueprint grid, film grain -->
+  <div class="ambient" aria-hidden="true">
+    <div class="aurora aurora--1"></div>
+    <div class="aurora aurora--2"></div>
+    <div class="aurora aurora--3"></div>
+    <div class="grid-layer"></div>
+    <div class="noise-layer"></div>
+  </div>
+  <div class="spotlight" aria-hidden="true"></div>
+  <div class="progress" id="progress" aria-hidden="true"></div>
 
-          <li class="nav-item"
-            data-preview="<h6>About Me</h6><p>Learn more about my academic background, technical skills, and professional interests.</p>">
-            <a class="nav-link" href="#about">About</a>
-            <div class="card-preview"></div>
-          </li>
+  <!-- Icon sprite: every glyph on the page, zero icon-font requests -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <g id="i-arrow-down"><path d="M12 5v14m0 0l-6-6m6 6l6-6" /></g>
+      <g id="i-arrow-up"><path d="M12 19V5m0 0l-6 6m6-6l6 6" /></g>
+      <g id="i-arrow-right"><path d="M5 12h14m0 0l-6-6m6 6l-6 6" /></g>
+      <g id="i-external"><path d="M8 16L16 8m0 0h-6m6 0v6" /><rect x="3" y="3" width="18" height="18" rx="5" /></g>
+      <g id="i-sun">
+        <circle cx="12" cy="12" r="4.2" />
+        <path d="M12 2v2.2M12 19.8V22M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2 12h2.2M19.8 12H22M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6" />
+      </g>
+      <g id="i-moon"><path d="M20.5 14.2A8.6 8.6 0 019.8 3.5a8.6 8.6 0 1010.7 10.7z" /></g>
+      <g id="i-mail"><rect x="2.5" y="4.5" width="19" height="15" rx="3" /><path d="M3.5 7l7.6 5.3a1.6 1.6 0 001.8 0L20.5 7" /></g>
+      <g id="i-copy"><rect x="9" y="9" width="11" height="11" rx="2.5" /><path d="M6.5 15H5.5a2 2 0 01-2-2V5.5a2 2 0 012-2H13a2 2 0 012 2v1" /></g>
+      <g id="i-check"><path d="M20 6L9 17l-5-5" /></g>
+      <g id="i-code"><path d="M8.5 17.5L3 12l5.5-5.5M15.5 6.5L21 12l-5.5 5.5M13.8 4l-3.6 16" /></g>
+      <g id="i-server">
+        <rect x="2.5" y="3.5" width="19" height="7" rx="2.5" /><rect x="2.5" y="13.5" width="19" height="7" rx="2.5" />
+        <path d="M6.5 7h.01M6.5 17h.01" />
+      </g>
+      <g id="i-database"><ellipse cx="12" cy="5.5" rx="8.5" ry="3.2" /><path d="M3.5 5.5v13c0 1.8 3.8 3.2 8.5 3.2s8.5-1.4 8.5-3.2v-13M3.5 12c0 1.8 3.8 3.2 8.5 3.2s8.5-1.4 8.5-3.2" /></g>
+      <g id="i-tools"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94z" /></g>
+      <g id="i-cap"><path d="M12 3.5L22 8.5l-10 5-10-5 10-5z" /><path d="M6 11v5.2c0 1.7 2.7 3.1 6 3.1s6-1.4 6-3.1V11M20.5 9.6v5" /></g>
+      <g id="i-pin"><path d="M20 10.5c0 5.6-8 12-8 12s-8-6.4-8-12a8 8 0 1116 0z" /><circle cx="12" cy="10.3" r="2.9" /></g>
+      <g id="i-spark"><path d="M12 2.5l2.1 5.9 5.9 2.1-5.9 2.1L12 18.5l-2.1-5.9L4 10.5l5.9-2.1z" /><path d="M18.5 16.5l.9 2.4 2.4.9-2.4.9-.9 2.4-.9-2.4-2.4-.9 2.4-.9z" /></g>
+      <g id="i-lock"><rect x="4" y="10.5" width="16" height="10.5" rx="3" /><path d="M8 10.5V7.4a4 4 0 018 0v3.1" /></g>
+      <g id="i-briefcase"><rect x="2.5" y="7" width="19" height="13.5" rx="3" /><path d="M8.5 7V5.6a2.2 2.2 0 012.2-2.1h2.6A2.2 2.2 0 0115.5 5.6V7M2.5 12.6h19" /></g>
+      <g id="i-building">
+        <rect x="3.5" y="2.5" width="12" height="19" rx="2.5" /><path d="M15.5 9h3.5a2 2 0 012 2v10.5" />
+        <path d="M7 6.5h1.5M11 6.5h1.5M7 10.5h1.5M11 10.5h1.5M7 14.5h1.5M11 14.5h1.5M2 21.5h20" />
+      </g>
+      <g id="i-bell"><path d="M18 8.5a6 6 0 10-12 0c0 6-2.5 7.5-2.5 7.5h17S18 14.5 18 8.5z" /><path d="M13.7 20a2 2 0 01-3.4 0" /></g>
+      <g id="i-news">
+        <path d="M17 21.5H4.5a2 2 0 01-2-2v-15a1 1 0 011-1h13a1 1 0 011 1v15a2 2 0 002 2 2 2 0 002-2V8.5h-3.5" />
+        <path d="M6 7.5h7M6 11.5h7M6 15.5h4" />
+      </g>
+      <g id="i-gauge"><path d="M3 3v16.5a1.5 1.5 0 001.5 1.5H21" /><path d="M7.5 16.5v-4M12 16.5v-8M16.5 16.5v-5.5M21 16.5V6" /></g>
+      <g id="i-leaf"><path d="M11 20.5C6 20.5 3 17 3 12.5 3 7 8 3.5 21 3.5c0 11-4.5 15-10 15z" /><path d="M3.5 20.5S6 14 13 10" /></g>
+      <g id="i-globe"><circle cx="12" cy="12" r="9.5" /><path d="M12 2.5a15 15 0 014 9.5 15 15 0 01-4 9.5 15 15 0 01-4-9.5 15 15 0 014-9.5z" /><path d="M2.5 12h19" /></g>
+      <g id="i-github"><path d="M15 22v-4a4.8 4.8 0 00-1-3.5c3 0 6-2 6-5.5a5.4 5.4 0 00-1-3.5 5 5 0 00-.1-3.5s-1.1-.3-3.6 1.4a12.3 12.3 0 00-6.6 0C6.2 1.7 5.1 2 5.1 2A5 5 0 005 5.5 5.4 5.4 0 004 9c0 3.5 3 5.5 6 5.5a4.8 4.8 0 00-1 3.5v4" /><path d="M9 18c-4.5 2-5-2-7-2" /></g>
+      <g id="i-linkedin"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-12h4v1.5A5.9 5.9 0 0116 8z" /><rect x="2" y="9" width="4" height="12" rx="1" /><circle cx="4" cy="4" r="2" /></g>
+      <g id="i-facebook"><path d="M15.5 3.5h-2.3a4 4 0 00-4 4v2.6H7v3.4h2.2v7h3.4v-7h2.6l.7-3.4h-3.3V8.2c0-.6.5-1.1 1.1-1.1h2.1z" /></g>
+    </defs>
+  </svg>
 
-          <li class="nav-item"
-            data-preview="<h6>Projects</h6><p>Explore selected projects that reflect my skills in web development and software engineering.</p>">
-            <a class="nav-link" href="#projects">Projects</a>
-            <div class="card-preview"></div>
-          </li>
+  <header class="nav" id="nav">
+    <div class="shell nav__inner">
+      <a class="brand" href="#home" aria-label="Peerawut Nipakornpan — back to top">
+        <span class="brand__mark">PN</span>
+        <span class="brand__text">
+          <span class="brand__name">Peerawut N.</span>
+          <span class="brand__role">Software Engineer</span>
+        </span>
+      </a>
 
-          <li class="nav-item"
-            data-preview="<h6>Contact</h6><p>Feel free to get in touch for collaboration, opportunities, or further discussion.</p>">
-            <a class="nav-link" href="#contact">Contact</a>
-            <div class="card-preview"></div>
-          </li>
-        </ul>
+      <nav class="nav__links" id="navLinks" aria-label="Section navigation">
+        <span class="nav__pill" id="navPill" aria-hidden="true"></span>
+        <a class="nav__link" href="#home">Home</a>
+        <a class="nav__link" href="#about">About</a>
+        <a class="nav__link" href="#skills">Skills</a>
+        <a class="nav__link" href="#experience">Experience</a>
+        <a class="nav__link" href="#work">Work</a>
+        <a class="nav__link" href="#contact">Contact</a>
+      </nav>
+
+      <div class="nav__actions">
+        <button class="icon-btn theme-toggle" id="themeToggle" type="button" aria-label="Switch colour theme">
+          <span class="theme-toggle__icons">
+            <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-sun" /></svg>
+            <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-moon" /></svg>
+          </span>
+        </button>
+
+        <button class="nav__burger" id="burger" type="button" aria-expanded="false" aria-controls="drawer"
+          aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
       </div>
     </div>
-  </nav>
+  </header>
 
-  <div class="mode-toggle-container">
-    <span class="icon sun">☀️</span>
-    <label class="switch">
-      <input type="checkbox" id="mode-toggle" />
-      <span class="slider"></span>
-    </label>
-    <span class="icon moon">🌙</span>
+  <div class="drawer" id="drawer" aria-hidden="true">
+    <nav class="drawer__list" aria-label="Mobile navigation">
+      <a class="drawer__link" href="#home" style="--i:0">
+        <span class="num">01</span>
+        <span>Home<span class="drawer__desc">Introduction and quick links</span></span>
+      </a>
+      <a class="drawer__link" href="#about" style="--i:1">
+        <span class="num">02</span>
+        <span>About<span class="drawer__desc">How I work and where I studied</span></span>
+      </a>
+      <a class="drawer__link" href="#skills" style="--i:2">
+        <span class="num">03</span>
+        <span>Skills<span class="drawer__desc">Languages, frameworks and tooling</span></span>
+      </a>
+      <a class="drawer__link" href="#experience" style="--i:3">
+        <span class="num">04</span>
+        <span>Experience<span class="drawer__desc">Roles, education and timeline</span></span>
+      </a>
+      <a class="drawer__link" href="#work" style="--i:4">
+        <span class="num">05</span>
+        <span>Work<span class="drawer__desc">Systems I have shipped</span></span>
+      </a>
+      <a class="drawer__link" href="#contact" style="--i:5">
+        <span class="num">06</span>
+        <span>Contact<span class="drawer__desc">Say hello or start a conversation</span></span>
+      </a>
+    </nav>
   </div>
 
-  <section id="home">
-    <div class="hero-badge">Software Engineering Graduate • Web Developer</div>
-
-    <img src="/images/Profile.jpg" alt="Profile" width="400" />
-
-    <div class="hero-content">
-      <p class="hero-intro">Hello, my name is</p>
-      <h1>Peerawut Nipakornpan</h1>
-      <p class="hero-description">
-        Software Engineering graduate with a strong interest in building practical, user-focused, and well-designed
-        digital solutions.
-      </p>
-
-      <div class="hero-actions">
-        <a href="#about" class="custom-button">
-          <span class="arrow">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="18"
-              height="18">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-            </svg>
+  <main id="main" tabindex="-1">
+    <section class="hero section" id="home">
+      <div class="shell hero__grid">
+        <div class="hero__copy">
+          <span class="eyebrow enter" style="--d:60ms">
+            <span class="dot"></span>Open to opportunities
           </span>
-          Learn More About Me
-        </a>
+
+          <p class="hero__intro enter" style="--d:140ms">Hello, my name is</p>
+
+          <h1 class="enter" style="--d:210ms">
+            <span class="grad">Peerawut</span>
+            <span class="hero__surname">Nipakornpan</span>
+          </h1>
+
+          <p class="hero__role enter" style="--d:290ms">
+            <span class="prompt">&gt;</span>
+            <span id="roleText" data-roles="Junior Full-Stack Developer|Software Engineer|Web &amp; Mobile Developer|Frontend &amp; Backend Developer">Junior Full-Stack Developer</span><span class="caret"></span>
+          </p>
+
+          <p class="hero__desc enter" style="--d:360ms">
+            I build features end to end — the database schema, the API behind it, and the screens on top.
+            Right now I do that across two production platforms at <strong>gendee-ai</strong>: an AI content
+            studio and a digital news app.
+          </p>
+
+          <div class="hero__actions enter" style="--d:430ms">
+            <a class="btn btn--primary magnetic" href="#work">
+              See what I have built
+              <svg class="arr-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-arrow-right" /></svg>
+            </a>
+            <a class="btn btn--ghost magnetic" href="#contact">
+              Get in touch
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                stroke-linejoin="round" aria-hidden="true"><use href="#i-mail" /></svg>
+            </a>
+          </div>
+
+          <div class="socials enter" style="--d:500ms">
+            <span class="socials__label">Find me</span>
+            <a class="social" href="https://github.com/6531503060-nipeerawut" target="_blank" rel="noopener noreferrer"
+              aria-label="GitHub">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+                stroke-linejoin="round" aria-hidden="true"><use href="#i-github" /></svg>
+            </a>
+            <a class="social" href="https://www.linkedin.com/in/peerawut-nipakornpan-3550a131a" target="_blank"
+              rel="noopener noreferrer" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+                stroke-linejoin="round" aria-hidden="true"><use href="#i-linkedin" /></svg>
+            </a>
+            <a class="social" href="https://www.facebook.com/nong.off.3" target="_blank" rel="noopener noreferrer"
+              aria-label="Facebook">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+                stroke-linejoin="round" aria-hidden="true"><use href="#i-facebook" /></svg>
+            </a>
+            <a class="social" href="mailto:yeern12@gmail.com" aria-label="Email">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+                stroke-linejoin="round" aria-hidden="true"><use href="#i-mail" /></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="hero__figure enter" style="--d:300ms">
+          <div class="hero__rings" aria-hidden="true"><span></span><span></span><span></span></div>
+          <div class="hero__orbit" aria-hidden="true"></div>
+          <div class="hero__photo">
+            <img src="/images/Profile.jpg" alt="Portrait of Peerawut Nipakornpan" width="440" height="440"
+              fetchpriority="high" />
+          </div>
+        </div>
+      </div>
+
+      <a class="hero__cue" href="#about" aria-label="Scroll to about section">
+        <span>Scroll</span>
+        <span class="track" aria-hidden="true"></span>
+      </a>
+    </section>
+
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <div class="marquee__group">
+          <span class="marquee__item">Web Development</span>
+          <span class="marquee__item">Mobile Apps</span>
+          <span class="marquee__item">API Design</span>
+          <span class="marquee__item">Database Modelling</span>
+          <span class="marquee__item">Full-Stack Engineering</span>
+          <span class="marquee__item">System Design</span>
+          <span class="marquee__item">Authentication &amp; Access</span>
+          <span class="marquee__item">Responsive Interfaces</span>
+        </div>
+        <div class="marquee__group">
+          <span class="marquee__item">Web Development</span>
+          <span class="marquee__item">Mobile Apps</span>
+          <span class="marquee__item">API Design</span>
+          <span class="marquee__item">Database Modelling</span>
+          <span class="marquee__item">Full-Stack Engineering</span>
+          <span class="marquee__item">System Design</span>
+          <span class="marquee__item">Authentication &amp; Access</span>
+          <span class="marquee__item">Responsive Interfaces</span>
+        </div>
       </div>
     </div>
-  </section>
 
-  <hr style="height: 3px; width: 80%; background-color: #666; border: none; margin: 1.25rem auto;" />
-
-  <section id="about">
-    <div class="section-card compact-section">
-      <h1 class="text-center mb-3">About Me</h1>
-
-      <div class="about-highlight">
-        <h4 class="fw-bold">Peerawut Nipakornpan</h4>
-        <p>
-          Graduated with a degree in Software Engineering from Mae Fah Luang University, School of Applied Digital
-          Technology.
-          Passionate about developing practical and innovative software solutions that deliver meaningful value to
-          users.
-        </p>
-      </div>
-
-      <h3 class="mb-3">Technical Skills</h3>
-      <div class="row g-3">
-        <div class="col-md-6">
-          <ul class="skill-list">
-            <li class="frontend">
-              <span class="label">
-                <i class="fas fa-code"></i>
-                <strong>Frontend:</strong>
-              </span>
-              <span class="skill-text">React, Next.js, Tailwind CSS, Flutter(Mobile)</span>
-            </li>
-            <li class="backend">
-              <span class="label">
-                <i class="fas fa-server"></i>
-                <strong>Backend:</strong>
-              </span>
-              <span class="skill-text">Node.js, Java, Go</span>
-            </li>
-          </ul>
+    <section class="section" id="about">
+      <div class="shell">
+        <div class="section-head reveal">
+          <span class="eyebrow"><span class="idx">01</span> / About</span>
+          <h2>I build features <span class="grad">end to end</span>.</h2>
+          <p>Who I am, where I studied, and the way I like to work.</p>
         </div>
 
-        <div class="col-md-6">
-          <ul class="skill-list">
-            <li class="database">
-              <span class="label">
-                <i class="fas fa-database"></i>
-                <strong>Database:</strong>
-              </span>
-              <span class="skill-text">MySQL, PostgreSQL, MSSQL</span>
-            </li>
-            <li class="tool">
-              <span class="label">
-                <i class="fas fa-tools"></i>
-                <strong>Tools:</strong>
-              </span>
-              <span class="content">Git, GitHub,Figma, Visual Studio Code Postman, Swagger</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <hr class="my-4 section-divider" />
-
-      <h3 class="mb-3">Interests</h3>
-      <p class="section-text">
-        Beyond academics and development work, I enjoy listening to music,
-        following technology trends, and continuously learning new programming
-        languages and tools to strengthen my skills.
-      </p>
-
-      <div class="parent-container compact-action">
-        <a href="#projects" class="custom-button1">
-          <span class="arrow">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="18"
-              height="18">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-            </svg>
-          </span>
-          View My Projects
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <hr style="height: 3px; width: 80%; background-color: #666; border: none; margin: 1.25rem auto;" />
-
-  <section id="projects">
-    <div class="projects-container compact-section">
-      <h1>Projects</h1>
-
-      <div class="projects-container3">
-        <p>
-          Here are some selected projects that reflect my experience in web development,
-          system design, and practical software implementation.
-        </p>
-      </div>
-
-      <div class="card-grid compact-grid">
-        <div class="project-card">
-          <div class="card-header">
-            <img src="https://cdn-icons-png.flaticon.com/512/1051/1051275.png" alt="GitHub icon" />
-            <h2>DoiTung Waste Management System (Senior Project)</h2>
-          </div>
-          <div class="projects-container1">
-            <p>
-              Designed and developed a web-based system to help communities manage waste more efficiently by enabling
-              structured tracking, data analysis, and improvements in collection and recycling processes. The system
-              supports allowing users to gain insights into waste generation
-              patterns and optimize resource management. It was built with a focus on usability and reliability,
-              incorporating well-structured APIs and efficient data handling to ensure consistent performance in
-              practical use.
+        <div class="about__grid">
+          <article class="card about__bio reveal reveal--left">
+            <p class="lead">
+              Most features I take on start at the database and finish in the browser. I design the tables and
+              access rules, write the API, then build the screens that use them.
             </p>
             <p>
-              <strong>Technologies:</strong> React, Node.js (Express.js), and MySQL
+              That is how I work at <mark>gendee-ai</mark>, on two products at once: <strong>Gendee.ai</strong>,
+              an AI content generation platform, and <strong>CIRCLE</strong>, a digital news app. Owning the whole
+              path means the pieces actually fit — no guessing at a contract someone else wrote.
             </p>
-          </div>
-          <a href="https://mymfu.doitung.net/waste" target="_blank">🌐 View on Website</a>
-        </div>
+            <p>
+              I graduated in Software Engineering from Mae Fah Luang University, School of Applied Digital
+              Technology. My senior project and my internship both ran inside real operations, where accurate
+              records mattered more than clever code. That shaped how I build: get the data model right first,
+              keep the interface predictable, and write it down so the next person is not stuck.
+            </p>
+            <p>
+              Away from work I listen to a lot of music, follow where the industry is heading, and keep sharpening
+              my TypeScript and Go.
+            </p>
 
-        <div class="project-card">
-          <div class="card-header">
-            <img src="https://cdn-icons-png.flaticon.com/512/1051/1051275.png" alt="Project icon" />
-            <h2>MyTissue - DoiTung (Internship Project)</h2>
-          </div>
-          <div class="projects-container1">
-            <p>
-              Designed and developed an internal web-based system to support staff in managing client-submitted wood
-              inventory throughout its lifecycle, enabling efficient tracking of stock movements from initial intake
-              through multiple processing stages while ensuring accurate data recording and real-time visibility. The
-              system incorporates structured multi-step workflow management to maintain traceability, reduce manual
-              errors, and improve operational efficiency, along with well-structured APIs, dynamic data handling, and
-              transactional consistency to ensure reliable performance in a real-world environment.
-            </p>
-            <p>
-              <strong>Technologies:</strong> Next.js, Go (Fiber), and MSSQL
-            </p>
+            <div class="live-links">
+              <span class="live-links__label">See them live</span>
+              <div class="live-links__row">
+                <a class="live-link live-link--1" href="https://gendee.ai/" target="_blank"
+                  rel="noopener noreferrer">
+                  <span class="live-link__ico">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-globe" /></svg>
+                  </span>
+                  <span class="live-link__text">
+                    <span class="live-link__name">Gendee.ai</span>
+                    <span class="live-link__meta"><i class="live-dot"></i>gendee.ai</span>
+                  </span>
+                  <span class="live-link__arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+                      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-external" /></svg>
+                  </span>
+                </a>
+
+                <a class="live-link live-link--2" href="https://circle-demo-gch.pages.dev/tabs/home" target="_blank"
+                  rel="noopener noreferrer">
+                  <span class="live-link__ico">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-news" /></svg>
+                  </span>
+                  <span class="live-link__text">
+                    <span class="live-link__name">CIRCLE <span class="live-link__tag">Demo</span></span>
+                    <span class="live-link__meta"><i class="live-dot"></i>circle-demo-gch.pages.dev</span>
+                  </span>
+                  <span class="live-link__arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+                      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-external" /></svg>
+                  </span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <div class="about__side">
+            <ul class="card facts reveal reveal--right" style="--d:80ms">
+              <li>
+                <span class="ico">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+                    stroke-linejoin="round" aria-hidden="true"><use href="#i-briefcase" /></svg>
+                </span>
+                <div>
+                  <span class="k">Currently</span>
+                  <span class="v">Software Engineer at gendee-ai</span>
+                </div>
+              </li>
+              <li>
+                <span class="ico">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+                    stroke-linejoin="round" aria-hidden="true"><use href="#i-cap" /></svg>
+                </span>
+                <div>
+                  <span class="k">Education</span>
+                  <span class="v">B.Eng. Software Engineering<br />Mae Fah Luang University</span>
+                </div>
+              </li>
+              <li>
+                <span class="ico">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+                    stroke-linejoin="round" aria-hidden="true"><use href="#i-code" /></svg>
+                </span>
+                <div>
+                  <span class="k">Focus</span>
+                  <span class="v">Next.js, Go (Fiber), PostgreSQL</span>
+                </div>
+              </li>
+              <li>
+                <span class="ico">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+                    stroke-linejoin="round" aria-hidden="true"><use href="#i-pin" /></svg>
+                </span>
+                <div>
+                  <span class="k">Based in</span>
+                  <span class="v">Thailand — open to remote &amp; on-site</span>
+                </div>
+              </li>
+            </ul>
+
+            <div class="stats reveal reveal--right" style="--d:160ms">
+              <div class="card stat">
+                <div class="stat__num" data-count="2">2</div>
+                <div class="stat__label">Platforms in production</div>
+              </div>
+              <div class="card stat">
+                <div class="stat__num" data-count="6">6</div>
+                <div class="stat__label">Repositories contributed to</div>
+              </div>
+              <div class="card stat">
+                <div class="stat__num" data-count="218">218</div>
+                <div class="stat__label">Commits authored</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+    </section>
 
-      <div class="projects-container2 compact-bottom-text">
-        <p class="project-link-text">
-          You are welcome to explore more of my work here
-          <span class="arrow-project">→</span>
-          <a href="https://github.com/6531503060-nipeerawut?tab=repositories" target="_blank" class="github-link">
-            My GitHub Repositories
-          </a>
-        </p>
-      </div>
+    <section class="section" id="skills">
+      <div class="shell">
+        <div class="section-head center reveal">
+          <span class="eyebrow"><span class="idx">02</span> / Skills</span>
+          <h2>What I <span class="grad">work with</span>.</h2>
+          <p>The stack I use day to day, plus what I have shipped with before.</p>
+        </div>
 
-      <div class="parent-container compact-action">
-        <a href="#contact" class="custom-button1">
-          <span class="arrow">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="18"
-              height="18">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-            </svg>
-          </span>
-          Contact Me
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <hr style="height: 3px; width: 80%; background-color: #666; border: none; margin: 1.25rem auto;" />
-
-  <section id="contact">
-    <div class="contact-wrapper compact-section">
-      <div class="contact-container text-center">
-        <h1>Contact Me</h1>
-        <p>
-          If you would like to collaborate, discuss opportunities, or simply get in touch,
-          please feel free to contact me through the following channels.
-        </p>
-      </div>
-
-      <div class="row contact-row">
-        <div class="col-md-6">
-          <div class="contact-item">
-            <i class="fas fa-envelope"></i>
-            <span id="email" onclick="copyEmail()" style="cursor: pointer;" title="Click to copy">
-              yeern12@gmail.com
+        <div class="skills__grid">
+          <article class="card skill skill--fe reveal" style="--d:0ms">
+            <span class="skill__ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+                stroke-linejoin="round" aria-hidden="true"><use href="#i-code" /></svg>
             </span>
+            <h3>Frontend</h3>
+            <span class="skill__meta">Interfaces &amp; experience</span>
+            <div class="tags">
+              <span class="tag">Angular</span>
+              <span class="tag">React</span>
+              <span class="tag">Next.js</span>
+              <span class="tag">Tailwind CSS</span>
+              <span class="tag">Flutter</span>
+            </div>
+          </article>
+
+          <article class="card skill skill--be reveal" style="--d:90ms">
+            <span class="skill__ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+                stroke-linejoin="round" aria-hidden="true"><use href="#i-server" /></svg>
+            </span>
+            <h3>Backend</h3>
+            <span class="skill__meta">APIs &amp; services</span>
+            <div class="tags">
+              <span class="tag">Go (Fiber)</span>
+              <span class="tag">Node.js (Express.js)</span>
+              <span class="tag">Java</span>
+              <span class="tag">Edge Functions</span>
+            </div>
+          </article>
+
+          <article class="card skill skill--db reveal" style="--d:180ms">
+            <span class="skill__ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+                stroke-linejoin="round" aria-hidden="true"><use href="#i-database" /></svg>
+            </span>
+            <h3>Database</h3>
+            <span class="skill__meta">Modelling &amp; integrity</span>
+            <div class="tags">
+              <span class="tag">MSSQL</span>
+              <span class="tag">MySQL</span>
+              <span class="tag">PostgreSQL</span>
+              <span class="tag">Supabase</span>
+            </div>
+          </article>
+
+          <article class="card skill skill--tools reveal" style="--d:270ms">
+            <span class="skill__ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+                stroke-linejoin="round" aria-hidden="true"><use href="#i-tools" /></svg>
+            </span>
+            <h3>Tools</h3>
+            <span class="skill__meta">Workflow &amp; collaboration</span>
+            <div class="tags">
+              <span class="tag">Git</span>
+              <span class="tag">GitHub</span>
+              <span class="tag">Swagger</span>
+              <span class="tag">Postman</span>
+              <span class="tag">Figma</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="experience">
+      <div class="shell">
+        <div class="section-head reveal">
+          <span class="eyebrow"><span class="idx">03</span> / Experience</span>
+          <h2>Two products, built <span class="grad">in parallel</span>.</h2>
+          <p>Where I have worked, what I owned there, and how I got here.</p>
+        </div>
+
+        <ol class="timeline">
+          <li class="timeline__item reveal">
+            <span class="timeline__dot" aria-hidden="true"></span>
+            <article class="card timeline__card">
+              <header class="timeline__head">
+                <div>
+                  <h3>Software Engineer</h3>
+                  <p class="timeline__org">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-building" /></svg>
+                    gendee-ai
+                  </p>
+                </div>
+                <span class="timeline__when">Jun 2026 &ndash; Present</span>
+              </header>
+
+              <p>
+                Full-stack work on two platforms at the same time: <strong>Gendee.ai</strong>, an AI content
+                generation studio, and <strong>CIRCLE</strong>, a digital news app. 218 commits across six
+                repositories &mdash; Angular and Ionic front ends, Deno edge functions, and PostgreSQL schemas.
+              </p>
+
+              <ul class="timeline__points">
+                <li>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                    stroke-linejoin="round" aria-hidden="true"><use href="#i-check" /></svg>
+                  Shipped three systems end to end &mdash; courses, notifications, and B2B organizations &mdash;
+                  each from schema through API to UI.
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                    stroke-linejoin="round" aria-hidden="true"><use href="#i-check" /></svg>
+                  Connected the CIRCLE reader app and editorial desk to their backend, then simplified the news
+                  schema behind them.
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                    stroke-linejoin="round" aria-hidden="true"><use href="#i-check" /></svg>
+                  Kept the details honest along the way: separate mobile layouts, multi-language copy, accessibility
+                  passes, unit tests, and written handover docs.
+                </li>
+              </ul>
+
+              <div class="tags">
+                <span class="tag">Angular</span>
+                <span class="tag">Ionic</span>
+                <span class="tag">Deno</span>
+                <span class="tag">Supabase</span>
+                <span class="tag">PostgreSQL</span>
+                <span class="tag">TypeScript</span>
+              </div>
+            </article>
+          </li>
+
+          <li class="timeline__item reveal" style="--d:100ms">
+            <span class="timeline__dot" aria-hidden="true"></span>
+            <article class="card timeline__card">
+              <header class="timeline__head">
+                <div>
+                  <h3>Software Engineer Intern</h3>
+                  <p class="timeline__org">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-briefcase" /></svg>
+                    DoiTung
+                  </p>
+                </div>
+                <span class="timeline__when">Internship</span>
+              </header>
+
+              <p>
+                Built <strong>MyTissue</strong>, an internal system for tracking client-submitted wood inventory
+                through every processing stage &mdash; multi-step workflows, transactional consistency, and
+                real-time stock visibility for the staff who use it daily.
+              </p>
+
+              <div class="tags">
+                <span class="tag">Next.js</span>
+                <span class="tag">Go / Fiber</span>
+                <span class="tag">MSSQL</span>
+              </div>
+            </article>
+          </li>
+
+          <li class="timeline__item reveal" style="--d:200ms">
+            <span class="timeline__dot" aria-hidden="true"></span>
+            <article class="card timeline__card">
+              <header class="timeline__head">
+                <div>
+                  <h3>B.Eng. Software Engineering</h3>
+                  <p class="timeline__org">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-cap" /></svg>
+                    Mae Fah Luang University
+                  </p>
+                </div>
+                <span class="timeline__when">Graduated</span>
+              </header>
+
+              <p>
+                School of Applied Digital Technology. Senior project: the DoiTung Waste Management System, built
+                and delivered for community use.
+              </p>
+            </article>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section" id="work">
+      <div class="shell">
+        <div class="section-head reveal">
+          <span class="eyebrow"><span class="idx">04</span> / Work</span>
+          <h2>Systems I have <span class="grad">shipped</span>.</h2>
+          <p>
+            Six builds that reached real users. Where it says end to end, I wrote the schema, the API, and the
+            interface.
+          </p>
+        </div>
+
+        <div class="work__grid">
+          <article class="card work-card work-card--1 tilt reveal">
+            <header class="work-card__top">
+              <span class="work-card__ico">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                  stroke-linejoin="round" aria-hidden="true"><use href="#i-building" /></svg>
+              </span>
+              <span class="work-card__badge">End to end</span>
+            </header>
+            <h3>Gendee for Business</h3>
+            <p class="work-card__org">Gendee.ai &middot; B2B</p>
+            <p>
+              Organization accounts with shared credit pools, per-member usage limits, and invite flows &mdash;
+              schema and access rules through to the admin console.
+            </p>
+            <div class="tags">
+              <span class="tag">Angular</span>
+              <span class="tag">Deno</span>
+              <span class="tag">PostgreSQL</span>
+            </div>
+          </article>
+
+          <article class="card work-card work-card--2 tilt reveal" style="--d:80ms">
+            <header class="work-card__top">
+              <span class="work-card__ico">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                  stroke-linejoin="round" aria-hidden="true"><use href="#i-cap" /></svg>
+              </span>
+              <span class="work-card__badge">End to end</span>
+            </header>
+            <h3>Course Platform</h3>
+            <p class="work-card__org">Gendee.ai &middot; Commerce</p>
+            <p>
+              Catalog, checkout, payment, and the classroom each learner lands in &mdash; plus the staff console
+              that manages every course behind it.
+            </p>
+            <div class="tags">
+              <span class="tag">Angular</span>
+              <span class="tag">Deno</span>
+              <span class="tag">PostgreSQL</span>
+            </div>
+          </article>
+
+          <article class="card work-card work-card--3 tilt reveal" style="--d:160ms">
+            <header class="work-card__top">
+              <span class="work-card__ico">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                  stroke-linejoin="round" aria-hidden="true"><use href="#i-bell" /></svg>
+              </span>
+              <span class="work-card__badge">End to end</span>
+            </header>
+            <h3>Notifications &amp; Push</h3>
+            <p class="work-card__org">Gendee.ai &middot; Platform</p>
+            <p>
+              Database triggers that fan out to Firebase Cloud Messaging, an in-app notification bell, and device
+              tokens that never duplicate.
+            </p>
+            <div class="tags">
+              <span class="tag">Firebase FCM</span>
+              <span class="tag">Deno</span>
+              <span class="tag">PostgreSQL</span>
+            </div>
+          </article>
+
+          <article class="card work-card work-card--4 tilt reveal" style="--d:240ms">
+            <header class="work-card__top">
+              <span class="work-card__ico">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                  stroke-linejoin="round" aria-hidden="true"><use href="#i-news" /></svg>
+              </span>
+              <span class="work-card__badge">Mobile app</span>
+            </header>
+            <h3>CIRCLE News Platform</h3>
+            <p class="work-card__org">Formerly BCC24 News</p>
+            <p>
+              Reader app and editorial desk wired to their backend: saving, sharing, search, member accounts, and
+              the rebrand across both.
+            </p>
+            <div class="tags">
+              <span class="tag">Ionic</span>
+              <span class="tag">Capacitor</span>
+              <span class="tag">Supabase</span>
+            </div>
+          </article>
+
+          <article class="card work-card work-card--5 tilt reveal" style="--d:320ms">
+            <header class="work-card__top">
+              <span class="work-card__ico">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                  stroke-linejoin="round" aria-hidden="true"><use href="#i-gauge" /></svg>
+              </span>
+              <span class="work-card__badge">Internal tool</span>
+            </header>
+            <h3>Operations Dashboard</h3>
+            <p class="work-card__org">Gendee.ai &middot; Admin</p>
+            <p>
+              Redeem codes, organizations, and reporting for the operations team &mdash; built on shared
+              date-picker, dialog, and filter components I wrote for it.
+            </p>
+            <div class="tags">
+              <span class="tag">Angular</span>
+              <span class="tag">Chart.js</span>
+              <span class="tag">Supabase</span>
+            </div>
+          </article>
+
+          <article class="card work-card work-card--6 tilt reveal" style="--d:400ms">
+            <header class="work-card__top">
+              <span class="work-card__ico">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                  stroke-linejoin="round" aria-hidden="true"><use href="#i-leaf" /></svg>
+              </span>
+              <span class="work-card__badge">Senior project</span>
+            </header>
+            <h3>DoiTung Waste Management</h3>
+            <p class="work-card__org">Mae Fah Luang University</p>
+            <p>
+              Community waste tracking and analysis that surfaces generation patterns, so collection and recycling
+              can be planned rather than guessed.
+            </p>
+            <div class="tags">
+              <span class="tag">React</span>
+              <span class="tag">Node.js</span>
+              <span class="tag">MySQL</span>
+            </div>
+          </article>
+        </div>
+
+        <div class="card repo-cta reveal">
+          <p>
+            <strong>More on GitHub</strong>
+            Experiments, coursework, and smaller builds that did not make this page.
+          </p>
+          <a class="btn btn--ghost magnetic" href="https://github.com/6531503060-nipeerawut?tab=repositories"
+            target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+              stroke-linejoin="round" aria-hidden="true"><use href="#i-github" /></svg>
+            Browse repositories
+            <svg class="arr-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-arrow-right" /></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="shell">
+        <div class="card contact__panel reveal reveal--scale">
+          <span class="eyebrow"><span class="idx">05</span> / Contact</span>
+          <h2>Say <span class="grad">hello</span>.</h2>
+          <p>
+            Hiring, collaborating, or just comparing notes on something you are building &mdash; my inbox is open
+            and I reply to everything.
+          </p>
+
+          <div class="copy-mail" id="copyMail">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+              stroke-linejoin="round" aria-hidden="true" style="width:19px;height:19px;color:var(--brand-1)">
+              <use href="#i-mail" />
+            </svg>
+            <span class="copy-mail__value" id="emailValue">yeern12@gmail.com</span>
+            <button class="copy-mail__btn" id="copyBtn" type="button" aria-label="Copy email address to clipboard">
+              <svg class="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-copy" /></svg>
+              <svg class="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-check" /></svg>
+              <span id="copyLabel">Copy</span>
+            </button>
           </div>
 
-          <div class="contact-item">
-            <i class="fab fa-linkedin linkedin-icon"></i>
-            <a href="www.linkedin.com/in/peerawut-nipakornpan-3550a131a" target="_blank">LinkedIn Profile</a>
-          </div>
+          <div class="channels">
+            <a class="channel channel--li" href="https://www.linkedin.com/in/peerawut-nipakornpan-3550a131a"
+              target="_blank" rel="noopener noreferrer">
+              <span class="channel__ico">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+                  stroke-linejoin="round" aria-hidden="true"><use href="#i-linkedin" /></svg>
+              </span>
+              <span>
+                <span class="channel__label">LinkedIn</span>
+                <span class="channel__handle">peerawut-nipakornpan</span>
+              </span>
+              <span class="channel__arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"
+                  stroke-linejoin="round" aria-hidden="true"><use href="#i-external" /></svg>
+              </span>
+            </a>
 
-          <div class="contact-item">
-            <i class="fab fa-github github-icon"></i>
-            <a href="https://github.com/6531503060-nipeerawut" target="_blank">GitHub Profile</a>
-          </div>
+            <a class="channel channel--gh" href="https://github.com/6531503060-nipeerawut" target="_blank"
+              rel="noopener noreferrer">
+              <span class="channel__ico">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+                  stroke-linejoin="round" aria-hidden="true"><use href="#i-github" /></svg>
+              </span>
+              <span>
+                <span class="channel__label">GitHub</span>
+                <span class="channel__handle">6531503060-nipeerawut</span>
+              </span>
+              <span class="channel__arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"
+                  stroke-linejoin="round" aria-hidden="true"><use href="#i-external" /></svg>
+              </span>
+            </a>
 
-          <div class="contact-item">
-            <i class="fab fa-facebook text-primary"></i>
-            <a href="https://www.facebook.com/nong.off.3" target="_blank">Facebook Profile</a>
+            <a class="channel channel--fb" href="https://www.facebook.com/nong.off.3" target="_blank"
+              rel="noopener noreferrer">
+              <span class="channel__ico">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+                  stroke-linejoin="round" aria-hidden="true"><use href="#i-facebook" /></svg>
+              </span>
+              <span>
+                <span class="channel__label">Facebook</span>
+                <span class="channel__handle">nong.off.3</span>
+              </span>
+              <span class="channel__arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"
+                  stroke-linejoin="round" aria-hidden="true"><use href="#i-external" /></svg>
+              </span>
+            </a>
           </div>
         </div>
       </div>
+    </section>
+  </main>
 
-      <div class="parent-container compact-action">
-        <a href="#home" class="custom-button1">
-          <span class="arrow">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="18"
-              height="18">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
-            </svg>
-          </span>
-          Back to Top
-        </a>
-      </div>
+  <footer class="footer">
+    <div class="shell footer__inner">
+      <p>&copy; <%= year %> Peerawut Nipakornpan. All rights reserved.</p>
+      <p class="footer__built">Designed &amp; built with <span>&#9829;</span> using Node.js, Express &amp; EJS</p>
     </div>
-  </section>
-
-  <footer class="custom-footer">
-    <p>© <span id="current-year"></span> Peerawut Nipakornpan. All rights reserved.</p>
   </footer>
 
-  <script src="/js/main.js"></script>
+  <button class="icon-btn to-top" id="toTop" type="button" aria-label="Back to top">
+    <svg class="arr-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+      stroke-linejoin="round" aria-hidden="true"><use href="#i-arrow-up" /></svg>
+  </button>
+
+  <div class="toast-stack" id="toastStack" role="status" aria-live="polite"></div>
+
+  <script src="/js/main.js" defer></script>
 </body>
 
 </html>
