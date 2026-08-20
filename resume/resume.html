@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Peerawut Nipakornpan — Junior Full-Stack Developer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700&display=swap"
+    rel="stylesheet" />
+  <style>
+    /* ------------------------------------------------------------------
+       Print-first resume. Open in Chrome, then Ctrl+P > Save as PDF with
+       margins set to None and background graphics on, to regenerate it.
+       ------------------------------------------------------------------ */
+
+    :root {
+      --ink: #0f172a;
+      --body: #1e293b;
+      --muted: #52627a;
+      --accent: #4338ca;
+      --accent-soft: #eef0fd;
+      --line: #dde3ec;
+      --side: #f7f8fc;
+    }
+
+    @page {
+      size: A4;
+      margin: 0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    body {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+      color: var(--body);
+      font-family: "Inter", "Segoe UI", Arial, sans-serif;
+      font-size: 8.9pt;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* URLs are real PDF link annotations - give them a hairline underline so a
+       reader can see there is something to click. */
+    a[href^="http"],
+    a[href^="mailto"] {
+      text-decoration: underline;
+      text-decoration-thickness: .4pt;
+      text-underline-offset: 1.6pt;
+      text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+    }
+
+    .head {
+      display: flex;
+      align-items: center;
+      gap: 6mm;
+      padding: 8mm 11mm 5.5mm;
+      border-bottom: 2.4pt solid var(--accent);
+    }
+
+    .head__photo {
+      flex: 0 0 auto;
+      width: 25mm;
+      height: 25mm;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: 50% 20%;
+      border: 1.2pt solid var(--line);
+    }
+
+    .head__name {
+      font-family: "Sora", "Segoe UI", Arial, sans-serif;
+      font-size: 21pt;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      line-height: 1.05;
+      color: var(--ink);
+    }
+
+    .head__role {
+      margin-top: 1.2mm;
+      font-size: 10.2pt;
+      font-weight: 600;
+      letter-spacing: .015em;
+      color: var(--accent);
+    }
+
+    .head__meta {
+      margin-top: 2.6mm;
+      font-size: 8.4pt;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .head__meta b {
+      font-weight: 600;
+      color: var(--body);
+    }
+
+    .sep {
+      display: inline-block;
+      margin: 0 1.6mm;
+      color: var(--line);
+    }
+
+    .summary {
+      padding: 4.4mm 11mm;
+      border-bottom: .8pt solid var(--line);
+      font-size: 8.9pt;
+      line-height: 1.5;
+      color: var(--body);
+    }
+
+    .summary strong {
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .grid {
+      display: flex;
+      align-items: stretch;
+      /* fills whatever is left of the page so the sidebar reaches the bottom edge */
+      flex: 1 1 auto;
+    }
+
+    .col--side {
+      flex: 0 0 60mm;
+      padding: 6.5mm 6mm 5mm 11mm;
+      background: var(--side);
+      border-right: .8pt solid var(--line);
+    }
+
+    .col--main {
+      flex: 1 1 auto;
+      padding: 6.5mm 11mm 8mm 7mm;
+      min-width: 0;
+    }
+
+    h2 {
+      font-family: "Sora", "Segoe UI", Arial, sans-serif;
+      font-size: 8.6pt;
+      font-weight: 700;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+      color: var(--accent);
+      padding-bottom: 1.1mm;
+      border-bottom: 1pt solid var(--accent);
+      margin-bottom: 2.8mm;
+    }
+
+    section + section {
+      margin-top: 4.4mm;
+    }
+
+    h3 {
+      font-size: 9.6pt;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.28;
+    }
+
+    .org {
+      font-size: 8.6pt;
+      font-weight: 600;
+      color: var(--accent);
+      margin-top: .5mm;
+    }
+
+    .when {
+      font-size: 7.9pt;
+      font-weight: 500;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 4mm;
+    }
+
+    .note {
+      font-size: 8.5pt;
+      color: var(--body);
+      margin-top: 1.3mm;
+    }
+
+    ul {
+      list-style: none;
+      margin-top: 1.5mm;
+    }
+
+    li {
+      position: relative;
+      padding-left: 3.4mm;
+      margin-bottom: 1.45mm;
+      font-size: 8.8pt;
+      line-height: 1.47;
+    }
+
+    li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 1.55mm;
+      width: 1.25mm;
+      height: 1.25mm;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .stack {
+      margin-top: 1.6mm;
+      font-size: 7.9pt;
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    .entry + .entry {
+      margin-top: 5mm;
+      padding-top: 5mm;
+      border-top: .8pt dotted var(--line);
+    }
+
+    .kv {
+      margin-bottom: 2mm;
+    }
+
+    .kv__k {
+      font-size: 7.4pt;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin-bottom: .5mm;
+    }
+
+    .kv__v {
+      font-size: 8.4pt;
+      line-height: 1.4;
+      color: var(--body);
+    }
+
+    .edu__deg {
+      font-size: 9.3pt;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.3;
+    }
+
+    .edu__line {
+      font-size: 8.4pt;
+      color: var(--body);
+      margin-top: .7mm;
+    }
+
+    .edu__hl {
+      display: inline-block;
+      margin-top: 1.5mm;
+      padding: .7mm 2mm;
+      border-radius: 1.4mm;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 7.6pt;
+      font-weight: 600;
+      line-height: 1.5;
+    }
+
+    .pub__title {
+      font-size: 8.5pt;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.35;
+    }
+
+    .pub__meta {
+      font-size: 8pt;
+      color: var(--muted);
+      margin-top: 1mm;
+      line-height: 1.45;
+    }
+
+    .pub__doi {
+      display: block;
+      margin-top: 1mm;
+      font-size: 7.6pt;
+      color: var(--accent);
+      font-weight: 500;
+      word-break: break-all;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- LinkedIn: this is the auto-generated URL, which is what works today. After
+       setting a custom URL, replace both the href and the text on the line below. -->
+  <header class="head">
+    <!-- Drop a portrait at resume/photo.jpg and it appears here; with no file the
+         header simply runs full width. -->
+    <img class="head__photo" src="photo.jpg" alt="Peerawut Nipakornpan"
+      onerror="this.hidden = true" />
+    <div>
+      <div class="head__name">PEERAWUT NIPAKORNPAN</div>
+      <div class="head__role">Junior Full-Stack Developer</div>
+      <div class="head__meta">
+        <b>+66 91 872 1064</b><span class="sep">|</span><a
+          href="mailto:yeern12@gmail.com">yeern12@gmail.com</a><span class="sep">|</span>Bangkok, Thailand<br />
+        <a href="https://portfolio-offpeerawutt.vercel.app">portfolio-offpeerawutt.vercel.app</a><span class="sep">|</span><a
+          href="https://www.linkedin.com/in/peerawut-nipakornpan-3550a131a">linkedin.com/in/peerawut-nipakornpan-3550a131a</a><span class="sep">|</span><a
+          href="https://github.com/6531503060-nipeerawut">github.com/6531503060-nipeerawut</a>
+      </div>
+    </div>
+  </header>
+
+  <p class="summary">
+    Full-stack developer at <strong>Gendee.ai</strong>, building two production platforms in parallel: an AI content
+    generation platform and a digital news app. I own features end to end &mdash; the PostgreSQL schema and access
+    rules, then the API, then the screens on top. Software Engineering graduate with Second Class Honors and first
+    author of a peer-reviewed IEEE conference paper.
+  </p>
+
+  <div class="grid">
+    <aside class="col--side">
+      <section>
+        <h2>Education</h2>
+        <div class="edu__deg">B.Eng. Software Engineering</div>
+        <div class="edu__line">Mae Fah Luang University<br />School of Applied Digital Technology</div>
+        <div class="edu__line">Graduated June 2026</div>
+        <span class="edu__hl">Second Class Honors<br />GPAX 3.27</span>
+      </section>
+
+      <section>
+        <h2>Technical Skills</h2>
+        <div class="kv">
+          <div class="kv__k">Languages</div>
+          <div class="kv__v">TypeScript, JavaScript, Go, Java, SQL</div>
+        </div>
+        <div class="kv">
+          <div class="kv__k">Frontend</div>
+          <div class="kv__v">Angular, React, Next.js, Ionic, Flutter, Tailwind CSS</div>
+        </div>
+        <div class="kv">
+          <div class="kv__k">Backend</div>
+          <div class="kv__v">Go (Fiber), Node.js (Express), Spring Boot, Deno, Edge Functions, REST APIs</div>
+        </div>
+        <div class="kv">
+          <div class="kv__k">Database</div>
+          <div class="kv__v">PostgreSQL, MSSQL, MySQL, Supabase</div>
+        </div>
+        <div class="kv">
+          <div class="kv__k">Tools</div>
+          <div class="kv__v">Git, GitHub, Swagger, Postman, Figma, Firebase Cloud Messaging</div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Publication</h2>
+        <div class="pub__title">Implementation of an Integrated Waste Management System: A Case Study of the Doi Tung
+          Development Project</div>
+        <div class="pub__meta">
+          <b>First author</b> &mdash; Peerawut Nipakornpan, et al.<br />
+          IEEE International Conference Proceedings, 2026
+        </div>
+        <a class="pub__doi" href="https://ieeexplore.ieee.org/document/11460046">ieeexplore.ieee.org/document/11460046</a>
+      </section>
+
+      <section>
+        <h2>Languages</h2>
+        <div class="kv__v">Thai &mdash; Native<br />English &mdash; Intermediate</div>
+      </section>
+    </aside>
+
+    <main class="col--main">
+      <section>
+        <h2>Experience</h2>
+
+        <div class="entry">
+          <div class="row">
+            <h3>Junior Full-Stack Developer</h3>
+            <span class="when">Jun 2026 &ndash; Present</span>
+          </div>
+          <div class="org">Gendee.ai &mdash; Bangkok, Thailand &middot; Full-time, On-site</div>
+          <p class="note">
+            Two products in parallel: <b>Gendee.ai</b>, an AI content generation platform, and <b>CIRCLE</b>, a digital
+            news app. 218 commits across 6 repositories.
+          </p>
+          <ul>
+            <li>Shipped three systems end to end &mdash; B2B organizations, a course platform and notifications &mdash;
+              each from PostgreSQL schema and access rules, through Deno edge APIs, to the Angular interface.</li>
+            <li>Built Gendee for Business: shared credit pools, per-member usage limits and invite flows, plus the
+              admin console that manages them.</li>
+            <li>Delivered the course platform: catalog, checkout, payment and classroom views, with a staff console
+              behind it.</li>
+            <li>Implemented push notifications: database triggers fanning out to Firebase Cloud Messaging, with an
+              in-app notification centre.</li>
+            <li>Connected the CIRCLE reader app (Ionic + Capacitor) and its editorial desk to the backend, then
+              simplified the news schema during the BCC24 to CIRCLE rebrand.</li>
+          </ul>
+          <div class="stack">Angular &middot; Ionic &middot; Capacitor &middot; TypeScript &middot; Deno &middot;
+            Supabase &middot; PostgreSQL &middot; Firebase FCM</div>
+          <div class="stack">Live: <a href="https://gendee.ai">gendee.ai</a> &middot;
+            <a href="https://circle-demo-gch.pages.dev/tabs/home">circle-demo-gch.pages.dev</a></div>
+        </div>
+
+        <div class="entry">
+          <div class="row">
+            <h3>Software Engineer Intern</h3>
+            <span class="when">Internship</span>
+          </div>
+          <div class="org">Mae Fah Luang Foundation under Royal Patronage &mdash; DoiTung Development Project, Bangkok
+          </div>
+          <p class="note">Project: <b>MyTissue</b> &mdash; internal wood inventory management system.</p>
+          <ul>
+            <li>Built the system that tracks client wood inventory through every processing stage, with multi-step
+              workflows kept transactionally consistent.</li>
+            <li>Designed and implemented RESTful APIs in Go (Fiber) running in production.</li>
+            <li>Built the responsive Next.js front end used daily by operations staff.</li>
+            <li>Tuned MSSQL queries and constraints for query performance and data consistency.</li>
+          </ul>
+          <div class="stack">Next.js &middot; Go (Fiber) &middot; MSSQL</div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Selected Project</h2>
+        <div class="entry">
+          <div class="row">
+            <h3>DoiTung Waste Management System</h3>
+            <span class="when">Senior Project</span>
+          </div>
+          <div class="org">Mae Fah Luang University</div>
+          <ul>
+            <li>Web system for community waste collection and recycling, surfacing waste generation patterns so
+              collection can be planned instead of guessed.</li>
+            <li>Became the basis for a peer-reviewed IEEE conference paper (see Publication).</li>
+          </ul>
+          <div class="stack">React &middot; Node.js (Express) &middot; MySQL</div>
+          <div class="stack">Code: <a href="https://github.com/6531503060-nipeerawut">github.com/6531503060-nipeerawut</a></div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+
+</html>

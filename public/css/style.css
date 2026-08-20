@@ -1620,6 +1620,44 @@ html[data-theme="dark"] .skill-item {
     height: 16px;
 }
 
+/* Each row links to the official site, so it needs a link affordance that does
+   not change the row height. */
+.skill-item__name {
+    min-width: 0;
+}
+
+.skill-item__out {
+    flex: none;
+    width: 13px;
+    height: 13px;
+    margin-left: auto;
+    color: var(--logo);
+    opacity: 0;
+    transform: translate(-2px, 2px);
+    transition: opacity .3s var(--ease), transform .3s var(--ease);
+}
+
+.skill-item:hover .skill-item__out,
+.skill-item:focus-visible .skill-item__out {
+    opacity: .85;
+    transform: translate(0, 0);
+}
+
+.skill-item:focus-visible {
+    outline: 2px solid var(--logo);
+    outline-offset: 2px;
+    border-color: color-mix(in srgb, var(--logo) 38%, transparent);
+    background: color-mix(in srgb, var(--logo) 9%, transparent);
+    color: var(--text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .skill-item__out {
+        transition: none;
+        transform: none;
+    }
+}
+
 .tag {
     padding: .34rem .75rem;
     border: 1px solid var(--line);
@@ -1871,6 +1909,27 @@ html[data-theme="dark"] .skill-item {
     white-space: nowrap;
 }
 
+/* The publication badge is a link, so it needs affordance the static badges do not. */
+.work-card__badge--pub {
+    display: inline-flex;
+    align-items: center;
+    gap: .34rem;
+    background: color-mix(in srgb, var(--tint) 16%, transparent);
+    border-color: color-mix(in srgb, var(--tint) 46%, transparent);
+    transition: background var(--t-fast, .25s) var(--ease), border-color var(--t-fast, .25s) var(--ease);
+}
+
+.work-card__badge--pub svg {
+    width: 11px;
+    height: 11px;
+}
+
+.work-card__badge--pub:hover,
+.work-card__badge--pub:focus-visible {
+    background: color-mix(in srgb, var(--tint) 26%, transparent);
+    border-color: var(--tint);
+}
+
 .work-card h3 {
     font-size: clamp(1.15rem, 2.1vw, 1.3rem);
     margin-bottom: .3rem;
@@ -2053,6 +2112,7 @@ html[data-theme="dark"] .skill-item {
 .channel--li { --tint: #0a66c2; }
 .channel--gh { --tint: var(--text); }
 .channel--fb { --tint: #1877f2; }
+.channel--cv { --tint: var(--brand-2); }
 
 html[data-theme="dark"] .channel--li { --tint: #4aa3ff; }
 

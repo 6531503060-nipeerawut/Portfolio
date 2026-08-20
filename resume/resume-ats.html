@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Peerawut Nipakornpan — Junior Full-Stack Developer (ATS)</title>
+  <style>
+    /* ------------------------------------------------------------------
+       Plain single-column version for applicant tracking systems: no
+       columns, no background fills, no images, no icons — just headings,
+       paragraphs and lists that a parser can read top to bottom.
+       ------------------------------------------------------------------ */
+
+    @page {
+      size: A4;
+      margin: 10mm 14mm;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 9pt;
+      line-height: 1.27;
+      color: #000;
+      background: #fff;
+    }
+
+    h1 {
+      font-size: 15.5pt;
+      letter-spacing: .01em;
+    }
+
+    .title {
+      font-size: 10.2pt;
+      font-weight: bold;
+      margin-top: .8mm;
+    }
+
+    .contact {
+      font-size: 8.7pt;
+      margin-top: 1.3mm;
+      line-height: 1.42;
+    }
+
+    h2 {
+      font-size: 9.6pt;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      border-bottom: 1pt solid #000;
+      padding-bottom: .8mm;
+      margin: 2.8mm 0 1.4mm;
+    }
+
+    h3 {
+      font-size: 9.8pt;
+    }
+
+    .meta {
+      font-size: 8.8pt;
+      font-style: italic;
+      margin-bottom: .6mm;
+    }
+
+    p {
+      font-size: 8.9pt;
+    }
+
+    ul {
+      margin: 1mm 0 0 5mm;
+    }
+
+    li {
+      font-size: 8.9pt;
+      margin-bottom: .35mm;
+    }
+
+    .entry {
+      margin-bottom: 2.1mm;
+    }
+
+    .entry:last-child {
+      margin-bottom: 0;
+    }
+
+    .skills p {
+      margin-bottom: 1mm;
+    }
+
+    /* Real PDF link annotations, underlined so they read as links on paper too. */
+    a {
+      color: #000;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Peerawut Nipakornpan</h1>
+  <div class="title">Junior Full-Stack Developer</div>
+  <div class="contact">
+    Phone: +66 91 872 1064 | Email: <a href="mailto:yeern12@gmail.com">yeern12@gmail.com</a> | Location: Bangkok,
+    Thailand<br />
+    Portfolio: <a href="https://portfolio-offpeerawutt.vercel.app">https://portfolio-offpeerawutt.vercel.app</a> | LinkedIn:
+    <a href="https://www.linkedin.com/in/peerawut-nipakornpan-3550a131a">https://linkedin.com/in/peerawut-nipakornpan-3550a131a</a> | GitHub:
+    <a href="https://github.com/6531503060-nipeerawut">https://github.com/6531503060-nipeerawut</a>
+  </div>
+
+  <h2>Summary</h2>
+  <p>
+    Full-stack developer at Gendee.ai, building two production platforms in parallel: an AI content generation
+    platform and a digital news app. I own features end to end &mdash; the PostgreSQL schema and access rules, then
+    the API, then the screens on top. Software Engineering graduate, Second Class Honors, and first author of a
+    peer-reviewed IEEE conference paper.
+  </p>
+
+  <h2>Technical Skills</h2>
+  <div class="skills">
+    <p><b>Languages:</b> TypeScript, JavaScript, Go, Java, SQL</p>
+    <p><b>Frontend:</b> Angular, React, Next.js, Ionic, Flutter, Tailwind CSS</p>
+    <p><b>Backend:</b> Go (Fiber), Node.js (Express), Spring Boot, Deno, Edge Functions, REST APIs</p>
+    <p><b>Database:</b> PostgreSQL, MSSQL, MySQL, Supabase</p>
+    <p><b>Tools:</b> Git, GitHub, Swagger, Postman, Figma, Firebase Cloud Messaging</p>
+  </div>
+
+  <h2>Professional Experience</h2>
+
+  <div class="entry">
+    <h3>Junior Full-Stack Developer &mdash; Gendee.ai, Bangkok, Thailand</h3>
+    <div class="meta">Full-time, On-site | June 2026 &ndash; Present</div>
+    <p>
+      Two products in parallel: Gendee.ai, an AI content generation platform, and CIRCLE, a digital news app.
+      218 commits across 6 repositories. Live: <a href="https://gendee.ai">https://gendee.ai</a> and
+      <a href="https://circle-demo-gch.pages.dev/tabs/home">https://circle-demo-gch.pages.dev</a>
+    </p>
+    <ul>
+      <li>Shipped three systems end to end &mdash; B2B organizations, a course platform and notifications &mdash;
+        each from PostgreSQL schema and access rules, through Deno edge APIs, to the Angular interface.</li>
+      <li>Built Gendee for Business: shared credit pools, per-member usage limits and invite flows, plus the admin
+        console that manages them.</li>
+      <li>Delivered the course platform: catalog, checkout, payment and classroom views, with a staff console behind
+        it.</li>
+      <li>Implemented push notifications: database triggers fanning out to Firebase Cloud Messaging, with an in-app
+        notification centre.</li>
+      <li>Connected the CIRCLE reader app (Ionic + Capacitor) and its editorial desk to the backend, then simplified
+        the news schema during the BCC24 to CIRCLE rebrand.</li>
+      <li>Technologies: Angular, Ionic, Capacitor, TypeScript, Deno, Supabase, PostgreSQL, Firebase Cloud Messaging.
+      </li>
+    </ul>
+  </div>
+
+  <div class="entry">
+    <h3>Software Engineer Intern &mdash; Mae Fah Luang Foundation under Royal Patronage, Bangkok</h3>
+    <div class="meta">DoiTung Development Project | Project: MyTissue, internal wood inventory management system</div>
+    <ul>
+      <li>Built the system that tracks client wood inventory through every processing stage, with multi-step workflows
+        kept transactionally consistent.</li>
+      <li>Designed and implemented RESTful APIs in Go (Fiber) running in production.</li>
+      <li>Built the responsive Next.js front end used daily by operations staff.</li>
+      <li>Tuned MSSQL queries and constraints for query performance and data consistency.</li>
+      <li>Technologies: Next.js, Go (Fiber), MSSQL.</li>
+    </ul>
+  </div>
+
+  <h2>Education</h2>
+  <div class="entry">
+    <h3>Bachelor of Engineering in Software Engineering</h3>
+    <div class="meta">Mae Fah Luang University, School of Applied Digital Technology | Graduated June 2026</div>
+    <p>Second Class Honors. GPAX 3.27.</p>
+  </div>
+
+  <h2>Selected Project</h2>
+  <div class="entry">
+    <h3>DoiTung Waste Management System &mdash; Senior Project</h3>
+    <div class="meta">Mae Fah Luang University | <a href="https://github.com/6531503060-nipeerawut">https://github.com/6531503060-nipeerawut</a></div>
+    <ul>
+      <li>Web system for community waste collection and recycling, surfacing waste generation patterns so collection
+        can be planned instead of guessed.</li>
+      <li>Became the basis for a peer-reviewed IEEE conference paper.</li>
+      <li>Technologies: React, Node.js (Express), MySQL.</li>
+    </ul>
+  </div>
+
+  <h2>Publication</h2>
+  <p>
+    Peerawut Nipakornpan, et al. (first author). <b>Implementation of an Integrated Waste Management System: A Case
+      Study of the Doi Tung Development Project.</b> IEEE International Conference Proceedings, 2026.
+    DOI: <a href="https://ieeexplore.ieee.org/document/11460046">https://ieeexplore.ieee.org/document/11460046</a>
+  </p>
+
+  <h2>Languages</h2>
+  <p>Thai &mdash; Native. English &mdash; Intermediate.</p>
+</body>
+
+</html>
