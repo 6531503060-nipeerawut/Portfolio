@@ -1,8 +1,22 @@
 # ไม่ให้ Git track ไฟล์ .env
 .env
+.env*.local
 
 # ไม่ให้ Git track โฟลเดอร์ node_modules
 node_modules/
 
 # ไม่ให้ Git track package-lock.json
 package-lock.json
+
+# ผลลัพธ์จากการ build ของ Next.js
+/.next/
+/out/
+next-env.d.ts
+*.tsbuildinfo
+
+# โฟลเดอร์ของ Vercel CLI
+.vercel
+
+# ไฟล์แนะนำสำหรับ AI agent ที่ next dev สร้างขึ้นมาเองทุกครั้ง
+AGENTS.md
+CLAUDE.md

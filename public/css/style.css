@@ -813,7 +813,8 @@ html.theme-anim-reverse::view-transition-new(root) {
     inset: 0;
     z-index: 1090;
     display: grid;
-    place-items: center;
+    align-items: center;
+    justify-items: stretch;
     padding: 5rem var(--gutter) 2rem;
     background: color-mix(in srgb, var(--bg) 88%, transparent);
     backdrop-filter: blur(16px);
@@ -834,6 +835,7 @@ html.theme-anim-reverse::view-transition-new(root) {
     flex-direction: column;
     gap: .35rem;
     width: min(420px, 100%);
+    margin-inline: auto;
 }
 
 .drawer__link {
@@ -1432,7 +1434,7 @@ html.theme-anim-reverse::view-transition-new(root) {
 /* In a split heading the tiles sit beside the title rather than below it. */
 .section-head--split .stats {
     flex: none;
-    grid-template-columns: repeat(3, minmax(92px, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     width: min(100%, 26rem);
 }
 
@@ -1475,7 +1477,7 @@ html.theme-anim-reverse::view-transition-new(root) {
 
 .skills__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(255px, 100%), 1fr));
     gap: clamp(1rem, 2vw, 1.35rem);
 }
 
@@ -1817,7 +1819,7 @@ html[data-theme="dark"] .skill-item {
 
 .work__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(285px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(285px, 100%), 1fr));
     gap: clamp(.8rem, 1.6vw, 1.15rem);
 }
 
@@ -2092,7 +2094,7 @@ html[data-theme="dark"] .skill-item {
 /* Channel cards */
 .channels {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr));
     gap: .9rem;
     text-align: left;
 }
@@ -2304,6 +2306,30 @@ html[data-theme="dark"] .channel--li { --tint: #4aa3ff; }
     transform: translateY(26px);
     transition: opacity .8s var(--ease), transform .8s var(--ease);
     transition-delay: var(--d, 0ms);
+    /* Failsafe. The observer that adds .is-in lives in main.js, which cannot
+       run until the framework has hydrated; on a slow connection that is
+       seconds after the HTML arrived, and until then every section below the
+       hero is transparent. If the observer has not reported in by now, show
+       the content and drop the slide-in — reading the page beats animating
+       it. */
+    animation: revealFailsafe 1ms linear 2s forwards;
+}
+
+@keyframes revealFailsafe {
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* setupReveal() sets this the moment the observer starts watching, which on
+   any normal load is well inside the two seconds. Pausing rather than
+   clearing the animation is what makes both outcomes safe: during the delay a
+   paused animation never fires at all, so nothing changes; past it the filled
+   value is held, so content that the failsafe already revealed does not blink
+   back out. */
+[data-reveal-ready] .reveal {
+    animation-play-state: paused;
 }
 
 .reveal.is-in {
@@ -2482,12 +2508,19 @@ html.theme-anim.theme-anim-reverse::view-transition-old(root) {
     }
 
     .work-card__badge {
-        font-size: .6rem;
+        font-size: .66rem;
         padding: .26rem .55rem;
     }
 
-    .stats {
+    .skill__meta,
+    .live-links__label {
+        font-size: .74rem;
+    }
+
+    .stats,
+    .section-head--split .stats {
         grid-template-columns: 1fr;
+        width: 100%;
     }
 
     .stat {
@@ -2500,8 +2533,10 @@ html.theme-anim.theme-anim-reverse::view-transition-old(root) {
 
     .stat__label {
         margin-top: 0;
-        max-width: 55%;
+        max-width: 70%;
         text-align: right;
+        font-size: .72rem;
+        letter-spacing: .1em;
     }
 
     .copy-mail {
@@ -2537,6 +2572,44 @@ html.theme-anim.theme-anim-reverse::view-transition-old(root) {
 @media (hover: none) {
     .spotlight {
         display: none;
+    }
+}
+
+/*
+ * Touch affordances. A finger is the same size whichever way the phone is
+ * held, so these are keyed on the pointer rather than on a width — otherwise
+ * a landscape phone, which is wider than the phone breakpoint, would miss out.
+ * The desktop sizes land a couple of pixels under the 44px most touch
+ * guidelines ask for.
+ */
+@media (pointer: coarse) {
+    .icon-btn,
+    .social,
+    .nav__burger {
+        width: 44px;
+        height: 44px;
+    }
+
+    .skill-item {
+        padding-block: .5rem;
+    }
+
+    .copy-mail__btn {
+        min-height: 44px;
+    }
+
+    /* The publication badge doubles as a link to the paper. */
+    .work-card__badge--pub {
+        padding-block: .5rem;
+    }
+}
+
+/* Once the wordmark is hidden, the monogram is the whole of the home link. */
+@media (pointer: coarse) and (max-width: 980px) {
+    .brand__mark {
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
     }
 }
 

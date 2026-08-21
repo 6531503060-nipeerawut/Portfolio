@@ -450,6 +450,10 @@
     var items = $$(".reveal");
     if (!items.length) return;
 
+    // Stands down the stylesheet's failsafe, which reveals everything on a
+    // timer in case this file never arrives. From here the observer owns it.
+    root.setAttribute("data-reveal-ready", "");
+
     if (!("IntersectionObserver" in window) || reduceMotion.matches) {
       items.forEach(function (el) { el.classList.add("is-in"); });
       return;
