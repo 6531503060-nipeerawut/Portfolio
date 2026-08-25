@@ -3,26 +3,39 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>Peerawut Nipakornpan — Junior Full-Stack Developer</title>
+  <title>Peerawut Nipakornpan &mdash; Junior Full-Stack Developer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700&display=swap"
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..112,400..700&display=swap"
     rel="stylesheet" />
   <style>
     /* ------------------------------------------------------------------
        Print-first resume. Open in Chrome, then Ctrl+P > Save as PDF with
        margins set to None and background graphics on, to regenerate it.
+
+       Palette, type scale and card geometry are lifted from the reference
+       design's vector data, so the colours are exactly the same ones:
+         gold band   #cb9f4a
+         ink         #09333f  (name, section headings, body)
+         ink deep    #0f2530  (summary paragraph)
+         accent      #027d9d  (contact icons)
+         hairline    #b8cfd6  (card borders)
+       Cards are white, 10px (2.65mm) radius, on a white page - the blue-grey
+       cast between them comes from the soft shadow, not a tinted background.
        ------------------------------------------------------------------ */
 
     :root {
-      --ink: #0f172a;
-      --body: #1e293b;
-      --muted: #52627a;
-      --accent: #4338ca;
-      --accent-soft: #eef0fd;
-      --line: #dde3ec;
-      --side: #f7f8fc;
+      --gold: #cb9f4a;
+      --ink: #09333f;
+      --ink-deep: #0f2530;
+      --accent: #027d9d;
+      --line: #b8cfd6;
+      --card: #ffffff;
+
+      --pad: 9.9mm;
+      --radius: 2.65mm;
+      --col-left: 84mm;
+      --col-right: 98.4mm;
     }
 
     @page {
@@ -42,17 +55,37 @@
     }
 
     body {
+      position: relative;
       width: 210mm;
       min-height: 297mm;
       margin: 0 auto;
-      display: flex;
-      flex-direction: column;
+      padding: var(--pad) var(--pad) 8mm;
       background: #fff;
-      color: var(--body);
-      font-family: "Inter", "Segoe UI", Arial, sans-serif;
-      font-size: 8.9pt;
-      line-height: 1.45;
+      color: var(--ink);
+      font-family: "Archivo", "Segoe UI", Arial, sans-serif;
+      font-stretch: 90%;
+      font-size: 8.7pt;
+      line-height: 1.42;
       -webkit-font-smoothing: antialiased;
+    }
+
+    /* Full-bleed gold band; the header card sits on top of it and runs past
+       its lower edge, exactly as in the reference. */
+    .band {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 28mm;
+      background: var(--gold);
+    }
+
+    .card {
+      position: relative;
+      background: var(--card);
+      border: .75pt solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 .5mm 1.4mm rgba(9, 51, 63, .10);
     }
 
     a {
@@ -60,403 +93,464 @@
       text-decoration: none;
     }
 
-    /* URLs are real PDF link annotations - give them a hairline underline so a
-       reader can see there is something to click. */
+    /* URLs are real PDF link annotations - a hairline underline tells the
+       reader there is something to click. */
     a[href^="http"],
     a[href^="mailto"] {
       text-decoration: underline;
       text-decoration-thickness: .4pt;
-      text-underline-offset: 1.6pt;
-      text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+      text-underline-offset: 1.5pt;
+      text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
     }
+
+    /* ---------------------------------------------------------- header */
 
     .head {
       display: flex;
       align-items: center;
-      gap: 6mm;
-      padding: 8mm 11mm 5.5mm;
-      border-bottom: 2.4pt solid var(--accent);
+      gap: 7mm;
+      height: 31.2mm;
+      padding-left: 10mm;
+      overflow: hidden;
     }
 
+    /* Cut-out portrait: runs the full height of the card, its own aspect
+       ratio (216x286) deciding the width - same as the reference. */
     .head__photo {
       flex: 0 0 auto;
-      width: 25mm;
-      height: 25mm;
-      border-radius: 50%;
-      object-fit: cover;
-      object-position: 50% 20%;
-      border: 1.2pt solid var(--line);
+      align-self: stretch;
+      width: auto;
+      height: 100%;
+      object-fit: contain;
+      object-position: 50% 100%;
+    }
+
+    .head__text {
+      min-width: 0;
     }
 
     .head__name {
-      font-family: "Sora", "Segoe UI", Arial, sans-serif;
-      font-size: 21pt;
+      font-size: 27pt;
       font-weight: 700;
-      letter-spacing: -0.015em;
-      line-height: 1.05;
+      letter-spacing: -.005em;
+      line-height: 1.02;
       color: var(--ink);
     }
 
     .head__role {
-      margin-top: 1.2mm;
-      font-size: 10.2pt;
+      margin-top: 1.6mm;
+      font-size: 11.4pt;
       font-weight: 600;
       letter-spacing: .015em;
       color: var(--accent);
     }
 
-    .head__meta {
-      margin-top: 2.6mm;
-      font-size: 8.4pt;
-      color: var(--muted);
-      line-height: 1.65;
-    }
-
-    .head__meta b {
-      font-weight: 600;
-      color: var(--body);
-    }
-
-    .sep {
-      display: inline-block;
-      margin: 0 1.6mm;
-      color: var(--line);
-    }
+    /* --------------------------------------------------------- summary */
 
     .summary {
-      padding: 4.4mm 11mm;
-      border-bottom: .8pt solid var(--line);
-      font-size: 8.9pt;
-      line-height: 1.5;
-      color: var(--body);
+      margin-top: 3.3mm;
+      padding: 3mm 5mm;
+      font-size: 8.7pt;
+      line-height: 1.46;
+      color: var(--ink-deep);
     }
 
     .summary strong {
-      font-weight: 600;
-      color: var(--ink);
+      font-weight: 700;
     }
 
-    .grid {
+    /* --------------------------------------------------------- columns */
+
+    .cols {
       display: flex;
-      align-items: stretch;
-      /* fills whatever is left of the page so the sidebar reaches the bottom edge */
-      flex: 1 1 auto;
+      align-items: flex-start;
+      gap: 7.8mm;
+      margin-top: 4.6mm;
     }
 
-    .col--side {
-      flex: 0 0 60mm;
-      padding: 6.5mm 6mm 5mm 11mm;
-      background: var(--side);
-      border-right: .8pt solid var(--line);
+    .col--left {
+      flex: 0 0 var(--col-left);
     }
 
-    .col--main {
-      flex: 1 1 auto;
-      padding: 6.5mm 11mm 8mm 7mm;
+    .col--right {
+      flex: 0 0 var(--col-right);
       min-width: 0;
     }
 
+    /* Section headings sit outside the cards, above them. */
     h2 {
-      font-family: "Sora", "Segoe UI", Arial, sans-serif;
-      font-size: 8.6pt;
+      font-size: 12.4pt;
       font-weight: 700;
-      letter-spacing: .13em;
+      letter-spacing: .012em;
       text-transform: uppercase;
-      color: var(--accent);
-      padding-bottom: 1.1mm;
-      border-bottom: 1pt solid var(--accent);
-      margin-bottom: 2.8mm;
+      color: var(--ink);
+      margin-bottom: 2.1mm;
     }
 
     section + section {
-      margin-top: 4.4mm;
+      margin-top: 3.4mm;
     }
+
+    .card--body {
+      padding: 3.2mm 4mm;
+    }
+
+    /* ----------------------------------------------------------- parts */
 
     h3 {
       font-size: 9.6pt;
       font-weight: 700;
       color: var(--ink);
-      line-height: 1.28;
-    }
-
-    .org {
-      font-size: 8.6pt;
-      font-weight: 600;
-      color: var(--accent);
-      margin-top: .5mm;
-    }
-
-    .when {
-      font-size: 7.9pt;
-      font-weight: 500;
-      color: var(--muted);
-      white-space: nowrap;
+      line-height: 1.26;
     }
 
     .row {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
-      gap: 4mm;
+      gap: 3mm;
+    }
+
+    .when {
+      font-size: 8pt;
+      font-weight: 600;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    .org {
+      font-size: 8.5pt;
+      font-weight: 600;
+      margin-top: .5mm;
     }
 
     .note {
-      font-size: 8.5pt;
-      color: var(--body);
-      margin-top: 1.3mm;
+      font-size: 8.4pt;
+      margin-top: .9mm;
     }
 
     ul {
       list-style: none;
-      margin-top: 1.5mm;
+      margin-top: 1.4mm;
     }
 
     li {
       position: relative;
-      padding-left: 3.4mm;
-      margin-bottom: 1.45mm;
-      font-size: 8.8pt;
-      line-height: 1.47;
+      padding-left: 3.2mm;
+      margin-bottom: .95mm;
+      font-size: 8.6pt;
+      line-height: 1.38;
     }
 
     li::before {
       content: "";
       position: absolute;
-      left: 0;
-      top: 1.55mm;
-      width: 1.25mm;
-      height: 1.25mm;
+      left: .2mm;
+      top: 1.5mm;
+      width: 1.15mm;
+      height: 1.15mm;
       border-radius: 50%;
       background: var(--accent);
     }
 
     .stack {
-      margin-top: 1.6mm;
+      margin-top: 1.2mm;
       font-size: 7.9pt;
       font-weight: 500;
-      color: var(--muted);
+      color: var(--ink-deep);
+    }
+
+    .stack b {
+      font-weight: 700;
     }
 
     .entry + .entry {
-      margin-top: 5mm;
-      padding-top: 5mm;
-      border-top: .8pt dotted var(--line);
+      margin-top: 3mm;
+      padding-top: 3mm;
+      border-top: .75pt solid var(--line);
     }
 
+    /* ------------------------------------------------------- left rail */
+
+    .contact__row {
+      display: flex;
+      align-items: flex-start;
+      gap: 2.4mm;
+      font-size: 8.5pt;
+      line-height: 1.35;
+    }
+
+    .contact__row + .contact__row {
+      margin-top: 1.65mm;
+    }
+
+    .contact__row svg {
+      flex: 0 0 auto;
+      width: 3.5mm;
+      height: 3.5mm;
+      margin-top: .35mm;
+      stroke: var(--accent);
+      fill: none;
+      stroke-width: 1.7;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .contact__row span {
+      min-width: 0;
+      word-break: break-word;
+    }
+
+    /* Skill rows keep the label on the same line as the values: two lines
+       per category instead of three, which is what buys the single page. */
     .kv {
-      margin-bottom: 2mm;
+      font-size: 8.4pt;
+      line-height: 1.36;
     }
 
-    .kv__k {
-      font-size: 7.4pt;
+    .kv + .kv {
+      margin-top: 1.4mm;
+    }
+
+    .kv b {
       font-weight: 700;
-      letter-spacing: .07em;
-      text-transform: uppercase;
-      color: var(--ink);
-      margin-bottom: .5mm;
+      color: var(--accent);
     }
 
     .kv__v {
       font-size: 8.4pt;
-      line-height: 1.4;
-      color: var(--body);
+      line-height: 1.38;
     }
 
     .edu__deg {
-      font-size: 9.3pt;
+      font-size: 9.4pt;
       font-weight: 700;
-      color: var(--ink);
-      line-height: 1.3;
+      line-height: 1.25;
     }
 
     .edu__line {
       font-size: 8.4pt;
-      color: var(--body);
-      margin-top: .7mm;
+      margin-top: .8mm;
+      line-height: 1.35;
     }
 
     .edu__hl {
       display: inline-block;
-      margin-top: 1.5mm;
-      padding: .7mm 2mm;
-      border-radius: 1.4mm;
-      background: var(--accent-soft);
-      color: var(--accent);
-      font-size: 7.6pt;
-      font-weight: 600;
-      line-height: 1.5;
-    }
-
-    .pub__title {
-      font-size: 8.5pt;
+      margin-top: 1.8mm;
+      padding: .8mm 2.2mm;
+      border-radius: 1.2mm;
+      border: .75pt solid var(--line);
+      font-size: 7.9pt;
       font-weight: 700;
-      color: var(--ink);
+      color: var(--accent);
       line-height: 1.35;
     }
 
+    .pub__title {
+      font-size: 8.6pt;
+      font-weight: 700;
+      line-height: 1.32;
+    }
+
     .pub__meta {
-      font-size: 8pt;
-      color: var(--muted);
-      margin-top: 1mm;
-      line-height: 1.45;
+      font-size: 8.2pt;
+      margin-top: 1.2mm;
+      line-height: 1.38;
     }
 
     .pub__doi {
       display: block;
-      margin-top: 1mm;
-      font-size: 7.6pt;
-      color: var(--accent);
+      margin-top: 1.2mm;
+      font-size: 7.7pt;
       font-weight: 500;
+      color: var(--accent);
       word-break: break-all;
     }
   </style>
 </head>
 
 <body>
-  <!-- LinkedIn: this is the auto-generated URL, which is what works today. After
-       setting a custom URL, replace both the href and the text on the line below. -->
-  <header class="head">
-    <!-- Drop a portrait at resume/photo.jpg and it appears here; with no file the
-         header simply runs full width. -->
-    <img class="head__photo" src="photo.jpg" alt="Peerawut Nipakornpan"
-      onerror="this.hidden = true" />
-    <div>
+  <div class="band"></div>
+
+  <header class="card head">
+    <!-- Background-removed portrait, so it sits on the card with no seam. -->
+    <img class="head__photo" src="photo.png" alt="Peerawut Nipakornpan" onerror="this.hidden = true" />
+    <div class="head__text">
       <div class="head__name">PEERAWUT NIPAKORNPAN</div>
       <div class="head__role">Junior Full-Stack Developer</div>
-      <div class="head__meta">
-        <b>+66 91 872 1064</b><span class="sep">|</span><a
-          href="mailto:yeern12@gmail.com">yeern12@gmail.com</a><span class="sep">|</span>Bangkok, Thailand<br />
-        <a href="https://portfolio-offpeerawutt.vercel.app">portfolio-offpeerawutt.vercel.app</a><span class="sep">|</span><a
-          href="https://www.linkedin.com/in/peerawut-nipakornpan-3550a131a">linkedin.com/in/peerawut-nipakornpan-3550a131a</a><span class="sep">|</span><a
-          href="https://github.com/6531503060-nipeerawut">github.com/6531503060-nipeerawut</a>
-      </div>
     </div>
   </header>
 
-  <p class="summary">
+  <p class="card summary">
     Full-stack developer at <strong>Gendee.ai</strong>, building two production platforms in parallel: an AI content
     generation platform and a digital news app. I own features end to end &mdash; the PostgreSQL schema and access
     rules, then the API, then the screens on top. Software Engineering graduate with Second Class Honors and first
     author of a peer-reviewed IEEE conference paper.
   </p>
 
-  <div class="grid">
-    <aside class="col--side">
+  <div class="cols">
+    <aside class="col--left">
+      <section>
+        <h2>Contact</h2>
+        <div class="card card--body">
+          <div class="contact__row">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6.5 3.5h-3l-.5 3a17 17 0 0 0 14.5 14.5l3-.5v-3l-4-1.5-2 2a13 13 0 0 1-6.5-6.5l2-2Z" />
+            </svg>
+            <span>091-872-1064</span>
+          </div>
+          <div class="contact__row">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="2.5" y="5" width="19" height="14" rx="2" />
+              <path d="m3 6.5 9 6.5 9-6.5" />
+            </svg>
+            <span><a href="mailto:yeern12@gmail.com">yeern12@gmail.com</a></span>
+          </div>
+          <div class="contact__row">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 21.5s7-6.2 7-11.2a7 7 0 1 0-14 0c0 5 7 11.2 7 11.2Z" />
+              <circle cx="12" cy="10" r="2.6" />
+            </svg>
+            <span>Bangkok, Thailand</span>
+          </div>
+          <div class="contact__row">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M3 12h18M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18Z" />
+            </svg>
+            <span><a href="https://portfolio-offpeerawutt.vercel.app">portfolio-offpeerawutt.vercel.app</a></span>
+          </div>
+          <div class="contact__row">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M9 20.5c-4.5 1.4-4.5-2.4-6-3m12 5v-3.6a3.1 3.1 0 0 0-.9-2.4c3-.3 6-1.5 6-6.6a5.1 5.1 0 0 0-1.4-3.5 4.8 4.8 0 0 0-.1-3.5s-1.2-.3-3.8 1.4a13 13 0 0 0-7 0C5.2 2.1 4 2.4 4 2.4a4.8 4.8 0 0 0-.1 3.5A5.1 5.1 0 0 0 2.5 9.4c0 5.1 3 6.3 6 6.6a3.1 3.1 0 0 0-.9 2.4V22" />
+            </svg>
+            <span><a href="https://github.com/6531503060-nipeerawut">github.com/6531503060-nipeerawut</a></span>
+          </div>
+          <div class="contact__row">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="2.5" y="2.5" width="19" height="19" rx="2.5" />
+              <path d="M7 10.5V17M7 7v.01M11.5 17v-3.6a2.4 2.4 0 0 1 4.8 0V17M11.5 10.5V17" />
+            </svg>
+            <span><a
+                href="https://www.linkedin.com/in/peerawut-nipakornpan-3550a131a">linkedin.com/in/peerawut-nipakornpan-3550a131a</a></span>
+          </div>
+        </div>
+      </section>
+
       <section>
         <h2>Education</h2>
-        <div class="edu__deg">B.Eng. Software Engineering</div>
-        <div class="edu__line">Mae Fah Luang University<br />School of Applied Digital Technology</div>
-        <div class="edu__line">Graduated June 2026</div>
-        <span class="edu__hl">Second Class Honors<br />GPAX 3.27</span>
+        <div class="card card--body">
+          <div class="edu__deg">B.Eng. Software Engineering</div>
+          <div class="edu__line">Mae Fah Luang University<br />School of Applied Digital Technology</div>
+          <div class="edu__line">Graduated June 2026</div>
+          <span class="edu__hl">Second Class Honors &middot; GPAX 3.27</span>
+        </div>
       </section>
 
       <section>
         <h2>Technical Skills</h2>
-        <div class="kv">
-          <div class="kv__k">Languages</div>
-          <div class="kv__v">TypeScript, JavaScript, Go, Java, SQL</div>
-        </div>
-        <div class="kv">
-          <div class="kv__k">Frontend</div>
-          <div class="kv__v">Angular, React, Next.js, Ionic, Flutter, Tailwind CSS</div>
-        </div>
-        <div class="kv">
-          <div class="kv__k">Backend</div>
-          <div class="kv__v">Go (Fiber), Node.js (Express), Spring Boot, Deno, Edge Functions, REST APIs</div>
-        </div>
-        <div class="kv">
-          <div class="kv__k">Database</div>
-          <div class="kv__v">PostgreSQL, MSSQL, MySQL, Supabase</div>
-        </div>
-        <div class="kv">
-          <div class="kv__k">Tools</div>
-          <div class="kv__v">Git, GitHub, Swagger, Postman, Figma, Firebase Cloud Messaging</div>
+        <div class="card card--body">
+          <div class="kv"><b>Languages:</b> TypeScript, JavaScript, Go, Java, SQL</div>
+          <div class="kv"><b>Frontend:</b> Angular, React, Next.js, Ionic, Flutter, Tailwind CSS</div>
+          <div class="kv"><b>Backend:</b> Go (Fiber), Node.js (Express), Spring Boot, Deno Edge Functions, REST APIs
+          </div>
+          <div class="kv"><b>Database:</b> PostgreSQL, MSSQL, MySQL, Supabase</div>
+          <div class="kv"><b>Tools:</b> Git, GitHub, Swagger, Postman, Figma, Firebase Cloud Messaging</div>
         </div>
       </section>
 
       <section>
         <h2>Publication</h2>
-        <div class="pub__title">Implementation of an Integrated Waste Management System: A Case Study of the Doi Tung
-          Development Project</div>
-        <div class="pub__meta">
-          <b>First author</b> &mdash; Peerawut Nipakornpan, et al.<br />
-          IEEE International Conference Proceedings, 2026
+        <div class="card card--body">
+          <div class="pub__title">Implementation of an Integrated Waste Management System: A Case Study of the Doi
+            Tung Development Project</div>
+          <div class="pub__meta">
+            <b>First author</b> &mdash; Peerawut Nipakornpan, et al.<br />
+            IEEE International Conference Proceedings, 2026
+          </div>
+          <a class="pub__doi"
+            href="https://ieeexplore.ieee.org/document/11460046">ieeexplore.ieee.org/document/11460046</a>
         </div>
-        <a class="pub__doi" href="https://ieeexplore.ieee.org/document/11460046">ieeexplore.ieee.org/document/11460046</a>
       </section>
 
       <section>
-        <h2>Languages</h2>
-        <div class="kv__v">Thai &mdash; Native<br />English &mdash; Intermediate</div>
+        <h2>Language Skills</h2>
+        <div class="card card--body">
+          <div class="kv__v">Thai &mdash; Native<br />English &mdash; Intermediate</div>
+        </div>
       </section>
     </aside>
 
-    <main class="col--main">
+    <main class="col--right">
       <section>
-        <h2>Experience</h2>
+        <h2>Work Experience</h2>
+        <div class="card card--body">
+          <div class="entry">
+            <div class="row">
+              <h3>Junior Full-Stack Developer</h3>
+              <span class="when">Jun 2026 &ndash; Present</span>
+            </div>
+            <div class="org">Gendee.ai &mdash; Bangkok, Thailand &middot; Full-time, On-site</div>
+            <p class="note">
+              Two products in parallel: <b>Gendee.ai</b>, an AI content generation platform, and <b>CIRCLE</b>, a
+              digital news app. 218 commits across 6 repositories.
+            </p>
+            <ul>
+              <li>Shipped three systems end to end &mdash; B2B organizations, courses and notifications &mdash; each
+                from PostgreSQL schema and access rules, through Deno edge APIs, to the Angular UI.</li>
+              <li>Built Gendee for Business: shared credit pools, per-member usage limits, invite flows and the admin
+                console behind them.</li>
+              <li>Delivered the course platform: catalog, checkout, payment and classroom views, plus a staff
+                console.</li>
+              <li>Implemented push notifications: database triggers fanning out to Firebase Cloud Messaging, with an
+                in-app notification centre.</li>
+              <li>Connected the CIRCLE reader app (Ionic + Capacitor) and its editorial desk to the backend, and
+                simplified the news schema through the BCC24 to CIRCLE rebrand.</li>
+            </ul>
+            <div class="stack"><b>Stack:</b> Angular &middot; Ionic &middot; TypeScript &middot; Deno &middot;
+              Supabase &middot; PostgreSQL &middot; Firebase</div>
+            <div class="stack"><b>Live:</b> <a href="https://gendee.ai">gendee.ai</a> &middot;
+              <a href="https://circle-demo-gch.pages.dev/tabs/home">circle-demo-gch.pages.dev</a>
+            </div>
+          </div>
 
-        <div class="entry">
-          <div class="row">
-            <h3>Junior Full-Stack Developer</h3>
-            <span class="when">Jun 2026 &ndash; Present</span>
+          <div class="entry">
+            <div class="row">
+              <h3>Software Engineer Intern</h3>
+              <span class="when">Internship</span>
+            </div>
+            <div class="org">Mae Fah Luang Foundation under Royal Patronage &mdash; DoiTung Development Project,
+              Bangkok</div>
+            <p class="note">Project: <b>MyTissue</b> &mdash; internal wood inventory management system.</p>
+            <ul>
+              <li>Built the tracking of client wood inventory through every processing stage, keeping multi-step
+                workflows transactionally consistent.</li>
+              <li>Designed and implemented RESTful APIs in Go (Fiber) running in production.</li>
+              <li>Built the responsive Next.js front end used daily by operations staff.</li>
+              <li>Tuned MSSQL queries and constraints for performance and data consistency.</li>
+            </ul>
+            <div class="stack"><b>Stack:</b> Next.js &middot; Go (Fiber) &middot; MSSQL</div>
           </div>
-          <div class="org">Gendee.ai &mdash; Bangkok, Thailand &middot; Full-time, On-site</div>
-          <p class="note">
-            Two products in parallel: <b>Gendee.ai</b>, an AI content generation platform, and <b>CIRCLE</b>, a digital
-            news app. 218 commits across 6 repositories.
-          </p>
-          <ul>
-            <li>Shipped three systems end to end &mdash; B2B organizations, a course platform and notifications &mdash;
-              each from PostgreSQL schema and access rules, through Deno edge APIs, to the Angular interface.</li>
-            <li>Built Gendee for Business: shared credit pools, per-member usage limits and invite flows, plus the
-              admin console that manages them.</li>
-            <li>Delivered the course platform: catalog, checkout, payment and classroom views, with a staff console
-              behind it.</li>
-            <li>Implemented push notifications: database triggers fanning out to Firebase Cloud Messaging, with an
-              in-app notification centre.</li>
-            <li>Connected the CIRCLE reader app (Ionic + Capacitor) and its editorial desk to the backend, then
-              simplified the news schema during the BCC24 to CIRCLE rebrand.</li>
-          </ul>
-          <div class="stack">Angular &middot; Ionic &middot; Capacitor &middot; TypeScript &middot; Deno &middot;
-            Supabase &middot; PostgreSQL &middot; Firebase FCM</div>
-          <div class="stack">Live: <a href="https://gendee.ai">gendee.ai</a> &middot;
-            <a href="https://circle-demo-gch.pages.dev/tabs/home">circle-demo-gch.pages.dev</a></div>
-        </div>
-
-        <div class="entry">
-          <div class="row">
-            <h3>Software Engineer Intern</h3>
-            <span class="when">Internship</span>
-          </div>
-          <div class="org">Mae Fah Luang Foundation under Royal Patronage &mdash; DoiTung Development Project, Bangkok
-          </div>
-          <p class="note">Project: <b>MyTissue</b> &mdash; internal wood inventory management system.</p>
-          <ul>
-            <li>Built the system that tracks client wood inventory through every processing stage, with multi-step
-              workflows kept transactionally consistent.</li>
-            <li>Designed and implemented RESTful APIs in Go (Fiber) running in production.</li>
-            <li>Built the responsive Next.js front end used daily by operations staff.</li>
-            <li>Tuned MSSQL queries and constraints for query performance and data consistency.</li>
-          </ul>
-          <div class="stack">Next.js &middot; Go (Fiber) &middot; MSSQL</div>
         </div>
       </section>
 
       <section>
         <h2>Selected Project</h2>
-        <div class="entry">
-          <div class="row">
-            <h3>DoiTung Waste Management System</h3>
-            <span class="when">Senior Project</span>
+        <div class="card card--body">
+          <div class="entry">
+            <div class="row">
+              <h3>DoiTung Waste Management System</h3>
+              <span class="when">Senior Project</span>
+            </div>
+            <div class="org">Mae Fah Luang University</div>
+            <ul>
+              <li>Web system for community waste collection and recycling, surfacing waste generation patterns so
+                collection can be planned instead of guessed.</li>
+              <li>Basis for the peer-reviewed IEEE paper listed under Publication.</li>
+            </ul>
+            <div class="stack"><b>Stack:</b> React &middot; Node.js (Express) &middot; MySQL</div>
           </div>
-          <div class="org">Mae Fah Luang University</div>
-          <ul>
-            <li>Web system for community waste collection and recycling, surfacing waste generation patterns so
-              collection can be planned instead of guessed.</li>
-            <li>Became the basis for a peer-reviewed IEEE conference paper (see Publication).</li>
-          </ul>
-          <div class="stack">React &middot; Node.js (Express) &middot; MySQL</div>
-          <div class="stack">Code: <a href="https://github.com/6531503060-nipeerawut">github.com/6531503060-nipeerawut</a></div>
         </div>
       </section>
     </main>
