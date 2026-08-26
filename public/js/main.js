@@ -29,6 +29,30 @@
     return Array.prototype.slice.call((ctx || document).querySelectorAll(sel));
   };
 
+  /*
+   * URL helpers.
+   *
+   * Now that the site is more than one document a nav href can be "/",
+   * "/about" or "/#skills", and only the last kind describes somewhere on
+   * the page currently being viewed. Trailing slashes are stripped so "/"
+   * and "" compare equal.
+   */
+  function currentPath() {
+    return (location.pathname || "/").replace(/\/+$/, "") || "/";
+  }
+
+  function routeOf(link) {
+    var href = link.getAttribute("href") || "";
+    var cut = href.indexOf("#");
+    return (cut < 0 ? href : href.slice(0, cut)).replace(/\/+$/, "") || "/";
+  }
+
+  function hashOf(link) {
+    var href = link.getAttribute("href") || "";
+    var cut = href.indexOf("#");
+    return cut < 0 ? "" : href.slice(cut + 1);
+  }
+
   /* Run a callback at most once per animation frame. */
   function rafThrottle(fn) {
     var queued = false;
@@ -119,11 +143,17 @@
     if (!toastStack) return;
 
     var el = document.createElement("div");
-    el.className = "toast" + (variant === "error" ? " toast--error" : "");
+    el.className =
+      "toast flex items-center gap-[.7rem] rounded-full border border-line-strong bg-glass-strong " +
+      "px-5 py-[.8rem] text-[.89rem] font-medium text-ink shadow-lg animate-toast-in";
 
     var icon = variant === "error" ? "M12 8v5m0 3.5v.01" : "M20 6L9 17l-5-5";
+    var tone = variant === "error"
+      ? "bg-brand-4"
+      : "bg-[image:var(--gradient-brand)]";
     el.innerHTML =
-      '<span class="toast__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+      '<span class="grid size-[22px] flex-none place-items-center rounded-full text-white ' + tone +
+      '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="size-[13px]" ' +
       'stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="' + icon + '"/></svg></span>' +
       "<span></span>";
     el.lastChild.textContent = message;
@@ -131,7 +161,8 @@
     toastStack.appendChild(el);
 
     setTimeout(function () {
-      el.classList.add("is-leaving");
+      el.classList.remove("animate-toast-in");
+      el.classList.add("animate-toast-out");
       setTimeout(function () {
         if (el.parentNode) el.parentNode.removeChild(el);
       }, 380);
@@ -226,9 +257,30 @@
     var pill = $("#navPill");
     var links = $$(".nav__link");
     var drawerLinks = $$(".drawer__link");
-    var sections = links
-      .map(function (l) { return document.querySelector(l.getAttribute("href")); })
-      .filter(Boolean);
+    var here = currentPath();
+
+    // Index-aligned with links; a null marks an entry the spy skips.
+    var targets = links.map(function (link) {
+      if (routeOf(link) !== here) return null;
+      var id = hashOf(link) || link.getAttribute("data-section");
+      return id ? document.getElementById(id) : null;
+    });
+    var sections = targets.filter(Boolean);
+
+    /*
+     * A route with no anchors of its own — About, Contact, Profile — has
+     * nothing to spy on, so its entry is simply active for as long as we
+     * are on it. Resolved once here rather than re-derived every scroll.
+     */
+    var staticId = null;
+    if (!sections.length) {
+      for (var s = 0; s < links.length; s++) {
+        if (routeOf(links[s]) === here) {
+          staticId = links[s].getAttribute("data-section");
+          break;
+        }
+      }
+    }
 
     var pillGeom = [];
     var tops = [];
@@ -261,13 +313,13 @@
       var index = -1;
 
       links.forEach(function (link, i) {
-        var on = link.getAttribute("href") === "#" + id;
+        var on = link.getAttribute("data-section") === id;
         link.classList.toggle("is-active", on);
         if (on) index = i;
       });
 
       drawerLinks.forEach(function (link) {
-        link.classList.toggle("is-active", link.getAttribute("href") === "#" + id);
+        link.classList.toggle("is-active", link.getAttribute("data-section") === id);
       });
 
       if (index >= 0) movePill(index);
@@ -281,6 +333,8 @@
         stuck = scrolled;
         nav.classList.toggle("is-stuck", scrolled);
       }
+
+      if (staticId) { setActive(staticId); return; }
 
       // The section occupying the viewport's upper third wins.
       var line = m.y + m.vh * 0.32;
@@ -315,7 +369,7 @@
 
     var drawerLinks = $$(".drawer__link", drawer);
     // Content that must not be reachable while the overlay covers it.
-    var behind = [$("#main"), $(".footer")].filter(Boolean);
+    var behind = [$("#main"), $("footer")].filter(Boolean);
     var supportsInert = "inert" in HTMLElement.prototype;
     var isOpen = false;
 
@@ -393,12 +447,14 @@
       el.focus({ preventScroll: true });
     }
 
-    $$('a[href^="#"]').forEach(function (anchor) {
+    $$('a[href*="#"]').forEach(function (anchor) {
       anchor.addEventListener("click", function (e) {
-        var id = this.getAttribute("href");
-        if (!id || id === "#") return;
+        if (routeOf(this) !== currentPath()) return;
 
-        var target = document.querySelector(id);
+        var id = hashOf(this);
+        if (!id) return;
+
+        var target = document.getElementById(id);
         if (!target) return;
 
         e.preventDefault();
@@ -413,7 +469,7 @@
         focusTarget(target);
 
         // Keep the URL shareable without letting the browser jump the page.
-        if (history.replaceState) history.replaceState(null, "", id);
+        if (history.replaceState) history.replaceState(null, "", "#" + id);
       });
     });
   }
@@ -447,7 +503,7 @@
   /* ── 7. Scroll reveal ──────────────────────────────────────────── */
 
   function setupReveal() {
-    var items = $$(".reveal");
+    var items = $$("[data-reveal]");
     if (!items.length) return;
 
     // Stands down the stylesheet's failsafe, which reveals everything on a
@@ -773,8 +829,8 @@
    * typewriter via its own handle — whenever their section leaves the viewport.
    */
   function setupAnimationBudget(typewriter) {
-    var hero = $(".hero");
-    var zones = [hero, $(".marquee")].filter(Boolean);
+    var hero = $("#home");
+    var zones = [hero, $("[data-marquee]")].filter(Boolean);
 
     if (!zones.length || !("IntersectionObserver" in window)) {
       typewriter.start();

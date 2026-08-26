@@ -1,0 +1,319 @@
+@import "tailwindcss";
+
+/* =====================================================================
+   Peerawut Nipakornpan — Portfolio
+   Design system: "Aurora Glass", expressed as Tailwind v4 theme tokens.
+
+   Everything below is CONFIGURATION, not component styling: the palette
+   the theme toggle swaps between, the tokens Tailwind turns into utility
+   classes, the keyframes those utilities reference, and the handful of
+   pseudo-elements no class can be attached to. There are no component
+   classes here and no second stylesheet in the project — every element
+   is styled by utilities in its own JSX.
+   ===================================================================== */
+
+/* The head script writes data-theme on <html> before first paint, so the
+   dark variant keys off that attribute rather than the media query. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ── Palette ─────────────────────────────────────────────────────────
+   Raw values only. @theme inline below hands them to Tailwind, which is
+   what lets one `bg-surface` resolve to a different colour per theme. */
+:root {
+  color-scheme: light;
+
+  /* Brand ramp — identical in both themes, so the signature gradient
+     never shifts hue when the palette does. */
+  --brand-1: #4f46e5;
+  --brand-2: #a855f7;
+  --brand-3: #06b6d4;
+  --brand-4: #f43f5e;
+
+  /* Composed once here rather than per use. Custom properties substitute
+     lazily, so the brand-* inside these resolve against whichever theme
+     the element using them sits in. */
+  --gradient-brand: linear-gradient(115deg, var(--brand-1), var(--brand-2) 48%, var(--brand-3));
+  --gradient-text: linear-gradient(100deg, var(--brand-1), var(--brand-2) 42%, var(--brand-3) 88%);
+  --gradient-line: linear-gradient(90deg, transparent, var(--line-strong) 18%, var(--line-strong) 82%, transparent);
+
+  --bg: #eceff8;
+  --bg-deep: #dfe5f3;
+  --surface: #ffffff;
+  --surface-glass: rgb(255 255 255 / 0.88);
+  --surface-glass-strong: rgb(255 255 255 / 0.96);
+  --surface-sunken: rgb(15 23 42 / 0.035);
+
+  --text: #080d1c;
+  --text-soft: #2b3450;
+  --text-muted: #515b79;
+  --text-faint: #7a839e;
+
+  --line: rgb(10 15 31 / 0.1);
+  --line-strong: rgb(10 15 31 / 0.17);
+
+  --shadow-xs-v: 0 1px 2px rgb(10 15 31 / 0.05);
+  --shadow-sm-v: 0 2px 6px rgb(10 15 31 / 0.07);
+  --shadow-md-v: 0 8px 20px -12px rgb(10 15 31 / 0.22);
+  --shadow-lg-v: 0 20px 40px -20px rgb(10 15 31 / 0.3);
+  --shadow-brand-v: 0 12px 28px -14px rgb(79 70 229 / 0.6);
+
+  /* Ambient layer strengths. The aurora has to be far stronger on a dark
+     ground to read at all, so it is a token rather than a fixed opacity. */
+  --aurora-alpha: 0.16;
+  --grid-alpha: 0.05;
+  --noise-alpha: 0.022;
+
+  /* Procedural film grain, kept inline so the page ships zero image
+     requests for it. */
+  --noise-url: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --brand-1: #6d7cff;
+  --brand-2: #b76bff;
+  --brand-3: #22d3ee;
+  --brand-4: #fb7185;
+
+  --bg: #05070f;
+  --bg-deep: #01030a;
+  --surface: #0c1122;
+  --surface-glass: rgb(14 19 38 / 0.8);
+  --surface-glass-strong: rgb(12 17 34 / 0.92);
+  --surface-sunken: rgb(255 255 255 / 0.035);
+
+  --text: #eaeefb;
+  --text-soft: #c3cade;
+  --text-muted: #9099b4;
+  --text-faint: #6b7490;
+
+  --line: rgb(255 255 255 / 0.09);
+  --line-strong: rgb(255 255 255 / 0.17);
+
+  --shadow-xs-v: 0 1px 2px rgb(0 0 0 / 0.5);
+  --shadow-sm-v: 0 2px 6px rgb(0 0 0 / 0.5);
+  --shadow-md-v: 0 10px 22px -12px rgb(0 0 0 / 0.75);
+  --shadow-lg-v: 0 22px 44px -20px rgb(0 0 0 / 0.85);
+  --shadow-brand-v: 0 12px 30px -12px rgb(109 124 255 / 0.6);
+
+  --aurora-alpha: 0.42;
+  --grid-alpha: 0.055;
+  --noise-alpha: 0.038;
+}
+
+/* ── Tokens Tailwind reads ───────────────────────────────────────────
+   `inline` is what makes these follow the palette above at runtime: the
+   generated utilities reference the custom property rather than baking
+   in whichever value was current at build time. */
+@theme inline {
+  --color-brand-1: var(--brand-1);
+  --color-brand-2: var(--brand-2);
+  --color-brand-3: var(--brand-3);
+  --color-brand-4: var(--brand-4);
+
+  --color-canvas: var(--bg);
+  --color-canvas-deep: var(--bg-deep);
+  --color-surface: var(--surface);
+  --color-glass: var(--surface-glass);
+  --color-glass-strong: var(--surface-glass-strong);
+  --color-sunken: var(--surface-sunken);
+
+  --color-ink: var(--text);
+  --color-ink-soft: var(--text-soft);
+  --color-ink-muted: var(--text-muted);
+  --color-ink-faint: var(--text-faint);
+
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+
+  --shadow-xs: var(--shadow-xs-v);
+  --shadow-sm: var(--shadow-sm-v);
+  --shadow-md: var(--shadow-md-v);
+  --shadow-lg: var(--shadow-lg-v);
+  --shadow-brand: var(--shadow-brand-v);
+}
+
+/* Fixed tokens: the same in both themes, so they need no indirection. */
+@theme {
+  --font-display: "Sora", "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --radius-brand-sm: 10px;
+  --radius-brand: 16px;
+  --radius-brand-lg: 24px;
+  --radius-brand-xl: 32px;
+
+  /* The reading column and the section rhythm. */
+  --spacing-shell: 1180px;
+  --spacing-gutter: clamp(1.15rem, 4vw, 2.5rem);
+  --spacing-section: clamp(2.5rem, 6vh, 5rem);
+
+  --ease-brand: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-io: cubic-bezier(0.65, 0.05, 0.36, 1);
+
+  --animate-enter-up: enter-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  --animate-hue: hue-shift 9s ease-in-out infinite;
+  --animate-hue-slow: hue-shift 11s ease-in-out infinite;
+  --animate-ping-dot: ping-dot 2.4s cubic-bezier(0.65, 0.05, 0.36, 1) infinite;
+  --animate-ping-live: ping-live 2.4s cubic-bezier(0.65, 0.05, 0.36, 1) infinite;
+  --animate-caret: caret 1.05s steps(2, start) infinite;
+  --animate-orbit-slow: orbit 44s linear infinite;
+  --animate-orbit-mid: orbit 30s linear infinite reverse;
+  --animate-orbit-fast: orbit 18s linear infinite;
+  --animate-wheel: wheel 1.9s cubic-bezier(0.65, 0.05, 0.36, 1) infinite;
+  --animate-marquee: marquee 38s linear infinite;
+  --animate-toast-in: toast-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  --animate-toast-out: toast-out 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+
+  /* Failsafe for the scroll reveal: if the observer in main.js has not
+     reported in within two seconds, show the content and drop the slide.
+     Reading the page beats animating it. */
+  --animate-reveal-failsafe: reveal-failsafe 1ms linear 2s forwards;
+
+  @keyframes enter-up {
+    to { opacity: 1; transform: none; }
+  }
+
+  @keyframes reveal-failsafe {
+    to { opacity: 1; transform: none; }
+  }
+
+  @keyframes hue-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  @keyframes ping-dot {
+    0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--brand-3) 55%, transparent); }
+    70% { box-shadow: 0 0 0 7px transparent; }
+  }
+
+  @keyframes ping-live {
+    0%, 100% { box-shadow: 0 0 0 0 rgb(34 197 94 / 0.5); }
+    70% { box-shadow: 0 0 0 5px rgb(34 197 94 / 0); }
+  }
+
+  @keyframes caret {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  @keyframes orbit {
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes wheel {
+    0% { opacity: 0; transform: translateY(0); }
+    35% { opacity: 1; }
+    100% { opacity: 0; transform: translateY(12px); }
+  }
+
+  /* Two identical groups sit in the track, so travelling exactly half of
+     it lands on the copy and the loop is seamless. */
+  @keyframes marquee {
+    to { transform: translateX(-50%); }
+  }
+
+  @keyframes toast-in {
+    from { opacity: 0; transform: translateY(20px) scale(0.94); }
+    to { opacity: 1; transform: none; }
+  }
+
+  @keyframes toast-out {
+    to { opacity: 0; transform: translateY(12px) scale(0.96); }
+  }
+
+  @keyframes theme-wipe {
+    from { clip-path: circle(0% at var(--wx, 50%) var(--wy, 50%)); }
+    to { clip-path: circle(var(--wr, 150%) at var(--wx, 50%) var(--wy, 50%)); }
+  }
+}
+
+/* ── Base ────────────────────────────────────────────────────────────
+   Only what cannot be written as a class on an element: <html>'s scroll
+   behaviour, and selectors that address pseudo-elements. */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Clearance under the fixed navbar. main.js reads the same custom
+       property, so it stays declared rather than inlined here. */
+    --nav-offset: 76px;
+    scroll-padding-top: var(--nav-offset);
+  }
+
+  ::selection {
+    background: var(--brand-1);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--brand-1);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 11px;
+    height: 11px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border: 3px solid transparent;
+    border-radius: 99px;
+    background: var(--line-strong);
+    background-clip: content-box;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--brand-1);
+    background-clip: content-box;
+  }
+
+  /* The theme toggle expands the new palette out of the button that was
+     pressed. View-transition pseudo-elements belong to the document, not
+     to any element, so there is nothing to hang a utility class on. */
+  html.theme-anim::view-transition-new(root) {
+    animation: theme-wipe 0.62s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  html.theme-anim.theme-anim-reverse::view-transition-new(root) {
+    animation: none;
+  }
+
+  html.theme-anim.theme-anim-reverse::view-transition-old(root) {
+    animation: theme-wipe 0.62s cubic-bezier(0.22, 1, 0.36, 1) reverse forwards;
+  }
+}
+
+/* Infinite decorative loops keep the compositor busy even when scrolled
+   out of view. setupAnimationBudget in main.js flags the section that has
+   left the viewport, and this parks every loop inside it. It is a document
+   level motion policy rather than component styling, which is why it sits
+   here next to the reduced-motion block. */
+.anim-paused [class*="animate-"],
+.anim-paused [class*="animate-"]::after {
+  animation-play-state: paused;
+}
+
+/* Honour a visitor who has asked for less movement: kill the decorative
+   loops outright rather than leaving them running at a lower amplitude. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
