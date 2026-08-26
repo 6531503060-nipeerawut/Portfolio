@@ -5,22 +5,22 @@ import { cssVars } from "@/lib/site";
 /** Timeline card: nudges sideways on hover, towards its dot. */
 const TL_CARD =
   CARD +
-  " rounded-brand-lg p-[clamp(1.1rem,2.3vw,1.5rem)] " +
-  "transition-[transform,box-shadow,border-color] duration-[450ms] ease-brand " +
+  " rounded-brand-lg p-[clamp(1.1rem,2.3vw,1.5rem)] short:px-[1.1rem] short:py-[.85rem] " +
+  "transition-[transform,translate,scale,rotate,box-shadow,border-color] duration-[450ms] ease-brand " +
   "hover:translate-x-1 hover:shadow-lg hover:border-[color-mix(in_srgb,var(--brand-1)_35%,var(--line))] " +
   "max-[1024px]:hover:translate-x-0";
 
-const TL_HEAD = "mb-[.7rem] flex flex-wrap items-baseline justify-between gap-x-4 gap-y-[.4rem] max-[640px]:flex-col max-[640px]:items-start";
+const TL_HEAD = "mb-[.7rem] short:mb-2 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-[.4rem] max-[640px]:flex-col max-[640px]:items-start";
 
 const TL_ORG =
-  "mt-[.3rem] flex items-center gap-[.45rem] font-mono text-[.82rem] text-brand-1 [&_svg]:size-[15px] " +
+  "mt-[.3rem] short:mt-[.15rem] flex items-center gap-[.45rem] font-mono text-[.82rem] text-brand-1 [&_svg]:size-[15px] " +
   "max-[640px]:mt-[.15rem]";
 
 const TL_WHEN =
   "flex-none rounded-full border border-line bg-sunken px-3 py-[.3rem] font-mono text-[.72rem] " +
   "tracking-[.05em] whitespace-nowrap text-ink-muted";
 
-const TL_POINT = "flex gap-[.6rem] text-[.89rem] text-ink-muted [&_svg]:mt-[.28rem] [&_svg]:size-4 [&_svg]:flex-none [&_svg]:text-brand-3";
+const TL_POINT = "flex gap-[.6rem] text-[.89rem] short:text-[.86rem] text-ink-muted [&_svg]:mt-[.28rem] [&_svg]:size-4 [&_svg]:flex-none [&_svg]:text-brand-3";
 
 /**
  * The dot sits in the gutter the list reserves with its padding, so the
@@ -32,7 +32,7 @@ const TL_DOT =
   "absolute top-8 size-3 rounded-full bg-[image:var(--gradient-brand)] " +
   "left-[calc(clamp(1.6rem,3.5vw,2.4rem)*-1)] " +
   "shadow-[0_0_0_4px_var(--bg),0_0_18px_2px_color-mix(in_srgb,var(--brand-2)_55%,transparent)] " +
-  "max-[640px]:top-[1.6rem] max-[640px]:size-2.5";
+  "max-[640px]:top-[1.6rem] max-[640px]:left-[-1.4rem] max-[640px]:size-2.5";
 
 export function Experience() {
   return (
@@ -49,7 +49,7 @@ export function Experience() {
         {/* The ::before is the spine, fading in at the top and out at the
             bottom so it never ends on a hard edge. */}
         <ol
-          className="relative grid list-none gap-[clamp(.8rem,1.8vh,1.15rem)]
+          className="relative grid list-none gap-[clamp(.8rem,1.8vh,1.15rem)] short:gap-2
             pl-[clamp(1.6rem,3.5vw,2.4rem)]
             before:absolute before:top-[.6rem] before:bottom-[.6rem] before:left-[5px] before:w-0.5
             before:rounded-sm before:content-['']
@@ -74,12 +74,12 @@ export function Experience() {
                 <span className={TL_WHEN}>Jun 2026 &ndash; Present</span>
               </header>
 
-              <p className="text-[.94rem] text-ink-muted [&_strong]:font-semibold [&_strong]:text-ink-soft">
+              <p className="text-[.94rem] short:text-[.88rem] short:leading-[1.5] text-ink-muted [&_strong]:font-semibold [&_strong]:text-ink-soft">
                 Two platforms at once &mdash; <strong>Gendee.ai</strong>, an AI content studio, and{" "}
                 <strong>CIRCLE</strong>, a news app. 218 commits across six repositories.
               </p>
 
-              <ul className="my-[.8rem] grid gap-[.45rem]">
+              <ul className="my-[.8rem] short:my-[.55rem] grid gap-[.45rem] short:gap-[.3rem]">
                 <li className={TL_POINT}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"
                     strokeLinejoin="round" aria-hidden="true"><use href="#i-check" /></svg>
@@ -99,7 +99,7 @@ export function Experience() {
                 </li>
               </ul>
 
-              <div className="mt-[.85rem] flex flex-wrap gap-[.45rem]">
+              <div className="mt-[.85rem] short:mt-[.6rem] flex flex-wrap gap-[.45rem]">
                 <span className={TAG}>Angular</span>
                 <span className={TAG}>Ionic</span>
                 <span className={TAG}>Supabase</span>
@@ -130,12 +130,12 @@ export function Experience() {
                 </div>
               </header>
 
-              <p className="text-[.94rem] text-ink-muted [&_strong]:font-semibold [&_strong]:text-ink-soft">
+              <p className="text-[.94rem] short:text-[.88rem] short:leading-[1.5] text-ink-muted [&_strong]:font-semibold [&_strong]:text-ink-soft">
                 Built <strong>MyTissue</strong>, an internal system tracking client wood inventory through every
                 processing stage &mdash; multi-step workflows with transactional consistency.
               </p>
 
-              <div className="mt-[.85rem] flex flex-wrap gap-[.45rem]">
+              <div className="mt-[.85rem] short:mt-[.6rem] flex flex-wrap gap-[.45rem]">
                 <span className={TAG}>Next.js</span>
                 <span className={TAG}>Go / Fiber</span>
                 <span className={TAG}>MSSQL</span>

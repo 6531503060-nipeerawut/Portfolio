@@ -4,7 +4,10 @@ export function Footer({ year }: { year: number }) {
   return (
     <>
       <footer className="relative border-t border-line bg-glass py-10">
-        <div className={`${SHELL} flex flex-wrap items-center justify-between gap-4`}>
+        <div
+          className={`${SHELL} flex flex-wrap items-center justify-between gap-4
+            max-[640px]:flex-col max-[640px]:text-center`}
+        >
           <p className="text-[.87rem] text-ink-muted">
             &copy; {year} Peerawut Nipakornpan. All rights reserved.
           </p>
@@ -17,9 +20,9 @@ export function Footer({ year }: { year: number }) {
       {/* Invisible rather than removed, so the fade can run both ways;
           main.js adds .is-visible once the page has scrolled far enough. */}
       <button
-        className={`${ICON_BTN} invisible fixed right-[clamp(1rem,3vw,1.75rem)] bottom-[clamp(1rem,3vw,1.75rem)]
+        className={`${ICON_BTN} invisible fixed right-[clamp(1rem,3vw,1.75rem)] bottom-[clamp(1rem,3vw,1.75rem)] print:hidden
           z-[1000] size-[46px] translate-y-[14px] scale-[.85] rounded-full opacity-0
-          transition-[opacity,transform,visibility] duration-[400ms] ease-spring [transition-delay:0s,0s,400ms]
+          transition-[opacity,transform,translate,scale,rotate,visibility] duration-[400ms] ease-spring [transition-delay:0s,0s,400ms]
           [&.is-visible]:visible [&.is-visible]:translate-y-0 [&.is-visible]:scale-100
           [&.is-visible]:opacity-100 [&.is-visible]:[transition-delay:0s,0s,0s]`}
         id="toTop"

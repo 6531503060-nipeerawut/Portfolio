@@ -82,8 +82,8 @@ const GROUPS: SkillGroup[] = [
  */
 const SKILL =
   CARD +
-  " group/card overflow-hidden p-[clamp(1.1rem,2.2vw,1.45rem)] " +
-  "transition-[transform,box-shadow,border-color] duration-[450ms] ease-brand " +
+  " group/card overflow-hidden p-[clamp(1.1rem,2.2vw,1.45rem)] short:px-[1.1rem] short:py-[.85rem] " +
+  "transition-[transform,translate,scale,rotate,box-shadow,border-color] duration-[450ms] ease-brand " +
   "hover:-translate-y-1.5 hover:shadow-lg hover:border-[color-mix(in_srgb,var(--tint)_42%,var(--line))] " +
   "after:pointer-events-none after:absolute after:-top-[40%] after:-left-[20%] after:size-[260px] " +
   "after:rounded-full after:opacity-0 after:content-[''] " +
@@ -103,6 +103,7 @@ const SKILL_ICO =
  */
 const SKILL_ITEM =
   "group/item flex items-center gap-[.7rem] rounded-[10px] border border-transparent px-2 py-[.38rem] " +
+  "short:py-[.28rem] touch:py-2 " +
   "text-[.88rem] font-medium text-ink-soft [--logo:var(--brand)] " +
   "dark:[--logo:var(--brand-on-dark,var(--brand))] " +
   "transition-[background-color,border-color,color] duration-300 ease-brand " +
@@ -120,7 +121,7 @@ const SKILL_LOGO =
 /* A link affordance that does not change the row height. */
 const SKILL_OUT =
   "ml-auto size-[13px] flex-none -translate-x-0.5 translate-y-0.5 text-[var(--logo)] opacity-0 " +
-  "transition-[opacity,transform] duration-300 ease-brand " +
+  "transition-[opacity,transform,translate,scale,rotate] duration-300 ease-brand " +
   "group-hover/item:translate-x-0 group-hover/item:translate-y-0 group-hover/item:opacity-85 " +
   "group-focus-visible/item:translate-x-0 group-focus-visible/item:translate-y-0 group-focus-visible/item:opacity-85";
 
@@ -149,7 +150,7 @@ export function Skills() {
                   strokeLinejoin="round" aria-hidden="true"><use href={`#${group.icon}`} /></svg>
               </span>
               <h3 className={`${H3} mb-1`}>{group.title}</h3>
-              <span className="mb-[.85rem] block font-mono text-[.68rem] tracking-[.13em] uppercase text-ink-faint">
+              <span className="mb-[.85rem] block font-mono text-[.68rem] max-[640px]:text-[.74rem] tracking-[.13em] uppercase text-ink-faint">
                 {group.meta}
               </span>
               <ul className="grid gap-[.3rem]">

@@ -59,13 +59,13 @@
       width: 210mm;
       min-height: 297mm;
       margin: 0 auto;
-      padding: var(--pad) var(--pad) 8mm;
+      padding: var(--pad) var(--pad) 3mm;
       background: #fff;
       color: var(--ink);
       font-family: "Archivo", "Segoe UI", Arial, sans-serif;
       font-stretch: 90%;
       font-size: 8.7pt;
-      line-height: 1.42;
+      line-height: 1.4;
       -webkit-font-smoothing: antialiased;
     }
 
@@ -192,7 +192,7 @@
     }
 
     .card--body {
-      padding: 3.2mm 4mm;
+      padding: 2.8mm 4mm;
     }
 
     /* ----------------------------------------------------------- parts */
@@ -384,8 +384,8 @@
   <p class="card summary">
     Full-stack developer at <strong>Gendee.ai</strong>, building two production platforms in parallel: an AI content
     generation platform and a digital news app. I own features end to end &mdash; the PostgreSQL schema and access
-    rules, then the API, then the screens on top. Software Engineering graduate with Second Class Honors and first
-    author of a peer-reviewed IEEE conference paper.
+    rules, then the API, then the screens on top. Software Engineering graduate, Second Class Honors, first author of
+    a peer-reviewed IEEE paper.
   </p>
 
   <div class="cols">
@@ -453,10 +453,10 @@
         <div class="card card--body">
           <div class="kv"><b>Languages:</b> TypeScript, JavaScript, Go, Java, SQL</div>
           <div class="kv"><b>Frontend:</b> Angular, React, Next.js, Ionic, Flutter, Tailwind CSS</div>
-          <div class="kv"><b>Backend:</b> Go (Fiber), Node.js (Express), Spring Boot, Deno Edge Functions, REST APIs
+          <div class="kv"><b>Backend:</b> Go (Fiber), Node.js (Express), Spring Boot, Deno, Edge Functions, REST APIs
           </div>
           <div class="kv"><b>Database:</b> PostgreSQL, MSSQL, MySQL, Supabase</div>
-          <div class="kv"><b>Tools:</b> Git, GitHub, Swagger, Postman, Figma, Firebase Cloud Messaging</div>
+          <div class="kv"><b>Tools:</b> Git, GitHub, Swagger, Postman, Figma, Chart.js, Firebase Cloud Messaging</div>
         </div>
       </section>
 
@@ -499,17 +499,18 @@
             <ul>
               <li>Shipped three systems end to end &mdash; B2B organizations, courses and notifications &mdash; each
                 from PostgreSQL schema and access rules, through Deno edge APIs, to the Angular UI.</li>
-              <li>Built Gendee for Business: shared credit pools, per-member usage limits, invite flows and the admin
-                console behind them.</li>
+              <li>Built Gendee for Business: shared credit pools, per-member usage limits, invite flows, the admin
+                console and the operations dashboard &mdash; redeem codes, organizations and reporting.</li>
               <li>Delivered the course platform: catalog, checkout, payment and classroom views, plus a staff
                 console.</li>
               <li>Implemented push notifications: database triggers fanning out to Firebase Cloud Messaging, with an
                 in-app notification centre.</li>
               <li>Connected the CIRCLE reader app (Ionic + Capacitor) and its editorial desk to the backend, and
                 simplified the news schema through the BCC24 to CIRCLE rebrand.</li>
+              <li>Kept the details honest: mobile layouts, multi-language copy, accessibility, tests, handover docs.</li>
             </ul>
             <div class="stack"><b>Stack:</b> Angular &middot; Ionic &middot; TypeScript &middot; Deno &middot;
-              Supabase &middot; PostgreSQL &middot; Firebase</div>
+              Supabase &middot; PostgreSQL &middot; Chart.js &middot; Firebase</div>
             <div class="stack"><b>Live:</b> <a href="https://gendee.ai">gendee.ai</a> &middot;
               <a href="https://circle-th.com/tabs/home">circle-th.com</a>
             </div>
@@ -526,8 +527,8 @@
             <ul>
               <li>Built the tracking of client wood inventory through every processing stage, keeping multi-step
                 workflows transactionally consistent.</li>
-              <li>Designed and implemented RESTful APIs in Go (Fiber) running in production.</li>
-              <li>Built the responsive Next.js front end used daily by operations staff.</li>
+              <li>Designed and implemented the production RESTful APIs in Go (Fiber), and the responsive Next.js
+                front end used daily by operations staff.</li>
               <li>Tuned MSSQL queries and constraints for performance and data consistency.</li>
             </ul>
             <div class="stack"><b>Stack:</b> Next.js &middot; Go (Fiber) &middot; MSSQL</div>
@@ -547,7 +548,7 @@
             <ul>
               <li>Web system for community waste collection and recycling, surfacing waste generation patterns so
                 collection can be planned instead of guessed.</li>
-              <li>Basis for the peer-reviewed IEEE paper listed under Publication.</li>
+              <li>Basis for the IEEE paper listed under Publication.</li>
             </ul>
             <div class="stack"><b>Stack:</b> React &middot; Node.js (Express) &middot; MySQL</div>
           </div>

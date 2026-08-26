@@ -16,9 +16,9 @@ const MARQUEE = [
 
 const SOCIAL =
   "grid size-10 place-items-center rounded-xl border border-line bg-glass text-ink-muted " +
-  "transition-[transform,color,border-color,box-shadow] duration-[400ms] ease-spring " +
+  "transition-[transform,translate,scale,rotate,color,border-color,box-shadow] duration-[400ms] ease-spring " +
   "hover:-translate-y-[3px] hover:border-[color-mix(in_srgb,var(--brand-1)_45%,var(--line))] " +
-  "hover:text-brand-1 hover:shadow-md [&_svg]:size-[18px]";
+  "hover:text-brand-1 hover:shadow-md touch:size-11 [&_svg]:size-[18px]";
 
 export function Hero() {
   return (
@@ -26,6 +26,7 @@ export function Hero() {
       <section
         className="relative flex min-h-svh items-center overflow-x-clip
           pt-[clamp(5.5rem,12vh,8rem)] pb-[clamp(2.5rem,7vh,4.5rem)]
+          short:pt-[5.5rem] short:pb-[2.25rem]
           max-[1024px]:[min-height:auto] max-[1024px]:text-center"
         id="home"
       >
@@ -76,7 +77,7 @@ export function Hero() {
             </p>
 
             <p
-              className={`${ENTER} mb-6 max-w-[38rem] text-[clamp(.97rem,1.3vw,1.05rem)] text-ink-muted
+              className={`${ENTER} mb-6 short:mb-[1.15rem] max-w-[38rem] text-[clamp(.97rem,1.3vw,1.05rem)] text-ink-muted
                 max-[1024px]:mx-auto [&_strong]:font-semibold [&_strong]:text-ink-soft`}
               style={cssVars({ "--d": "360ms" })}
             >
@@ -86,7 +87,7 @@ export function Hero() {
             </p>
 
             <div
-              className={`${ENTER} mb-[1.6rem] flex flex-wrap gap-3 max-[1024px]:justify-center`}
+              className={`${ENTER} mb-[1.6rem] short:mb-[1.15rem] flex flex-wrap gap-3 max-[1024px]:justify-center`}
               style={cssVars({ "--d": "430ms" })}
             >
               <a className={`${BTN_PRIMARY} magnetic`} href="/#work">
@@ -179,10 +180,16 @@ export function Hero() {
           </div>
 
           {/* Capped against viewport height too, so the portrait cannot
-              drive the hero taller than the screen on a short laptop. */}
+              drive the hero taller than the screen on a short laptop.
+
+              The narrow cap keeps that height term rather than replacing it
+              with a flat 320px. On a phone held portrait 46vh is far past
+              320px, so nothing changes there — but held landscape it is
+              about 180px, and a flat cap would hand the whole first screen
+              to a photograph before a single word of the page. */}
           <div
             className={`${ENTER} relative mx-auto grid aspect-square w-full max-w-[min(400px,46vh)]
-              place-items-center max-[1024px]:row-start-1 max-[1024px]:max-w-[320px]`}
+              place-items-center max-[1024px]:row-start-1 max-[1024px]:max-w-[min(320px,46vh)]`}
             style={cssVars({ "--d": "300ms" })}
           >
             <div className="pointer-events-none absolute inset-0" aria-hidden="true">
@@ -228,7 +235,7 @@ export function Hero() {
         <a
           className="absolute bottom-[1.6rem] left-1/2 flex -translate-x-1/2 flex-col items-center
             gap-[.55rem] font-mono text-[.64rem] tracking-[.2em] uppercase text-ink-faint
-            max-[1024px]:hidden"
+            max-[1024px]:hidden print:hidden"
           href="/#skills"
           aria-label="Scroll to the next section"
         >
@@ -243,13 +250,13 @@ export function Hero() {
       </section>
 
       <div
-        className="relative overflow-hidden border-y border-line bg-glass py-[1.15rem]
+        className="relative overflow-hidden border-y border-line bg-glass py-[1.15rem] print:hidden
           [mask-image:linear-gradient(90deg,transparent,#000_12%,#000_88%,transparent)]
           group"
         aria-hidden="true"
         data-marquee
       >
-        <div className="flex w-max animate-marquee group-hover:[animation-play-state:paused]">
+        <div className="flex w-max animate-marquee [will-change:transform] group-hover:[animation-play-state:paused]">
           {/* Two identical groups: the track scrolls exactly one group
               width, so the second copy is what makes the loop seamless. */}
           {[0, 1].map((group) => (

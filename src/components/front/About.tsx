@@ -15,7 +15,10 @@ import { cssVars } from "@/lib/site";
 /** Stat tile: a gradient number over a mono caption. */
 const STAT =
   CARD +
-  " rounded-brand px-[.85rem] py-[.9rem] text-center transition-[transform,border-color] duration-[400ms] " +
+  " rounded-brand px-[.85rem] py-[.9rem] short:px-[.8rem] short:py-[.7rem] text-center " +
+  "max-[640px]:flex max-[640px]:items-center max-[640px]:justify-between max-[640px]:text-left " +
+  "max-[640px]:px-[1.1rem] max-[640px]:py-[.9rem] " +
+  "transition-[transform,translate,scale,rotate,border-color] duration-[400ms] " +
   "ease-brand hover:-translate-y-1 hover:border-[color-mix(in_srgb,var(--brand-1)_38%,var(--line))]";
 
 const STAT_NUM =
@@ -23,16 +26,20 @@ const STAT_NUM =
   "[font-variant-numeric:tabular-nums] bg-[image:var(--gradient-text)] bg-clip-text text-transparent";
 
 const STAT_LABEL =
-  "mt-[.4rem] font-mono text-[.64rem] leading-[1.35] tracking-[.12em] uppercase text-ink-faint";
+  "mt-[.4rem] font-mono text-[.64rem] leading-[1.35] tracking-[.12em] uppercase text-ink-faint " +
+  "max-[640px]:mt-0 max-[640px]:max-w-[70%] max-[640px]:text-right max-[640px]:text-[.72rem] " +
+  "max-[640px]:tracking-[.1em]";
 
 /** One row of the fact list. `+ li` gets the divider, so the first has none. */
-const FACT = "flex items-start gap-[.8rem] py-2 [&+li]:border-t [&+li]:border-line";
+const FACT =
+  "flex items-start gap-[.8rem] py-2 short:py-[.34rem] [&+li]:border-t [&+li]:border-line";
 
 const FACT_ICO =
   "grid size-8 flex-none place-items-center rounded-[11px] text-brand-1 " +
   "bg-[color-mix(in_srgb,var(--brand-1)_12%,transparent)] [&_svg]:size-[17px]";
 
-const FACT_K = "block font-mono text-[.65rem] tracking-[.15em] uppercase text-ink-faint";
+const FACT_K =
+  "block font-mono text-[.65rem] max-[640px]:text-[.72rem] tracking-[.15em] uppercase text-ink-faint";
 const FACT_V = "block text-[.91rem] font-medium leading-[1.35] text-ink";
 
 /**
@@ -42,7 +49,8 @@ const FACT_V = "block text-[.91rem] font-medium leading-[1.35] text-ink";
  */
 const LIVE_LINK =
   "group flex min-w-0 items-center gap-3 rounded-brand border border-line bg-sunken px-[.8rem] py-[.6rem] " +
-  "transition-[transform,border-color,box-shadow,background-color] duration-[400ms] ease-brand " +
+  "short:px-[.7rem] short:py-2 " +
+  "transition-[transform,translate,scale,rotate,border-color,box-shadow,background-color] duration-[400ms] ease-brand " +
   "hover:-translate-y-[3px] hover:border-[color-mix(in_srgb,var(--tint)_45%,var(--line))] " +
   "hover:bg-[color-mix(in_srgb,var(--tint)_7%,transparent)] hover:shadow-md";
 
@@ -52,7 +60,7 @@ const LIVE_ICO =
   "group-hover:scale-[1.07] group-hover:-rotate-6 [&_svg]:size-[18px]";
 
 const LIVE_ARROW =
-  "ml-auto flex-none text-ink-faint transition-[transform,color] duration-[400ms] ease-spring " +
+  "ml-auto flex-none text-ink-faint transition-[transform,translate,scale,rotate,color] duration-[400ms] ease-spring " +
   "group-hover:translate-x-[3px] group-hover:-translate-y-[3px] group-hover:text-[var(--tint)] " +
   "[&_svg]:size-[15px]";
 
@@ -100,6 +108,7 @@ export function About() {
           {/* Both columns end level; the bio absorbs whatever slack is left. */}
           <article
             className={`${CARD} ${REVEAL_LEFT} flex flex-col justify-center p-[clamp(1.4rem,2.8vw,2rem)]
+              short:px-[1.1rem] short:py-[.85rem] short:[&>p+p]:mt-[.6rem]
               [&>p]:text-[.97rem] [&>p]:text-ink-muted [&>p+p]:mt-[.8rem]`}
             data-reveal
           >
@@ -127,7 +136,7 @@ export function About() {
 
           <div className="grid gap-[clamp(.85rem,1.8vw,1.15rem)] grid-rows-[auto_1fr]">
             <ul
-              className={`${CARD} ${REVEAL_RIGHT} p-[clamp(1.15rem,2.4vw,1.6rem)]`}
+              className={`${CARD} ${REVEAL_RIGHT} p-[clamp(1.15rem,2.4vw,1.6rem)] short:px-[1.1rem] short:py-[.85rem]`}
               style={cssVars({ "--d": "80ms" })}
               data-reveal
             >
@@ -174,11 +183,11 @@ export function About() {
             </ul>
 
             <div
-              className={`${CARD} ${REVEAL_RIGHT} p-[clamp(1.25rem,2.6vw,1.6rem)]`}
+              className={`${CARD} ${REVEAL_RIGHT} p-[clamp(1.25rem,2.6vw,1.6rem)] short:px-[1.1rem] short:py-[.85rem]`}
               style={cssVars({ "--d": "240ms" })}
               data-reveal
             >
-              <span className="mb-[.65rem] block font-mono text-[.68rem] tracking-[.15em] uppercase text-ink-faint">
+              <span className="mb-[.65rem] short:mb-2 block font-mono text-[.68rem] max-[640px]:text-[.74rem] tracking-[.15em] uppercase text-ink-faint">
                 See them live
               </span>
               {/* Stacked so the full host name fits without truncating. */}

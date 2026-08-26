@@ -12,7 +12,7 @@
 export const SHELL = "mx-auto w-full max-w-shell px-gutter";
 
 /** Vertical rhythm between the numbered sections. */
-export const SECTION = "relative py-section";
+export const SECTION = "relative py-section short:py-8";
 
 /**
  * Glass card. The ::before is the hairline of brand colour along the top
@@ -21,7 +21,8 @@ export const SECTION = "relative py-section";
 export const CARD =
   "relative rounded-brand-lg border border-line bg-glass shadow-md " +
   "before:absolute before:inset-x-[12%] before:top-0 before:h-px before:opacity-70 before:content-[''] " +
-  "before:bg-[linear-gradient(90deg,transparent,color-mix(in_srgb,var(--brand-2)_55%,transparent),transparent)]";
+  "before:bg-[linear-gradient(90deg,transparent,color-mix(in_srgb,var(--brand-2)_55%,transparent),transparent)] " +
+  "print:border-[#ccc] print:bg-white print:shadow-none";
 
 /**
  * Button shell.
@@ -37,8 +38,13 @@ export const BTN =
   "whitespace-nowrap rounded-full border border-line-strong bg-surface px-6 py-[.85rem] " +
   "font-display text-[.94rem] font-semibold tracking-[-.01em] text-ink shadow-sm " +
   "[transform:translate(var(--mag-x,0px),calc(var(--mag-y,0px)+var(--lift,0px)))] " +
-  "transition-[transform,box-shadow,border-color,color,background-position] " +
+  "transition-[transform,translate,scale,rotate,box-shadow,border-color,color,background-position] " +
   "duration-[var(--tf-dur,350ms)] ease-brand " +
+  // main.js adds `is-tracking` for as long as the pointer is inside the
+  // button. Without this the magnetic pull is put through the 350ms ease
+  // on every pointermove, so the button trails the cursor instead of
+  // following it.
+  "[&.is-tracking]:[--tf-dur:0s] [&.is-tracking]:[will-change:transform] " +
   "hover:[--lift:-2px] hover:border-[color-mix(in_srgb,var(--brand-1)_45%,var(--line-strong))] hover:shadow-md " +
   "active:[--lift:0px] active:scale-[.985] " +
   "[&_svg]:size-[18px] [&_svg]:flex-none [&_svg]:transition-transform [&_svg]:duration-[400ms] [&_svg]:ease-spring " +
@@ -64,7 +70,8 @@ export const BTN_GHOST = BTN + " bg-glass hover:text-brand-1";
 export const EYEBROW =
   "mb-[.8rem] inline-flex items-center gap-[.6rem] rounded-full border border-line bg-glass " +
   "py-[.38rem] pr-[.85rem] pl-[.55rem] font-mono text-[.74rem] font-medium uppercase " +
-  "tracking-[.14em] text-ink-muted shadow-xs";
+  "tracking-[.14em] text-ink-muted shadow-xs " +
+  "short:mb-[.6rem] short:py-[.3rem]";
 
 /** Brand-gradient text. Wide background so the hue can drift across it. */
 export const GRAD =
@@ -73,7 +80,8 @@ export const GRAD =
 /** Section heading block: eyebrow, h2, and a muted line under it. */
 export const SECTION_HEAD =
   "mb-[clamp(1.5rem,3.6vh,2.75rem)] max-w-[46rem] " +
-  "[&>p]:mt-3 [&>p]:text-[clamp(.95rem,1.2vw,1.04rem)] [&>p]:text-ink-muted";
+  "[&>p]:mt-3 [&>p]:text-[clamp(.95rem,1.2vw,1.04rem)] [&>p]:text-ink-muted " +
+  "short:mb-4 short:[&>p]:mt-2 short:[&>p]:text-[.92rem]";
 
 /** Display headings. h1/h2/h3 are set per use rather than globally. */
 export const H1 =
@@ -96,12 +104,17 @@ export const H3 =
  */
 export const REVEAL =
   "translate-y-[26px] opacity-0 animate-reveal-failsafe " +
-  "transition-[opacity,transform] duration-[800ms] ease-brand [transition-delay:var(--d,0ms)] " +
+  "transition-[opacity,transform,translate,scale,rotate] duration-[800ms] ease-brand [transition-delay:var(--d,0ms)] " +
   "[&.is-in]:translate-y-0 [&.is-in]:opacity-100";
 
-/** First paint of the hero, which runs on a timer rather than an observer. */
-export const ENTER =
-  "translate-y-6 opacity-0 animate-enter-up [animation-delay:var(--d,0ms)]";
+/**
+ * First paint of the hero, which runs on a timer rather than an observer.
+ *
+ * The 24px rise lives inside the keyframe, not in a `translate-y-6` class
+ * here — see the note on @keyframes enter-up in globals.css. Nothing else
+ * on these elements touches `translate`, so the animation can own it.
+ */
+export const ENTER = "opacity-0 animate-enter-up [animation-delay:var(--d,0ms)]";
 
 /**
  * Directional reveals. Below 1024px the layout is a single column, so the
@@ -110,25 +123,26 @@ export const ENTER =
  */
 export const REVEAL_LEFT =
   "-translate-x-[30px] opacity-0 animate-reveal-failsafe " +
-  "transition-[opacity,transform] duration-[800ms] ease-brand [transition-delay:var(--d,0ms)] " +
+  "transition-[opacity,transform,translate,scale,rotate] duration-[800ms] ease-brand [transition-delay:var(--d,0ms)] " +
   "[&.is-in]:translate-x-0 [&.is-in]:opacity-100 " +
   "max-[1024px]:translate-x-0 max-[1024px]:translate-y-[26px] max-[1024px]:[&.is-in]:translate-y-0";
 
 export const REVEAL_RIGHT =
   "translate-x-[30px] opacity-0 animate-reveal-failsafe " +
-  "transition-[opacity,transform] duration-[800ms] ease-brand [transition-delay:var(--d,0ms)] " +
+  "transition-[opacity,transform,translate,scale,rotate] duration-[800ms] ease-brand [transition-delay:var(--d,0ms)] " +
   "[&.is-in]:translate-x-0 [&.is-in]:opacity-100 " +
   "max-[1024px]:translate-x-0 max-[1024px]:translate-y-[26px] max-[1024px]:[&.is-in]:translate-y-0";
 
 export const REVEAL_SCALE =
   "scale-[.94] opacity-0 animate-reveal-failsafe " +
-  "transition-[opacity,transform] duration-[800ms] ease-brand [transition-delay:var(--d,0ms)] " +
+  "transition-[opacity,transform,translate,scale,rotate] duration-[800ms] ease-brand [transition-delay:var(--d,0ms)] " +
   "[&.is-in]:scale-100 [&.is-in]:opacity-100";
 
 /** Heading block with the stat tiles pulled up beside the title. */
 export const SECTION_HEAD_SPLIT =
   "mb-[clamp(1.5rem,3.6vh,2.75rem)] flex max-w-none flex-wrap items-end justify-between gap-x-8 gap-y-4 " +
-  "[&>div]:max-w-[46rem] [&>div>p]:mt-3 [&>div>p]:text-[clamp(.95rem,1.2vw,1.04rem)] [&>div>p]:text-ink-muted";
+  "[&>div]:max-w-[46rem] [&>div>p]:mt-3 [&>div>p]:text-[clamp(.95rem,1.2vw,1.04rem)] [&>div>p]:text-ink-muted " +
+  "short:mb-[.7rem] short:[&>div>p]:mt-2 short:[&>div>p]:text-[.92rem]";
 
 /**
  * Tech tag. The hover reads --tint from whichever card encloses it, so a
@@ -137,14 +151,15 @@ export const SECTION_HEAD_SPLIT =
  */
 export const TAG =
   "rounded-lg border border-line bg-sunken px-3 py-[.34rem] font-mono text-[.74rem] font-medium text-ink-soft " +
-  "transition-[transform,color,border-color,background-color] duration-300 ease-brand " +
+  "transition-[transform,translate,scale,rotate,color,border-color,background-color] duration-300 ease-brand " +
   "hover:-translate-y-0.5 hover:text-[var(--tint,var(--brand-1))] " +
   "hover:border-[color-mix(in_srgb,var(--tint,var(--brand-1))_45%,var(--line))] " +
-  "hover:bg-[color-mix(in_srgb,var(--tint,var(--brand-1))_10%,transparent)]";
+  "hover:bg-[color-mix(in_srgb,var(--tint,var(--brand-1))_10%,transparent)] " +
+  "short:px-[.65rem] short:py-[.28rem]";
 
 /** Square glass button — the theme switch and the back-to-top control. */
 export const ICON_BTN =
   "grid size-[42px] place-items-center rounded-[14px] border border-line bg-glass text-ink-soft shadow-xs " +
-  "transition-[transform,color,border-color,background-color] duration-[400ms] ease-spring " +
+  "transition-[transform,translate,scale,rotate,color,border-color,background-color] duration-[400ms] ease-spring " +
   "hover:-translate-y-0.5 hover:border-[color-mix(in_srgb,var(--brand-1)_40%,var(--line))] hover:text-brand-1 " +
-  "[&_svg]:size-[19px]";
+  "touch:size-[44px] [&_svg]:size-[19px]";

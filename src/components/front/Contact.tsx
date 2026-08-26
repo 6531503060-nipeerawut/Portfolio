@@ -9,7 +9,7 @@ import { RESUME_HREF, cssVars } from "@/lib/site";
  */
 const CHANNEL =
   "group flex items-center gap-[.9rem] rounded-brand border border-line bg-glass px-5 py-[1.1rem] " +
-  "transition-[transform,border-color,box-shadow] duration-[400ms] ease-brand " +
+  "transition-[transform,translate,scale,rotate,border-color,box-shadow] duration-[400ms] ease-brand " +
   "hover:-translate-y-1 hover:border-[color-mix(in_srgb,var(--tint)_45%,var(--line))] hover:shadow-md";
 
 const CHANNEL_ICO =
@@ -24,7 +24,7 @@ const CHANNEL_HANDLE =
   "block overflow-hidden font-mono text-[.73rem] text-ellipsis whitespace-nowrap text-ink-faint";
 
 const CHANNEL_ARROW =
-  "ml-auto text-ink-faint transition-[transform,color] duration-[400ms] ease-spring " +
+  "ml-auto text-ink-faint transition-[transform,translate,scale,rotate,color] duration-[400ms] ease-spring " +
   "group-hover:translate-x-[3px] group-hover:-translate-y-[3px] group-hover:text-[var(--tint)] " +
   "[&_svg]:size-4";
 
@@ -37,7 +37,7 @@ export function Contact() {
             the rounded corners still clip it. */}
         <div
           className={`${CARD} ${REVEAL_SCALE} relative overflow-hidden rounded-brand-xl
-            p-[clamp(1.6rem,3.6vw,2.6rem)] text-center
+            p-[clamp(1.6rem,3.6vw,2.6rem)] short:p-7 text-center
             after:pointer-events-none after:absolute after:bottom-[-55%] after:left-1/2 after:aspect-[2/1]
             after:w-[130%] after:-translate-x-1/2 after:content-['']
             after:bg-[radial-gradient(ellipse_at_center,color-mix(in_srgb,var(--brand-2)_22%,transparent),transparent_65%)]
@@ -56,9 +56,10 @@ export function Contact() {
           {/* main.js toggles .is-copied here for a beat after a successful
               copy, which is what swaps the icon inside the button. */}
           <div
-            className="copy-mail mx-auto mb-7 inline-flex max-w-full items-center gap-[.85rem] rounded-full
+            className="copy-mail mx-auto mb-7 short:mb-5 inline-flex max-w-full items-center gap-[.85rem] rounded-full
+              max-[640px]:w-full max-[640px]:flex-col max-[640px]:gap-[.7rem] max-[640px]:rounded-brand max-[640px]:p-4
               border border-line-strong bg-glass-strong py-[.7rem] pr-3 pl-[1.35rem] shadow-md
-              transition-[transform,border-color,box-shadow] duration-[400ms] ease-brand
+              transition-[transform,translate,scale,rotate,border-color,box-shadow] duration-[400ms] ease-brand
               hover:-translate-y-0.5 hover:border-[color-mix(in_srgb,var(--brand-1)_45%,var(--line-strong))]
               hover:shadow-lg
               [&.is-copied_.i-copy]:hidden [&.is-copied_.i-check]:block"
@@ -84,7 +85,8 @@ export function Contact() {
               nipeerawutdev15@gmail.com
             </span>
             <button
-              className="inline-flex flex-none items-center gap-[.45rem] rounded-full
+              className="inline-flex min-h-0 touch:min-h-11 flex-none items-center gap-[.45rem] rounded-full
+                max-[640px]:w-full max-[640px]:justify-center
                 bg-[image:var(--gradient-brand)] px-[.95rem] py-2 font-display text-[.8rem] font-semibold
                 text-white transition-transform duration-[350ms] ease-spring hover:scale-[1.04]
                 [&_svg]:size-[15px]"

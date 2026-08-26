@@ -16,6 +16,30 @@
    dark variant keys off that attribute rather than the media query. */
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
+/*
+ * Laptops are wide but short. Width-based sizing gives those screens the
+ * roomiest spacing of all, which is exactly backwards — a 1440×800 laptop
+ * gets more padding than it has room for and every section spills past the
+ * fold. Below ~880px of viewport height the vertical rhythm tightens while
+ * the layout stays put; large monitors keep the generous version.
+ */
+@custom-variant short (@media (min-width: 1024px) and (max-height: 880px));
+
+/*
+ * Touch affordances. A finger is the same size whichever way the phone is
+ * held, so these key on the pointer rather than on a width — otherwise a
+ * landscape phone, which is wider than the phone breakpoint, would miss
+ * out. The desktop sizes land a couple of pixels under the 44px most touch
+ * guidelines ask for.
+ */
+@custom-variant touch (@media (pointer: coarse));
+
+/* Once the wordmark is hidden, the monogram is the whole of the home link. */
+@custom-variant touch-narrow (@media (pointer: coarse) and (max-width: 980px));
+
+/* Anything that follows a cursor has no meaning without one. */
+@custom-variant no-hover (@media (hover: none));
+
 /* ── Palette ─────────────────────────────────────────────────────────
    Raw values only. @theme inline below hands them to Tailwind, which is
    what lets one `bg-surface` resolve to a different colour per theme. */
@@ -173,12 +197,25 @@
      Reading the page beats animating it. */
   --animate-reveal-failsafe: reveal-failsafe 1ms linear 2s forwards;
 
+  /* The offset is declared here rather than as a `translate-*` class on the
+     element, which is what keeps this working through minification. Written
+     the other way — an offset on the element and `transform: none` in the
+     keyframe — Lightning CSS folds the reset down to
+     `transform: translate(0) scale(1) rotate(0)`, and that no longer clears
+     the standalone `translate` property Tailwind v4 actually put the offset
+     in. The hero then stays 24px low forever. With both ends of the
+     animation naming the same property there is nothing left to fold. */
   @keyframes enter-up {
-    to { opacity: 1; transform: none; }
+    from { opacity: 0; translate: 0 24px; }
+    to { opacity: 1; translate: 0 0; }
   }
 
+  /* This one cannot own its offset: the resting state has to exist as a
+     class, because the observer path transitions out of it and each
+     direction rests somewhere different. So the reset is spelt out as real
+     values — `none` is what invites the fold above. */
   @keyframes reveal-failsafe {
-    to { opacity: 1; transform: none; }
+    to { opacity: 1; translate: 0 0; scale: 1; rotate: 0deg; }
   }
 
   @keyframes hue-shift {
@@ -244,6 +281,23 @@
     scroll-padding-top: var(--nav-offset);
   }
 
+  /*
+   * Phone adjustments that are values rather than utilities: the navbar is
+   * shorter here, so an anchor should land higher; and the large radii were
+   * drawn for cards several hundred pixels wide — at phone width the same
+   * curve eats into the text it is supposed to frame.
+   */
+  @media (max-width: 640px) {
+    html {
+      --nav-offset: 70px;
+    }
+
+    :root {
+      --radius-brand-lg: 20px;
+      --radius-brand-xl: 24px;
+    }
+  }
+
   ::selection {
     background: var(--brand-1);
     color: #fff;
@@ -302,6 +356,16 @@
   animation-play-state: paused;
 }
 
+/* setupReveal() sets this on <html> the moment the observer starts watching,
+   which on any normal load is well inside the failsafe's two-second delay.
+   Pausing rather than clearing the animation is what makes both outcomes
+   safe: during the delay a paused animation never fires at all, so nothing
+   changes; past it the filled value is held, so content the failsafe already
+   revealed does not blink back out. */
+[data-reveal-ready] [data-reveal] {
+  animation-play-state: paused;
+}
+
 /* Honour a visitor who has asked for less movement: kill the decorative
    loops outright rather than leaving them running at a lower amplitude. */
 @media (prefers-reduced-motion: reduce) {
@@ -315,5 +379,32 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Both of these rest at an offset that only their animation or the
+     observer would undo. Neither runs meaningfully here, so the resting
+     state is cleared outright — otherwise the page is transparent for two
+     seconds and the hero never rises.
+
+     Written as real values, and with no `transform` in the block, for the
+     same reason as @keyframes enter-up above: given `transform: none`
+     alongside these, Lightning CSS folds the lot into
+     `transform: translate(0) scale(1)` and the `translate` the offset
+     actually lives in survives untouched. Nothing here needs `transform`
+     cleared anyway — the one element that sets it is a work card, and the
+     pointer effects that drive it do not run under this query at all. */
+  [data-reveal],
+  [class*="animate-enter-up"] {
+    opacity: 1 !important;
+    translate: 0 0 !important;
+    scale: 1 !important;
+    rotate: 0deg !important;
+  }
+
+  /* A blob that chases the cursor is the definition of what this query
+     asks us to stop doing. */
+  .spotlight {
+    display: none;
   }
 }

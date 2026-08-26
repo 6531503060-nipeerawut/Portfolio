@@ -14,7 +14,6 @@ import { RESUME_HREF } from "@/lib/site";
  * writes anything.
  */
 export default function AdminPage() {
-  const routes = SECTIONS.filter((section) => !section.href.includes("#"));
   const anchors = SECTIONS.filter((section) => section.href.includes("#"));
 
   return (
@@ -28,8 +27,8 @@ export default function AdminPage() {
 
       <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(min(220px,100%),1fr))]">
         <StatCard label="Navigation entries" value={SECTIONS.length} hint="Shared by the navbar and the mobile drawer." />
-        <StatCard label="Routes" value={routes.length} hint="Entries that resolve to a page of their own." />
-        <StatCard label="Home anchors" value={anchors.length} hint="Entries that scroll within the home page." />
+        <StatCard label="Home anchors" value={anchors.length} hint="Entries that scroll within the single page." />
+        <StatCard label="Documents" value={2} hint="Résumé PDFs served from /public." />
       </div>
 
       <section className={`${CARD} mt-6 p-6`}>

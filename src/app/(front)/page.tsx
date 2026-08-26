@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+import { About } from "@/components/front/About";
+import { Contact } from "@/components/front/Contact";
 import { Experience } from "@/components/front/Experience";
 import { Hero } from "@/components/front/Hero";
 import { Skills } from "@/components/front/Skills";
@@ -15,13 +17,22 @@ export const metadata: Metadata = {
   openGraph: { ...OPEN_GRAPH, url: "/" },
 };
 
+/*
+ * The whole site, in the order it reads.
+ *
+ * Each child owns the section id the nav points at, so this list is also
+ * the scroll order: SECTIONS in src/lib/sections.ts names the same six
+ * anchors and must stay in step with it.
+ */
 export default function Home() {
   return (
     <>
       <Hero />
+      <About />
       <Skills />
       <Experience />
       <Work />
+      <Contact />
     </>
   );
 }

@@ -87,7 +87,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
       <body
         className="min-h-svh overflow-x-clip bg-canvas font-body text-base leading-[1.65] text-ink
-          antialiased transition-colors duration-[450ms] ease-brand [&.is-locked]:overflow-hidden"
+          antialiased transition-colors duration-[450ms] ease-brand [&.is-locked]:overflow-hidden
+          print:bg-white print:text-black"
       >
         {children}
 

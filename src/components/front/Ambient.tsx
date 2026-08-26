@@ -11,7 +11,7 @@ export function Ambient() {
   return (
     <>
       <div
-        className="pointer-events-none fixed inset-0 -z-20 overflow-hidden
+        className="pointer-events-none fixed inset-0 -z-20 overflow-hidden print:hidden
           bg-[radial-gradient(125%_90%_at_50%_0%,var(--bg)_0%,var(--bg-deep)_100%)]"
         aria-hidden="true"
       >
@@ -50,6 +50,7 @@ export function Ambient() {
           never pay for it. */}
       <div
         className="spotlight pointer-events-none fixed top-0 left-0 -z-10 -mt-[230px] -ml-[230px]
+          no-hover:hidden print:hidden
           size-[460px] rounded-full opacity-0 transition-opacity duration-[600ms] ease-brand
           [will-change:transform]
           bg-[radial-gradient(circle,color-mix(in_srgb,var(--brand-2)_24%,transparent),transparent_62%)]
@@ -57,9 +58,17 @@ export function Ambient() {
         aria-hidden="true"
       />
 
+      {/* The resting state is written as `transform`, not the `scale-x-0`
+          utility. Tailwind v4 compiles `scale-*` to the standalone `scale`
+          property, which the spec applies *before* `transform` — so a
+          `scale: 0` from the class would multiply out whatever
+          `setupProgress` writes to `style.transform` and the bar could
+          never grow. Same property on both sides, and the inline value
+          simply wins. */}
       <div
         id="progress"
-        className="fixed inset-x-0 top-0 z-[1200] h-[2.5px] origin-left scale-x-0
+        className="fixed inset-x-0 top-0 z-[1200] h-[2.5px] print:hidden
+          [transform-origin:0_50%] [transform:scaleX(0)] [will-change:transform]
           bg-[image:var(--gradient-brand)]
           shadow-[0_0_14px_color-mix(in_srgb,var(--brand-2)_70%,transparent)]"
         aria-hidden="true"

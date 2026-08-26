@@ -94,24 +94,28 @@ const PROJECTS: WorkItem[] = [
  */
 const WORK_CARD =
   CARD +
-  " group flex flex-col overflow-hidden p-[clamp(1.1rem,2.2vw,1.45rem)] [transform-style:preserve-3d] " +
+  " group flex flex-col overflow-hidden p-[clamp(1.1rem,2.2vw,1.45rem)] short:px-[1.1rem] short:py-[.85rem] " +
+  "[transform-style:preserve-3d] " +
   "[transform:perspective(1100px)_rotateX(var(--tilt-x,0deg))_rotateY(var(--tilt-y,0deg))_translateY(var(--lift,0px))] " +
-  "transition-[transform,box-shadow,border-color] duration-[var(--tf-dur,500ms)] ease-brand " +
+  "transition-[transform,translate,scale,rotate,box-shadow,border-color] duration-[var(--tf-dur,500ms)] ease-brand " +
+  "[&.is-tracking]:[--tf-dur:0s] [&.is-tracking]:[will-change:transform] " +
   "hover:[--lift:-6px] hover:shadow-lg hover:border-[color-mix(in_srgb,var(--tint)_42%,var(--line))] " +
   "after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:opacity-0 " +
   "after:content-[''] after:transition-opacity after:duration-500 after:ease-brand hover:after:opacity-100 " +
   "after:bg-[radial-gradient(280px_circle_at_var(--mx,50%)_var(--my,50%),color-mix(in_srgb,var(--tint)_15%,transparent),transparent_70%)]";
 
 const WORK_ICO =
-  "grid size-[38px] place-items-center rounded-[13px] text-[var(--tint)] " +
+  "grid size-[38px] short:size-8 place-items-center rounded-[13px] text-[var(--tint)] " +
   "border border-[color-mix(in_srgb,var(--tint)_30%,transparent)] " +
   "bg-[color-mix(in_srgb,var(--tint)_12%,transparent)] transition-transform duration-500 ease-spring " +
   "group-hover:-translate-y-0.5 group-hover:-rotate-6 [&_svg]:size-[21px]";
 
 const BADGE =
-  "rounded-full border px-[.7rem] py-[.3rem] font-mono text-[.66rem] tracking-[.1em] uppercase " +
+  "rounded-full border px-[.7rem] py-[.3rem] short:px-[.55rem] short:py-[.24rem] " +
+  "font-mono text-[.66rem] short:text-[.62rem] tracking-[.1em] uppercase " +
   "whitespace-nowrap text-[var(--tint)] border-[color-mix(in_srgb,var(--tint)_32%,transparent)] " +
-  "bg-[color-mix(in_srgb,var(--tint)_10%,transparent)] max-[640px]:px-[.55rem] max-[640px]:text-[.66rem]";
+  "bg-[color-mix(in_srgb,var(--tint)_10%,transparent)] " +
+  "max-[640px]:px-[.55rem] max-[640px]:py-[.26rem] max-[640px]:text-[.66rem]";
 
 /* The publication badge is a link, so it needs affordance the static ones do not. */
 const BADGE_PUB =
@@ -120,7 +124,7 @@ const BADGE_PUB =
   "bg-[color-mix(in_srgb,var(--tint)_16%,transparent)] transition-[background-color,border-color] duration-[250ms] " +
   "ease-brand hover:border-[var(--tint)] hover:bg-[color-mix(in_srgb,var(--tint)_26%,transparent)] " +
   "focus-visible:border-[var(--tint)] focus-visible:bg-[color-mix(in_srgb,var(--tint)_26%,transparent)] " +
-  "[&_svg]:size-[11px] max-[640px]:py-[.5rem]";
+  "[&_svg]:size-[11px] touch:py-2 max-[640px]:py-[.5rem]";
 
 export function Work() {
   return (
@@ -149,7 +153,7 @@ export function Work() {
           </a>
         </div>
 
-        <div className="grid gap-[clamp(.8rem,1.6vw,1.15rem)] grid-cols-[repeat(auto-fit,minmax(min(285px,100%),1fr))]">
+        <div className="grid gap-[clamp(.8rem,1.6vw,1.15rem)] short:gap-[.65rem] grid-cols-[repeat(auto-fit,minmax(min(285px,100%),1fr))]">
           {PROJECTS.map((project, index) => (
             <article
               className={`${WORK_CARD} ${REVEAL} tilt`}
@@ -163,7 +167,7 @@ export function Work() {
               }
               data-reveal
             >
-              <header className="mb-[.85rem] flex items-center justify-between gap-3">
+              <header className="mb-[.85rem] short:mb-[.65rem] flex items-center justify-between gap-3">
                 <span className={WORK_ICO}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"
                     strokeLinejoin="round" aria-hidden="true"><use href={`#${project.icon}`} /></svg>
@@ -185,13 +189,13 @@ export function Work() {
                 )}
               </header>
 
-              <h3 className="mb-[.3rem] font-display text-[clamp(1.15rem,2.1vw,1.3rem)] font-bold leading-[1.1] tracking-[-.02em] text-ink">
+              <h3 className="mb-[.3rem] font-display text-[clamp(1.15rem,2.1vw,1.3rem)] short:text-[1.06rem] font-bold leading-[1.1] tracking-[-.02em] text-ink">
                 {project.title}
               </h3>
-              <p className="mb-[.6rem] font-mono text-[.74rem] text-ink-faint">{project.org}</p>
-              <p className="text-[.9rem] text-ink-muted">{project.blurb}</p>
+              <p className="mb-[.6rem] short:mb-[.45rem] font-mono text-[.74rem] text-ink-faint">{project.org}</p>
+              <p className="text-[.9rem] short:text-[.88rem] short:leading-[1.5] text-ink-muted">{project.blurb}</p>
 
-              <div className="mt-auto flex flex-wrap gap-[.45rem] pt-[.9rem]">
+              <div className="mt-auto flex flex-wrap gap-[.45rem] pt-[.9rem] short:pt-[.7rem]">
                 {project.tags.map((tag) => (
                   <span className={TAG} key={tag}>{tag}</span>
                 ))}

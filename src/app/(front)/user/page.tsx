@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 
 import { User } from "@/app/(front)/user/User";
-import { SectionEyebrow } from "@/components/front/SectionEyebrow";
-import { GRAD, H2, SECTION, SECTION_HEAD, SHELL } from "@/lib/styles";
+import { EYEBROW, GRAD, H2, SECTION, SECTION_HEAD, SHELL } from "@/lib/styles";
 import { OPEN_GRAPH } from "@/lib/site";
 
 const GITHUB_LOGIN = "6531503060-nipeerawut";
@@ -11,6 +10,9 @@ export const metadata: Metadata = {
   title: "Profile",
   description: "The GitHub account behind the commits listed across this portfolio.",
   alternates: { canonical: "/user" },
+  // Reachable by anyone given the link, but not something to compete with
+  // the home page in search results.
+  robots: { index: false, follow: true },
   openGraph: { ...OPEN_GRAPH, url: "/user" },
 };
 
@@ -47,7 +49,13 @@ export default async function UserPage() {
       <section className={SECTION} id="user">
         <div className={SHELL}>
           <div className={`${SECTION_HEAD} mx-auto text-center`}>
-            <SectionEyebrow id="user" />
+            {/* Not a <SectionEyebrow>: those are numbered from the
+                registry of home-page sections, and this route is not one
+                of them. The counter would have nothing honest to print. */}
+            <span className={EYEBROW}>
+              <span className="text-brand-1">&#47;&#47;</span>
+              {" GitHub"}
+            </span>
             <h2 className={H2}>
               The account behind the <span className={GRAD}>commits</span>.
             </h2>

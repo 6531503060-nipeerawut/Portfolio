@@ -6,20 +6,23 @@
  * three used to be numbered by hand in four files, so reordering a section
  * meant editing all of them and hoping the numbers still lined up.
  *
- * `href` is what keeps the nav honest now that the site is more than one
- * document: About, Contact and User are their own routes, while Skills,
- * Experience and Work are still anchors on the home page. main.js reads
- * it to decide whether a link is a same-page jump it should scroll-spy or
- * a navigation it should leave to the router.
+ * Every entry is an anchor on the home page, because that is what the site
+ * is: one document a visitor scrolls through. Splitting these across routes
+ * was tried and reverted — it turned six in-page scrolls into six
+ * navigations, and each one landed on a page holding a single section.
+ *
+ * The paths are absolute (`/#about`, not `#about`) so the nav still works
+ * from a route that is not the home page. main.js reads the part before
+ * the `#` to decide whether a link is a same-page jump it should smooth
+ * scroll and scroll-spy, or a navigation it should leave alone.
  */
 export const SECTIONS = [
-  { id: "home", label: "Home", href: "/", blurb: "Introduction and quick links" },
-  { id: "about", label: "About", href: "/about", blurb: "How I work and where I studied" },
+  { id: "home", label: "Home", href: "/#home", blurb: "Introduction and quick links" },
+  { id: "about", label: "About", href: "/#about", blurb: "How I work and where I studied" },
   { id: "skills", label: "Skills", href: "/#skills", blurb: "Languages, frameworks and tooling" },
   { id: "experience", label: "Experience", href: "/#experience", blurb: "Roles, education and timeline" },
   { id: "work", label: "Work", href: "/#work", blurb: "Systems I have shipped" },
-  { id: "contact", label: "Contact", href: "/contact", blurb: "Say hello or start a conversation" },
-  { id: "user", label: "Profile", href: "/user", blurb: "The GitHub account behind the commits" },
+  { id: "contact", label: "Contact", href: "/#contact", blurb: "Say hello or start a conversation" },
 ] as const;
 
 export type SectionId = (typeof SECTIONS)[number]["id"];
