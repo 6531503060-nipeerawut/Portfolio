@@ -1,13 +1,29 @@
 <!--
-  Brand mark — a person drawn as one unbroken line, from the first stroke to
-  the last. Geometry: the glyph is exactly 24x24 centred in a 32x32 box, so it
-  keeps a 4-unit margin on every side at any size.
+  Brand mark — the portrait from the GitHub profile (github.com/6531503060-nipeerawut)
+  reduced to the two features that survive at icon size: a head-and-shoulders bust,
+  and the round glasses. Everything else in that avatar — the hair sweep, the polo,
+  the books, the chalkboard doodles — is unreadable below ~32px, so it is not drawn.
 
-  The same path is inlined in app/_components/site-header.tsx and baked into
-  favicon.svg; change one, change all three.
+  Geometry, in a 32x32 box:
+
+    head    circle (16, 11.5) r 5.9
+    lenses  circles (13.35, 11.55) and (18.65, 11.55) r 2.05
+    bridge  the 1.2-wide bar between them, laid tangent to both rather than
+            overlapping — an overlap would be crossed twice and fill back in
+    bust    a dome from y 19.6 that runs off the bottom edge on purpose, so
+            whatever encloses the mark (the gradient tile in favicon.svg, the
+            rounded square in the navbar) crops the shoulders rather than
+            leaving them floating in space
+
+  fill-rule="evenodd" is what makes the lenses holes rather than dots: they are
+  the only subpaths sitting inside another, so the ground behind the mark — the
+  brand gradient, in both places it is used — shows through them.
+
+  The same two paths are inlined in src/components/front/Navbar.tsx and baked
+  into favicon.svg; change one, change all three.
 -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" fill="none"
-  stroke="currentColor" stroke-width="3.2" stroke-linecap="round" role="img"
-  aria-label="Peerawut Nipakornpan">
-  <path d="M5.9 26.3C5.9 21.2 8.4 15.6 11.8 13.97A5.2 5.2 0 1 1 20.2 13.97C23.6 15.6 26.1 21.2 26.1 26.3" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32"
+  fill="currentColor" fill-rule="evenodd" role="img" aria-label="Peerawut Nipakornpan">
+  <path d="M16 5.6a5.9 5.9 0 1 1 0 11.8 5.9 5.9 0 0 1 0-11.8Zm-2.65 3.9a2.05 2.05 0 1 0 0 4.1 2.05 2.05 0 0 0 0-4.1Zm5.3 0a2.05 2.05 0 1 0 0 4.1 2.05 2.05 0 0 0 0-4.1Zm-3.25 1.65h1.2v.8h-1.2Z" />
+  <path d="M4.2 32c0-7.3 5.2-12.4 11.8-12.4S27.8 24.7 27.8 32Z" />
 </svg>

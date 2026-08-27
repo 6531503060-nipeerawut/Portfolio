@@ -58,6 +58,16 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   colorScheme: "light dark",
+  /*
+   * Let the page fill the screen edge to edge on a phone, notch and home
+   * indicator included, the way a native app does — the alternative is two
+   * letterboxed bands in the theme colour. It is what makes env(safe-area-
+   * inset-*) report anything but zero, and every fixed surface reads those:
+   * the top bar pads itself past the notch, the tab bar floats above the home
+   * indicator, and --spacing-gutter keeps text clear of a landscape camera
+   * housing. See globals.css.
+   */
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -87,7 +97,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
       <body
         className="min-h-svh overflow-x-clip bg-canvas font-body text-base leading-[1.65] text-ink
-          antialiased transition-colors duration-[450ms] ease-brand [&.is-locked]:overflow-hidden
+          antialiased transition-colors duration-[450ms] ease-brand
           print:bg-white print:text-black"
       >
         {children}

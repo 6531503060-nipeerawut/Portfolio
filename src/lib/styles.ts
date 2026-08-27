@@ -11,8 +11,29 @@
 /** The reading column: full width up to 1180px, then centred with gutters. */
 export const SHELL = "mx-auto w-full max-w-shell px-gutter";
 
-/** Vertical rhythm between the numbered sections. */
-export const SECTION = "relative py-section short:py-8";
+/**
+ * Vertical rhythm between the numbered sections — and, on a desktop, the
+ * thing that keeps one section from bleeding into the next.
+ *
+ * `snap-start` pairs with the `scroll-snap-type: y proximity` in globals.css:
+ * the page still scrolls freely, but it comes to rest on a section boundary
+ * rather than halfway between two, so you no longer see the tail of the
+ * section above and the eyebrow of the one below at the same time. The
+ * minimum height is the other half of that — a section shorter than the
+ * screen would otherwise leave room for its neighbour to show through no
+ * matter where the scroll stopped.
+ *
+ * The clearance under the navbar is left entirely to `scroll-padding-top` on
+ * <html>. A `scroll-mt` here would not replace that, it would be added to
+ * it: a snap position lines the snap area — the box plus its scroll margin —
+ * up against the snapport — the viewport minus its scroll padding. Declaring
+ * both lands every section a full navbar-height too low, and leaves a strip
+ * of the previous one showing under the bar, which is the exact thing this
+ * is here to stop.
+ */
+export const SECTION =
+  "relative flex snap-start flex-col justify-center py-section short:py-8 " +
+  "min-[1024px]:min-h-[calc(100svh-var(--nav-offset))]";
 
 /**
  * Glass card. The ::before is the hairline of brand colour along the top
@@ -37,6 +58,9 @@ export const BTN =
   "relative isolate inline-flex cursor-pointer items-center justify-center gap-[.6rem] overflow-hidden " +
   "whitespace-nowrap rounded-full border border-line-strong bg-surface px-6 py-[.85rem] " +
   "font-display text-[.94rem] font-semibold tracking-[-.01em] text-ink shadow-sm " +
+  // A tap should read as a press, not as a grey box the browser paints over
+  // whatever the finger landed on.
+  "[-webkit-tap-highlight-color:transparent] touch:py-[.95rem] " +
   "[transform:translate(var(--mag-x,0px),calc(var(--mag-y,0px)+var(--lift,0px)))] " +
   "transition-[transform,translate,scale,rotate,box-shadow,border-color,color,background-position] " +
   "duration-[var(--tf-dur,350ms)] ease-brand " +
@@ -46,7 +70,7 @@ export const BTN =
   // following it.
   "[&.is-tracking]:[--tf-dur:0s] [&.is-tracking]:[will-change:transform] " +
   "hover:[--lift:-2px] hover:border-[color-mix(in_srgb,var(--brand-1)_45%,var(--line-strong))] hover:shadow-md " +
-  "active:[--lift:0px] active:scale-[.985] " +
+  "active:[--lift:0px] active:scale-[.97] active:[--tf-dur:120ms] " +
   "[&_svg]:size-[18px] [&_svg]:flex-none [&_svg]:transition-transform [&_svg]:duration-[400ms] [&_svg]:ease-spring " +
   "hover:[&_.arr-right]:translate-x-1 hover:[&_.arr-down]:translate-y-[3px] hover:[&_.arr-up]:-translate-y-[3px]";
 

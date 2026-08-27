@@ -3,7 +3,7 @@ import { type SectionId, sectionIndex, sectionLabel } from "@/lib/sections";
 
 /**
  * The "01 / About" line above a section heading. Both halves come from the
- * section registry, so the counter cannot fall out of step with the drawer.
+ * section registry, so the counter cannot fall out of step with the nav.
  */
 export function SectionEyebrow({ id }: { id: SectionId }) {
   return (

@@ -57,10 +57,9 @@ The site is **one page** a visitor scrolls through, in this order:
 | **Contact** | Email with a one-click copy control, LinkedIn, GitHub and a résumé download |
 
 Six navigation entries — one per section — are declared once in
-[`src/lib/sections.ts`](src/lib/sections.ts) and drive the desktop nav, the
-mobile drawer with its `01`–`06` counters, the scroll-spy, and the numbered
-eyebrow above each section. Every one is an anchor, so the nav scrolls rather
-than navigates.
+[`src/lib/sections.ts`](src/lib/sections.ts) and drive the desktop nav rail,
+the mobile tab bar, the scroll-spy behind both, and the numbered eyebrow above
+each section. Every one is an anchor, so the nav scrolls rather than navigates.
 
 Three further routes exist but are not in the nav: `/about` and `/contact`
 serve those two sections on their own, `/user` reads the GitHub account live
@@ -73,8 +72,9 @@ results, and anything else lands on a custom 404 page.
 The page works fully without JavaScript. Everything below is enhancement layered
 on top, and all of it respects `prefers-reduced-motion`:
 
-- Sliding pill that follows the active nav link, driven by a scroll-spy
-- Mobile drawer with focus trapping and `inert` on the content behind it
+- Sliding pill that follows the active entry on whichever nav is showing,
+  driven by one scroll-spy
+- Bottom tab bar below 981px, in place of a burger and a full-screen drawer
 - Scroll progress bar and scroll-triggered reveals
 - Typewriter cycling the role line under the name
 - Counters that animate up when their tile enters view
@@ -203,18 +203,25 @@ of viewport height the vertical rhythm tightens while the layout stays put, via
 the `short:` variant defined in [`globals.css`](src/app/globals.css).
 
 Two more queries key on the device rather than the window: `touch:` lifts every
-icon button, social link and burger to a 44px target on coarse pointers — a
-finger is the same size whichever way the phone is held, so a landscape phone
-would miss a width-based rule — and `no-hover:` drops the cursor spotlight
-where there is no cursor to follow.
+icon button and social link to a 44px target on coarse pointers — a finger is
+the same size whichever way the phone is held, so a landscape phone would miss
+a width-based rule — and `no-hover:` drops the cursor spotlight where there is
+no cursor to follow.
+
+Below 981px the page becomes a mobile app rather than a narrow desktop: a slim
+app bar at the top, a floating tab bar at the bottom, and `viewport-fit=cover`
+so both sit clear of the notch and the home indicator via
+`env(safe-area-inset-*)`. Sections lock to the viewport on a desktop —
+`scroll-snap-type: y proximity` with a minimum height of one screen — so the
+page comes to rest on a section rather than between two.
 
 ### Accessibility
 
 A skip link, a focusable `<main>`, a visible `:focus-visible` ring on every
 interactive element, `aria-label` on every icon-only control, `aria-hidden` on
-decorative SVG, a focus-trapped drawer that marks the page behind it `inert`,
-and a reduced-motion block that disables the typewriter, the marquee, the
-orbits and the reveals.
+decorative SVG, `aria-current` on the nav entry the page is showing, and a
+reduced-motion block that disables the typewriter, the marquee, the orbits,
+the reveals and the scroll snapping.
 
 ---
 
@@ -317,12 +324,13 @@ thirteen named animations, each registered as an `--animate-*` token so it is
 reachable as a utility class. All of them are disabled under reduced motion,
 and an animation budget pauses those outside the viewport.
 
-**The mark** — [`public/images/logo.svg`](public/images/logo.svg) is a person
-glyph drawn as one unbroken stroke: a circular head over shoulders that rise
-symmetrically and stop with rounded caps. It renders identically at 16 px in a
-tab and at 512 px on a home screen, appears in the navbar and the console
-header, and is baked over the brand gradient in the favicon and the
-apple-touch icon.
+**The mark** — [`public/images/logo.svg`](public/images/logo.svg) is the
+portrait from the GitHub profile reduced to the two features that survive at
+icon size: a head-and-shoulders bust, and a pair of round glasses. The lenses
+are holes rather than dots — an even-odd fill — so the brand gradient behind
+the mark shows through them. It renders identically at 16 px in a tab and at
+512 px on a home screen, appears in the navbar, and is baked over the gradient
+in the favicon and the apple-touch icon.
 
 ---
 

@@ -34,9 +34,6 @@
  */
 @custom-variant touch (@media (pointer: coarse));
 
-/* Once the wordmark is hidden, the monogram is the whole of the home link. */
-@custom-variant touch-narrow (@media (pointer: coarse) and (max-width: 980px));
-
 /* Anything that follows a cursor has no meaning without one. */
 @custom-variant no-hover (@media (hover: none));
 
@@ -66,6 +63,13 @@
   --surface-glass: rgb(255 255 255 / 0.88);
   --surface-glass-strong: rgb(255 255 255 / 0.96);
   --surface-sunken: rgb(15 23 42 / 0.035);
+
+  /* The ground under both navigation bars. Deliberately far more opaque than
+     --surface-glass: these are the two surfaces the whole page scrolls under,
+     and at 0.8 the card passing beneath a bar stayed legible through it. Even
+     the blur does not hide a card edge at that alpha — a hairline is high
+     frequency in one axis only, which is what a Gaussian preserves best. */
+  --nav: rgb(240 243 250 / 0.97);
 
   --text: #080d1c;
   --text-soft: #2b3450;
@@ -106,6 +110,7 @@
   --surface-glass: rgb(14 19 38 / 0.8);
   --surface-glass-strong: rgb(12 17 34 / 0.92);
   --surface-sunken: rgb(255 255 255 / 0.035);
+  --nav: rgb(7 10 21 / 0.97);
 
   --text: #eaeefb;
   --text-soft: #c3cade;
@@ -142,6 +147,7 @@
   --color-glass: var(--surface-glass);
   --color-glass-strong: var(--surface-glass-strong);
   --color-sunken: var(--surface-sunken);
+  --color-nav: var(--nav);
 
   --color-ink: var(--text);
   --color-ink-soft: var(--text-soft);
@@ -171,7 +177,18 @@
 
   /* The reading column and the section rhythm. */
   --spacing-shell: 1180px;
-  --spacing-gutter: clamp(1.15rem, 4vw, 2.5rem);
+
+  /*
+   * The page gutter, and the floor under it in landscape on a notched
+   * phone: viewport-fit=cover lets the document run under the camera
+   * housing, and the same clamp that is comfortable everywhere else would
+   * put the first character of every line beneath it. Both insets are
+   * folded into one value so the column stays centred rather than sliding
+   * away from whichever edge the notch is on; on every screen where the
+   * insets are zero — desktops, phones held upright — this is exactly the
+   * clamp it was before.
+   */
+  --spacing-gutter: max(clamp(1.15rem, 4vw, 2.5rem), env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px));
   --spacing-section: clamp(2.5rem, 6vh, 5rem);
 
   --ease-brand: cubic-bezier(0.22, 1, 0.36, 1);
@@ -275,27 +292,97 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    /* Clearance under the fixed navbar. main.js reads the same custom
-       property, so it stays declared rather than inlined here. */
-    --nav-offset: 76px;
+
+    /*
+     * Clearance under the fixed navbar. This one declaration is the whole of
+     * it: what the browser leaves above a hash target, what it leaves above a
+     * snap point, and — read straight back off the resolved padding by
+     * main.js — where an eased jump aims.
+     *
+     * Nothing adds a `scroll-margin` on top. A snap position lines the snap
+     * area (the box plus its scroll margin) up against the snapport (the
+     * viewport minus its scroll padding), so declaring both would land every
+     * section a full navbar-height too low. And the number has to be shared
+     * with main.js rather than approximated: the page re-snaps after a
+     * programmatic scroll, so a jump aimed even a few pixels off its own snap
+     * point arrives and then twitches into place.
+     *
+     * One value covers both bars — stuck, the desktop bar is 58px and the
+     * mobile bar 60px, so 72 clears either with a little air.
+     */
+    --nav-offset: calc(72px + env(safe-area-inset-top, 0px));
     scroll-padding-top: var(--nav-offset);
+
+    /*
+     * Geometry of the mobile tab bar, in one place because four things
+     * depend on it: the bar itself, the room the page reserves at its foot,
+     * where the back-to-top button sits, and where toasts stack.
+     *
+     * --tabbar-space is zero above the breakpoint, so every rule that
+     * reserves room for the bar can be written once and unconditionally.
+     */
+    --tabbar-h: 62px;
+    --tabbar-gap: max(10px, env(safe-area-inset-bottom, 0px));
+    --tabbar-x: max(10px, env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px));
+    --tabbar-space: 0px;
+  }
+
+  /* A finger drags the page as often as it taps, so the grey box the browser
+     paints under every touch fires constantly on something that was never a
+     tap. Inherited, so one declaration covers the document. */
+  @media (pointer: coarse) {
+    html {
+      -webkit-tap-highlight-color: transparent;
+      -webkit-text-size-adjust: 100%;
+    }
   }
 
   /*
-   * Phone adjustments that are values rather than utilities: the navbar is
-   * shorter here, so an anchor should land higher; and the large radii were
-   * drawn for cards several hundred pixels wide — at phone width the same
-   * curve eats into the text it is supposed to frame.
+   * Below 981px the navigation is a tab bar floating over the foot of the
+   * page, so the page has to stop short of it.
+   */
+  @media (max-width: 980px) {
+    html {
+      --tabbar-space: calc(var(--tabbar-h) + var(--tabbar-gap) + 12px);
+    }
+  }
+
+  /*
+   * Phone adjustments that are values rather than utilities: the large radii
+   * were drawn for cards several hundred pixels wide — at phone width the
+   * same curve eats into the text it is supposed to frame.
    */
   @media (max-width: 640px) {
-    html {
-      --nav-offset: 70px;
-    }
-
     :root {
       --radius-brand-lg: 20px;
       --radius-brand-xl: 24px;
     }
+  }
+
+  /*
+   * Section locking.
+   *
+   * Without this the page is one continuous scroll, so wherever it comes to
+   * rest you see the tail of the section above and the head of the one
+   * below — an eyebrow and half a card belonging to neither. `proximity`
+   * rather than `mandatory` is the whole point: a section taller than the
+   * viewport still scrolls freely through its own content, and the snap
+   * only takes over near a boundary, which is exactly where the bleed was.
+   *
+   * Desktop only. A phone scrolls with momentum, and snapping fights the
+   * flick it is still carrying; the tab bar covers the same need there by
+   * making every section one tap away.
+   */
+  @media (min-width: 1024px) and (pointer: fine) {
+    html {
+      scroll-snap-type: y proximity;
+    }
+  }
+
+  /* The tab bar overlays the foot of the document, so the document has to
+     stop short of it. Zero above the breakpoint. */
+  body {
+    padding-bottom: var(--tabbar-space);
   }
 
   ::selection {
@@ -371,6 +458,9 @@
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+    /* Snapping moves the page after the visitor has stopped moving it,
+       which is the class of motion this query asks us to give up. */
+    scroll-snap-type: none;
   }
 
   *,

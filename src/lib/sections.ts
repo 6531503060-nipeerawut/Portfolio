@@ -1,10 +1,10 @@
 /**
  * The one list of page sections.
  *
- * It drives the desktop nav, the mobile drawer (including its 01–06
- * counters) and the counter printed in each section's own eyebrow. Those
- * three used to be numbered by hand in four files, so reordering a section
- * meant editing all of them and hoping the numbers still lined up.
+ * It drives the desktop nav rail, the mobile tab bar and the counter printed
+ * in each section's own eyebrow. Those used to be numbered by hand in four
+ * files, so reordering a section meant editing all of them and hoping the
+ * numbers still lined up.
  *
  * Every entry is an anchor on the home page, because that is what the site
  * is: one document a visitor scrolls through. Splitting these across routes
@@ -15,26 +15,32 @@
  * from a route that is not the home page. main.js reads the part before
  * the `#` to decide whether a link is a same-page jump it should smooth
  * scroll and scroll-spy, or a navigation it should leave alone.
+ *
+ * `icon` is a sprite id from IconSprite, without the leading `#`. Only the
+ * tab bar draws it — the desktop rail is wide enough for words alone — but
+ * it belongs here rather than in the navbar, because a section and the
+ * glyph that stands for it are the same fact. `blurb` is the one-line
+ * description the admin console lists beside each entry.
  */
 export const SECTIONS = [
-  { id: "home", label: "Home", href: "/#home", blurb: "Introduction and quick links" },
-  { id: "about", label: "About", href: "/#about", blurb: "How I work and where I studied" },
-  { id: "skills", label: "Skills", href: "/#skills", blurb: "Languages, frameworks and tooling" },
-  { id: "experience", label: "Experience", href: "/#experience", blurb: "Roles, education and timeline" },
-  { id: "work", label: "Work", href: "/#work", blurb: "Systems I have shipped" },
-  { id: "contact", label: "Contact", href: "/#contact", blurb: "Say hello or start a conversation" },
+  { id: "home", label: "Home", icon: "i-home", blurb: "Introduction and quick links" },
+  { id: "about", label: "About", icon: "i-user", blurb: "How I work and where I studied" },
+  { id: "skills", label: "Skills", icon: "i-code", blurb: "Languages, frameworks and tooling" },
+  { id: "experience", label: "Experience", icon: "i-briefcase", blurb: "Roles, education and timeline" },
+  { id: "work", label: "Work", icon: "i-layers", blurb: "Systems I have shipped" },
+  { id: "contact", label: "Contact", icon: "i-mail", blurb: "Say hello or start a conversation" },
 ] as const;
 
 export type SectionId = (typeof SECTIONS)[number]["id"];
 
+/** Every section is an anchor on the home page. */
+export function sectionHref(id: SectionId): string {
+  return `/#${id}`;
+}
+
 /** Zero-padded, so "3" reads as "03". */
 function pad(n: number): string {
   return String(n).padStart(2, "0");
-}
-
-/** Position in the drawer, counting from 01. */
-export function drawerNumber(index: number): string {
-  return pad(index + 1);
 }
 
 /**

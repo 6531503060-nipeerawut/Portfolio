@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { StatCard } from "@/components/admin/StatCard";
-import { SECTIONS } from "@/lib/sections";
+import { SECTIONS, sectionHref } from "@/lib/sections";
 import { CARD, H2, H3 } from "@/lib/styles";
 import { RESUME_HREF } from "@/lib/site";
 
@@ -14,7 +14,7 @@ import { RESUME_HREF } from "@/lib/site";
  * writes anything.
  */
 export default function AdminPage() {
-  const anchors = SECTIONS.filter((section) => section.href.includes("#"));
+  const anchors = SECTIONS.filter((section) => sectionHref(section.id).includes("#"));
 
   return (
     <>
@@ -26,7 +26,7 @@ export default function AdminPage() {
       </div>
 
       <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(min(220px,100%),1fr))]">
-        <StatCard label="Navigation entries" value={SECTIONS.length} hint="Shared by the navbar and the mobile drawer." />
+        <StatCard label="Navigation entries" value={SECTIONS.length} hint="Shared by the desktop rail and the mobile tab bar." />
         <StatCard label="Home anchors" value={anchors.length} hint="Entries that scroll within the single page." />
         <StatCard label="Documents" value={2} hint="Résumé PDFs served from /public." />
       </div>
@@ -44,8 +44,8 @@ export default function AdminPage() {
                 <span className="block font-display text-[.92rem] font-semibold text-ink">{section.label}</span>
                 <span className="block text-[.8rem] text-ink-muted">{section.blurb}</span>
               </span>
-              <Link className="font-mono text-[.76rem] text-brand-1 hover:underline" href={section.href}>
-                {section.href}
+              <Link className="font-mono text-[.76rem] text-brand-1 hover:underline" href={sectionHref(section.id)}>
+                {sectionHref(section.id)}
               </Link>
             </li>
           ))}

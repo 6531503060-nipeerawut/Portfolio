@@ -7,7 +7,7 @@
    2.  Scroll bus (one listener, cached metrics)
    3.  Toast
    4.  Theme
-   5.  Navigation, drawer, smooth scrolling
+   5.  Navigation, tab bar, smooth scrolling
    6.  Progress bar
    7.  Reveal, typewriter, counters
    8.  Pointer flourishes
@@ -72,11 +72,19 @@
     else if (media.addListener) media.addListener(handler);
   }
 
-  /* The nav height lives in CSS as --nav-offset so markup, CSS scroll
-     padding and this file cannot drift apart. */
+  /*
+   * How far below the top of the viewport an anchor should land.
+   *
+   * Read back off scroll-padding-top rather than from --nav-offset, which is
+   * where that padding comes from: the property carries a calc and an env(),
+   * and parseInt would choke on both, while the resolved padding is a plain
+   * pixel length. Taking it from the declaration the browser itself uses is
+   * also what keeps an eased jump from being corrected afterwards — the page
+   * snaps, and a jump aimed anywhere but its own snap point lands and then
+   * twitches into place.
+   */
   function navOffset() {
-    var raw = getComputedStyle(root).getPropertyValue("--nav-offset");
-    return parseInt(raw, 10) || 88;
+    return parseFloat(getComputedStyle(root).scrollPaddingTop) || 88;
   }
 
   /* ── 2. Scroll bus ─────────────────────────────────────────────── */
@@ -127,6 +135,12 @@
     }, { passive: true });
 
     window.addEventListener("resize", dispatchResize, { passive: true });
+
+    /* An eased jump has to yield the moment the visitor scrolls for
+       themselves, or the page pulls against the wheel or the flick. These
+       are registered once rather than per jump, so nothing accumulates. */
+    window.addEventListener("wheel", cancelGlide, { passive: true });
+    window.addEventListener("touchstart", cancelGlide, { passive: true });
 
     // Late webfonts and images change the document height.
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(dispatchResize);
@@ -253,14 +267,32 @@
 
   function setupNav() {
     var nav = $("#nav");
-    var rail = $("#navLinks");
-    var pill = $("#navPill");
-    var links = $$(".nav__link");
-    var drawerLinks = $$(".drawer__link");
     var here = currentPath();
 
-    // Index-aligned with links; a null marks an entry the spy skips.
-    var targets = links.map(function (link) {
+    /*
+     * One rail per navigation surface: the pill row in the header, and the
+     * tab bar along the bottom below 981px. They list the same sections and
+     * only one of them is visible at a time, but both are kept in step —
+     * measuring a hidden rail costs nothing (its boxes are all zero, which
+     * movePill reads as "no pill to place") and a resize across the
+     * breakpoint re-measures whichever one just appeared.
+     */
+    function makeRail(root, pill, selector) {
+      if (!root) return null;
+      return { root: root, pill: pill, links: $$(selector, root), geom: [] };
+    }
+
+    var rails = [
+      makeRail($("#navLinks"), $("#navPill"), ".nav__link"),
+      makeRail($("#tabbar"), $("#tabPill"), ".tab__link")
+    ].filter(Boolean);
+
+    if (!rails.length) return;
+
+    // Index-aligned with the first rail's links; a null marks an entry the
+    // spy skips. Both rails carry the same hrefs, so one pass covers them.
+    var lead = rails[0].links;
+    var targets = lead.map(function (link) {
       if (routeOf(link) !== here) return null;
       var id = hashOf(link) || link.getAttribute("data-section");
       return id ? document.getElementById(id) : null;
@@ -274,23 +306,23 @@
      */
     var staticId = null;
     if (!sections.length) {
-      for (var s = 0; s < links.length; s++) {
-        if (routeOf(links[s]) === here) {
-          staticId = links[s].getAttribute("data-section");
+      for (var s = 0; s < lead.length; s++) {
+        if (routeOf(lead[s]) === here) {
+          staticId = lead[s].getAttribute("data-section");
           break;
         }
       }
     }
 
-    var pillGeom = [];
     var tops = [];
     var lastActive = null;
     var stuck = null;
 
     function measure() {
-      if (rail) {
-        var railLeft = rail.getBoundingClientRect().left;
-        pillGeom = links.map(function (link) {
+      for (var r = 0; r < rails.length; r++) {
+        var rail = rails[r];
+        var railLeft = rail.root.getBoundingClientRect().left;
+        rail.geom = rail.links.map(function (link) {
           var box = link.getBoundingClientRect();
           return { width: box.width, offset: box.left - railLeft };
         });
@@ -298,32 +330,55 @@
       tops = sections.map(function (section) { return section.offsetTop; });
     }
 
-    function movePill(index) {
-      if (!pill || index < 0 || !pillGeom[index]) return;
-      var g = pillGeom[index];
-      pill.style.width = g.width + "px";
-      pill.style.transform = "translateX(" + g.offset + "px)";
-      pill.style.opacity = "1";
+    function movePill(rail, index) {
+      if (!rail.pill) return;
+
+      var g = index >= 0 ? rail.geom[index] : null;
+
+      // A rail that is display:none measures zero. Nothing to point at.
+      if (!g || !g.width) {
+        rail.pill.style.opacity = "0";
+        return;
+      }
+
+      rail.pill.style.width = g.width + "px";
+      rail.pill.style.transform = "translateX(" + g.offset + "px)";
+      rail.pill.style.opacity = "1";
+
+      /* The transition is gated on this class, so the first placement is a
+         cut rather than a slide out of the left-hand corner. Opening
+         /#work would otherwise start with the pill travelling four tabs. */
+      if (!rail.ready) {
+        rail.ready = true;
+        requestAnimationFrame(function () { rail.pill.classList.add("is-ready"); });
+      }
     }
 
     function setActive(id) {
       if (id === lastActive) return;
       lastActive = id;
 
-      var index = -1;
+      for (var r = 0; r < rails.length; r++) {
+        var rail = rails[r];
+        var index = -1;
 
-      links.forEach(function (link, i) {
-        var on = link.getAttribute("data-section") === id;
-        link.classList.toggle("is-active", on);
-        if (on) index = i;
-      });
+        for (var i = 0; i < rail.links.length; i++) {
+          var link = rail.links[i];
+          var on = link.getAttribute("data-section") === id;
 
-      drawerLinks.forEach(function (link) {
-        link.classList.toggle("is-active", link.getAttribute("data-section") === id);
-      });
+          link.classList.toggle("is-active", on);
+          // The colour change is the only cue otherwise, and a screen reader
+          // cannot see it.
+          if (on) {
+            link.setAttribute("aria-current", "true");
+            index = i;
+          } else {
+            link.removeAttribute("aria-current");
+          }
+        }
 
-      if (index >= 0) movePill(index);
-      else if (pill) pill.style.opacity = "0";
+        movePill(rail, index);
+      }
     }
 
     // Reads only cached values; the scroll bus supplies the metrics.
@@ -360,84 +415,63 @@
     measure();
   }
 
-  /* ── Mobile drawer ─────────────────────────────────────────────── */
+  /* ── Smooth scrolling ──────────────────────────────────────────── */
 
-  function setupDrawer() {
-    var burger = $("#burger");
-    var drawer = $("#drawer");
-    if (!burger || !drawer) return;
+  /*
+   * `behavior: "smooth"` hands the curve to the browser, and the browser
+   * uses one duration for every distance — on Chrome that is around 150ms,
+   * which reads as a cut rather than a move once the jump is a few sections
+   * long. This runs the same move on a fixed ease over a duration that
+   * grows with the distance, and gets out of the way the instant the
+   * visitor touches the page themselves.
+   */
+  var glideToken = 0;
 
-    var drawerLinks = $$(".drawer__link", drawer);
-    // Content that must not be reachable while the overlay covers it.
-    var behind = [$("#main"), $("footer")].filter(Boolean);
-    var supportsInert = "inert" in HTMLElement.prototype;
-    var isOpen = false;
-
-    function setOpen(open) {
-      if (open === isOpen) return;
-      isOpen = open;
-
-      drawer.classList.toggle("is-open", open);
-      drawer.setAttribute("aria-hidden", open ? "false" : "true");
-      burger.setAttribute("aria-expanded", open ? "true" : "false");
-      burger.setAttribute("aria-label", open ? "Close menu" : "Open menu");
-      document.body.classList.toggle("is-locked", open);
-
-      // Without this the page behind a full-screen overlay stays tabbable.
-      behind.forEach(function (el) {
-        if (supportsInert) el.inert = open;
-        else if (open) el.setAttribute("aria-hidden", "true");
-        else el.removeAttribute("aria-hidden");
-      });
-
-      // The drawer is visibility:hidden until .is-open applies, and a hidden
-      // element cannot take focus — wait for the style flush.
-      if (open && drawerLinks[0]) requestAnimationFrame(function () { drawerLinks[0].focus(); });
-      else if (!open) burger.focus();
-    }
-
-    burger.addEventListener("click", function () { setOpen(!isOpen); });
-
-    drawerLinks.forEach(function (link) {
-      link.addEventListener("click", function () { setOpen(false); });
-    });
-
-    // Tapping the backdrop closes it — the only exit on a device with no Escape.
-    drawer.addEventListener("click", function (event) {
-      if (event.target === drawer) setOpen(false);
-    });
-
-    document.addEventListener("keydown", function (e) {
-      if (!isOpen) return;
-
-      if (e.key === "Escape") {
-        setOpen(false);
-        return;
-      }
-
-      // Keep Tab inside the overlay; inert is not available everywhere.
-      if (e.key !== "Tab" || supportsInert) return;
-
-      var focusable = [burger].concat(drawerLinks);
-      var first = focusable[0];
-      var last = focusable[focusable.length - 1];
-
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
-    });
-
-    // A drawer left open across a resize into desktop would trap scrolling.
-    onResize(function () {
-      if (window.innerWidth > 980) setOpen(false);
-    });
+  function cancelGlide() {
+    glideToken++;
   }
 
-  /* ── Smooth scrolling ──────────────────────────────────────────── */
+  function easeInOutQuint(t) {
+    return t < 0.5 ? 16 * t * t * t * t * t : 1 - Math.pow(-2 * t + 2, 5) / 2;
+  }
+
+  function glideTo(top) {
+    var from = window.scrollY;
+    var delta = Math.max(top, 0) - from;
+
+    if (reduceMotion.matches || Math.abs(delta) < 2) {
+      window.scrollTo(0, Math.max(top, 0));
+      return;
+    }
+
+    /* Each frame writes a new scroll position, and `scroll-behavior: smooth`
+       in the stylesheet would put every one of those writes through the
+       browser's own animation as well — two eases fighting over the same
+       property. Suspended for the duration and handed straight back. */
+    var declared = root.style.scrollBehavior;
+    root.style.scrollBehavior = "auto";
+
+    // Long jumps must not take proportionally longer or crossing the page
+    // becomes a wait; short ones must not be instant.
+    var duration = Math.min(1150, Math.max(430, Math.abs(delta) * 0.62));
+    var began = null;
+    var token = ++glideToken;
+
+    function done() {
+      root.style.scrollBehavior = declared;
+    }
+
+    requestAnimationFrame(function step(now) {
+      if (token !== glideToken) { done(); return; }
+      if (began === null) began = now;
+
+      var t = Math.min((now - began) / duration, 1);
+      window.scrollTo(0, from + delta * easeInOutQuint(t));
+
+      if (t < 1) requestAnimationFrame(step);
+      else done();
+    });
+  }
 
   function setupSmoothScroll() {
     /* In-page navigation must move focus as well as the viewport, or the
@@ -459,13 +493,7 @@
 
         e.preventDefault();
 
-        var top = target.getBoundingClientRect().top + window.pageYOffset - navOffset();
-
-        window.scrollTo({
-          top: Math.max(top, 0),
-          behavior: reduceMotion.matches ? "auto" : "smooth"
-        });
-
+        glideTo(target.getBoundingClientRect().top + window.pageYOffset - navOffset());
         focusTarget(target);
 
         // Keep the URL shareable without letting the browser jump the page.
@@ -494,9 +522,7 @@
     });
 
     if (toTop) {
-      toTop.addEventListener("click", function () {
-        window.scrollTo({ top: 0, behavior: reduceMotion.matches ? "auto" : "smooth" });
-      });
+      toTop.addEventListener("click", function () { glideTo(0); });
     }
   }
 
@@ -860,7 +886,6 @@
     startScrollBus();
     setupTheme();
     setupNav();
-    setupDrawer();
     setupSmoothScroll();
     setupProgress();
     setupReveal();

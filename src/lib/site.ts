@@ -75,7 +75,7 @@ export const TWITTER = {
 } satisfies Metadata["twitter"];
 
 /**
- * The stylesheet drives stagger delays, drawer indices and per-item brand
+ * The stylesheet drives stagger delays and per-item brand
  * tints from custom properties set on the element. React writes `--*` keys
  * through untouched; the cast exists only because CSSProperties has no index
  * signature for them.

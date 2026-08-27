@@ -18,9 +18,12 @@ export function Footer({ year }: { year: number }) {
       </footer>
 
       {/* Invisible rather than removed, so the fade can run both ways;
-          main.js adds .is-visible once the page has scrolled far enough. */}
+          main.js adds .is-visible once the page has scrolled far enough.
+          --tabbar-space is the room the mobile tab bar occupies, and zero
+          above its breakpoint — so one expression parks the button clear of
+          the bar on a phone and leaves the desktop offset untouched. */}
       <button
-        className={`${ICON_BTN} invisible fixed right-[clamp(1rem,3vw,1.75rem)] bottom-[clamp(1rem,3vw,1.75rem)] print:hidden
+        className={`${ICON_BTN} invisible fixed right-[clamp(1rem,3vw,1.75rem)] bottom-[calc(var(--tabbar-space)+clamp(1rem,3vw,1.75rem))] print:hidden
           z-[1000] size-[46px] translate-y-[14px] scale-[.85] rounded-full opacity-0
           transition-[opacity,transform,translate,scale,rotate,visibility] duration-[400ms] ease-spring [transition-delay:0s,0s,400ms]
           [&.is-visible]:visible [&.is-visible]:translate-y-0 [&.is-visible]:scale-100
@@ -36,7 +39,7 @@ export function Footer({ year }: { year: number }) {
       {/* main.js appends toasts here; the classes each one needs are on the
           element it builds, in setupToasts. */}
       <div
-        className="pointer-events-none fixed bottom-[clamp(1.25rem,4vw,2.25rem)] left-1/2 z-[1300]
+        className="pointer-events-none fixed bottom-[calc(var(--tabbar-space)+clamp(1.25rem,4vw,2.25rem))] left-1/2 z-[1300]
           flex -translate-x-1/2 flex-col items-center gap-2"
         id="toastStack"
         role="status"

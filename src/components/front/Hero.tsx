@@ -24,10 +24,11 @@ export function Hero() {
   return (
     <>
       <section
-        className="relative flex min-h-svh items-center overflow-x-clip
-          pt-[clamp(5.5rem,12vh,8rem)] pb-[clamp(2.5rem,7vh,4.5rem)]
+        className="relative flex min-h-svh snap-start items-center
+          overflow-x-clip pt-[clamp(5.5rem,12vh,8rem)] pb-[clamp(2.5rem,7vh,4.5rem)]
           short:pt-[5.5rem] short:pb-[2.25rem]
-          max-[1024px]:[min-height:auto] max-[1024px]:text-center"
+          max-[1024px]:text-center
+          max-[980px]:pt-[calc(5rem+env(safe-area-inset-top,0px))] max-[980px]:pb-10"
         id="home"
       >
         <div
@@ -87,7 +88,8 @@ export function Hero() {
             </p>
 
             <div
-              className={`${ENTER} mb-[1.6rem] short:mb-[1.15rem] flex flex-wrap gap-3 max-[1024px]:justify-center`}
+              className={`${ENTER} mb-[1.6rem] short:mb-[1.15rem] flex flex-wrap gap-3 max-[1024px]:justify-center
+                max-[560px]:flex-col max-[560px]:gap-[.65rem] max-[560px]:[&>a]:w-full`}
               style={cssVars({ "--d": "430ms" })}
             >
               <a className={`${BTN_PRIMARY} magnetic`} href="/#work">
@@ -186,10 +188,17 @@ export function Hero() {
               with a flat 320px. On a phone held portrait 46vh is far past
               320px, so nothing changes there — but held landscape it is
               about 180px, and a flat cap would hand the whole first screen
-              to a photograph before a single word of the page. */}
+              to a photograph before a single word of the page.
+
+              A phone held upright is the one case none of that covers: 46vh
+              of an 844px screen is 388px, wider than the screen itself, so
+              the portrait fills it and the name lands below the fold. The
+              third cap is what keeps the first screen introducing someone
+              rather than just showing them. */}
           <div
             className={`${ENTER} relative mx-auto grid aspect-square w-full max-w-[min(400px,46vh)]
-              place-items-center max-[1024px]:row-start-1 max-[1024px]:max-w-[min(320px,46vh)]`}
+              place-items-center max-[1024px]:row-start-1 max-[1024px]:max-w-[min(320px,46vh)]
+              max-[640px]:max-w-[min(238px,32vh)]`}
             style={cssVars({ "--d": "300ms" })}
           >
             <div className="pointer-events-none absolute inset-0" aria-hidden="true">
@@ -251,6 +260,7 @@ export function Hero() {
 
       <div
         className="relative overflow-hidden border-y border-line bg-glass py-[1.15rem] print:hidden
+          max-[640px]:py-[.8rem]
           [mask-image:linear-gradient(90deg,transparent,#000_12%,#000_88%,transparent)]
           group"
         aria-hidden="true"
@@ -260,10 +270,10 @@ export function Hero() {
           {/* Two identical groups: the track scrolls exactly one group
               width, so the second copy is what makes the loop seamless. */}
           {[0, 1].map((group) => (
-            <div className="flex items-center gap-11 pr-11" key={group}>
+            <div className="flex items-center gap-11 pr-11 max-[640px]:gap-7 max-[640px]:pr-7" key={group}>
               {MARQUEE.map((item) => (
                 <span
-                  className="inline-flex items-center gap-[.55rem] font-display text-[1.05rem] font-semibold
+                  className="inline-flex items-center gap-[.55rem] font-display text-[1.05rem] max-[640px]:text-[.9rem] font-semibold
                     tracking-[-.02em] text-ink-faint transition-colors duration-300 ease-brand
                     hover:text-brand-1
                     before:size-[5px] before:rounded-full before:bg-brand-2 before:opacity-55

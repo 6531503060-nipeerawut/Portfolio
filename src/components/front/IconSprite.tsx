@@ -22,6 +22,10 @@ export function IconSprite() {
         <g id="i-copy"><rect x="9" y="9" width="11" height="11" rx="2.5" /><path d="M6.5 15H5.5a2 2 0 01-2-2V5.5a2 2 0 012-2H13a2 2 0 012 2v1" /></g>
         <g id="i-check"><path d="M20 6L9 17l-5-5" /></g>
         <g id="i-code"><path d="M8.5 17.5L3 12l5.5-5.5M15.5 6.5L21 12l-5.5 5.5M13.8 4l-3.6 16" /></g>
+        {/* The three the tab bar needs that nothing else on the page had. */}
+        <g id="i-home"><path d="M3.5 10.4L12 3.2l8.5 7.2V19a2.5 2.5 0 01-2.5 2.5h-2.8v-6H8.8v6H6A2.5 2.5 0 013.5 19z" /></g>
+        <g id="i-user"><circle cx="12" cy="8" r="4" /><path d="M4.5 20.8c0-4.2 3.3-6.6 7.5-6.6s7.5 2.4 7.5 6.6" /></g>
+        <g id="i-layers"><path d="M12 2.8L21.5 7.6 12 12.4 2.5 7.6z" /><path d="M2.5 12.2L12 17l9.5-4.8M2.5 16.6L12 21.4l9.5-4.8" /></g>
         <g id="i-server">
           <rect x="2.5" y="3.5" width="19" height="7" rx="2.5" /><rect x="2.5" y="13.5" width="19" height="7" rx="2.5" />
           <path d="M6.5 7h.01M6.5 17h.01" />
