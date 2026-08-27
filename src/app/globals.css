@@ -314,17 +314,18 @@
     scroll-padding-top: var(--nav-offset);
 
     /*
-     * Geometry of the mobile tab bar, in one place because four things
-     * depend on it: the bar itself, the room the page reserves at its foot,
-     * where the back-to-top button sits, and where toasts stack.
+     * Geometry of the phone app's two fixed bars, used by the shell that
+     * draws them and by the column between them that has to stop short of
+     * both. The safe-area insets are added at each use rather than folded
+     * in here: the top bar pads its contents past the notch while its own
+     * ground runs to the edge of the screen, and only one of those is this
+     * height.
      *
-     * --tabbar-space is zero above the breakpoint, so every rule that
-     * reserves room for the bar can be written once and unconditionally.
+     * These belong to (mobile) alone. The document has no such bars — see
+     * the note in src/components/front/Navbar.tsx.
      */
-    --tabbar-h: 62px;
-    --tabbar-gap: max(10px, env(safe-area-inset-bottom, 0px));
-    --tabbar-x: max(10px, env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px));
-    --tabbar-space: 0px;
+    --app-bar-h: 56px;
+    --app-tab-h: 64px;
   }
 
   /* A finger drags the page as often as it taps, so the grey box the browser
@@ -334,16 +335,6 @@
     html {
       -webkit-tap-highlight-color: transparent;
       -webkit-text-size-adjust: 100%;
-    }
-  }
-
-  /*
-   * Below 981px the navigation is a tab bar floating over the foot of the
-   * page, so the page has to stop short of it.
-   */
-  @media (max-width: 980px) {
-    html {
-      --tabbar-space: calc(var(--tabbar-h) + var(--tabbar-gap) + 12px);
     }
   }
 
@@ -377,12 +368,6 @@
     html {
       scroll-snap-type: y proximity;
     }
-  }
-
-  /* The tab bar overlays the foot of the document, so the document has to
-     stop short of it. Zero above the breakpoint. */
-  body {
-    padding-bottom: var(--tabbar-space);
   }
 
   ::selection {

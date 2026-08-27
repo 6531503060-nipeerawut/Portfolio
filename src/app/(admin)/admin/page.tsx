@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { StatCard } from "@/components/admin/StatCard";
+import { appHref } from "@/lib/mobile";
 import { SECTIONS, sectionHref } from "@/lib/sections";
 import { CARD, H2, H3 } from "@/lib/styles";
 import { RESUME_HREF } from "@/lib/site";
@@ -14,8 +15,6 @@ import { RESUME_HREF } from "@/lib/site";
  * writes anything.
  */
 export default function AdminPage() {
-  const anchors = SECTIONS.filter((section) => sectionHref(section.id).includes("#"));
-
   return (
     <>
       <div className="mb-8">
@@ -26,8 +25,8 @@ export default function AdminPage() {
       </div>
 
       <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(min(220px,100%),1fr))]">
-        <StatCard label="Navigation entries" value={SECTIONS.length} hint="Shared by the desktop rail and the mobile tab bar." />
-        <StatCard label="Home anchors" value={anchors.length} hint="Entries that scroll within the single page." />
+        <StatCard label="Navigation entries" value={SECTIONS.length} hint="One registry, read by the desktop rail and the app's tab bar." />
+        <StatCard label="App screens" value={SECTIONS.length} hint="Each entry is a route of its own under /m — the phone build." />
         <StatCard label="Documents" value={2} hint="Résumé PDFs served from /public." />
       </div>
 
@@ -44,9 +43,16 @@ export default function AdminPage() {
                 <span className="block font-display text-[.92rem] font-semibold text-ink">{section.label}</span>
                 <span className="block text-[.8rem] text-ink-muted">{section.blurb}</span>
               </span>
-              <Link className="font-mono text-[.76rem] text-brand-1 hover:underline" href={sectionHref(section.id)}>
-                {sectionHref(section.id)}
-              </Link>
+              {/* Both addresses for the same section: the anchor the
+                  document scrolls to, and the screen the app navigates to. */}
+              <span className="flex items-center gap-3">
+                <Link className="font-mono text-[.76rem] text-brand-1 hover:underline" href={sectionHref(section.id)}>
+                  {sectionHref(section.id)}
+                </Link>
+                <Link className="font-mono text-[.76rem] text-ink-faint hover:underline" href={appHref(section.id)}>
+                  {appHref(section.id)}
+                </Link>
+              </span>
             </li>
           ))}
         </ul>

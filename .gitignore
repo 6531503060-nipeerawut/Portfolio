@@ -9,7 +9,9 @@ node_modules/
 package-lock.json
 
 # ผลลัพธ์จากการ build ของ Next.js
+# .next = next build / next start, .next-dev = next dev (แยกกันใน next.config.ts)
 /.next/
+/.next-dev/
 /out/
 next-env.d.ts
 *.tsbuildinfo

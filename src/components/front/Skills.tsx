@@ -1,80 +1,7 @@
 import { SectionEyebrow } from "@/components/front/SectionEyebrow";
+import { HEADINGS, SKILL_GROUPS } from "@/lib/content";
 import { CARD, GRAD, H2, H3, REVEAL, SECTION, SECTION_HEAD, SHELL } from "@/lib/styles";
 import { cssVars, stagger } from "@/lib/site";
-
-type SkillLink = {
-  name: string;
-  href: string;
-  /** Sprite id of the vendor logo, without the leading `#`. */
-  logo: string;
-  /** Vendor colour used on the light palette. */
-  brand: string;
-  /** Same colour lifted for contrast on the dark palette. */
-  brandOnDark: string;
-};
-
-type SkillGroup = {
-  title: string;
-  meta: string;
-  /** Brand token the card tints itself with. */
-  tint: string;
-  /** Sprite id of the card icon, without the leading `#`. */
-  icon: string;
-  items: SkillLink[];
-};
-
-const GROUPS: SkillGroup[] = [
-  {
-    title: "Frontend",
-    meta: "Interfaces & experience",
-    tint: "var(--brand-1)",
-    icon: "i-code",
-    items: [
-      { name: "Angular", href: "https://angular.dev/", logo: "logo-angular", brand: "#0F0F11", brandOnDark: "#e8ecf8" },
-      { name: "React", href: "https://react.dev/", logo: "logo-react", brand: "#61DAFB", brandOnDark: "#61DAFB" },
-      { name: "Next.js", href: "https://nextjs.org/", logo: "logo-nextjs", brand: "#000000", brandOnDark: "#e8ecf8" },
-      { name: "Tailwind CSS", href: "https://tailwindcss.com/", logo: "logo-tailwind-css", brand: "#06B6D4", brandOnDark: "hsl(189 94% 68%)" },
-      { name: "Flutter", href: "https://flutter.dev/", logo: "logo-flutter", brand: "#02569B", brandOnDark: "hsl(207 97% 68%)" },
-    ],
-  },
-  {
-    title: "Backend",
-    meta: "APIs & services",
-    tint: "var(--brand-2)",
-    icon: "i-server",
-    items: [
-      { name: "Go (Fiber)", href: "https://go.dev/", logo: "logo-go-fiber", brand: "#00ADD8", brandOnDark: "hsl(192 100% 68%)" },
-      { name: "Node.js (Express.js)", href: "https://nodejs.org/", logo: "logo-nodejs-expressjs", brand: "#5FA04E", brandOnDark: "hsl(108 55% 68%)" },
-      { name: "Java (Spring Boot)", href: "https://spring.io/projects/spring-boot", logo: "logo-spring-boot", brand: "#6DB33F", brandOnDark: "hsl(96 48% 68%)" },
-      { name: "Edge Functions", href: "https://supabase.com/docs/guides/functions", logo: "logo-edge-fn", brand: "#7C8CFF", brandOnDark: "#7C8CFF" },
-    ],
-  },
-  {
-    title: "Database",
-    meta: "Modelling & integrity",
-    tint: "var(--brand-3)",
-    icon: "i-database",
-    items: [
-      { name: "MSSQL", href: "https://www.microsoft.com/en-us/sql-server", logo: "logo-generic-db", brand: "#CC2927", brandOnDark: "hsl(1 68% 68%)" },
-      { name: "MySQL", href: "https://www.mysql.com/", logo: "logo-mysql", brand: "#4479A1", brandOnDark: "hsl(206 55% 68%)" },
-      { name: "PostgreSQL", href: "https://www.postgresql.org/", logo: "logo-postgresql", brand: "#4169E1", brandOnDark: "hsl(225 73% 68%)" },
-      { name: "Supabase", href: "https://supabase.com/", logo: "logo-supabase", brand: "#3FCF8E", brandOnDark: "hsl(153 60% 68%)" },
-    ],
-  },
-  {
-    title: "Tools",
-    meta: "Workflow & collaboration",
-    tint: "var(--brand-4)",
-    icon: "i-tools",
-    items: [
-      { name: "Git", href: "https://git-scm.com/", logo: "logo-git", brand: "#F03C2E", brandOnDark: "hsl(4 87% 68%)" },
-      { name: "GitHub", href: "https://github.com/", logo: "logo-github", brand: "#181717", brandOnDark: "#e8ecf8" },
-      { name: "Swagger", href: "https://swagger.io/", logo: "logo-swagger", brand: "#85EA2D", brandOnDark: "hsl(92 82% 68%)" },
-      { name: "Postman", href: "https://www.postman.com/", logo: "logo-postman", brand: "#FF6C37", brandOnDark: "hsl(16 100% 68%)" },
-      { name: "Figma", href: "https://www.figma.com/", logo: "logo-figma", brand: "#F24E1E", brandOnDark: "hsl(14 89% 68%)" },
-    ],
-  },
-];
 
 /**
  * Skill card. The ::after is a tinted glow that blooms out from behind the
@@ -126,19 +53,23 @@ const SKILL_OUT =
   "group-focus-visible/item:translate-x-0 group-focus-visible/item:translate-y-0 group-focus-visible/item:opacity-85";
 
 export function Skills() {
+  const heading = HEADINGS.skills;
+
   return (
     <section className={SECTION} id="skills">
       <div className={SHELL}>
         <div className={`${SECTION_HEAD} ${REVEAL} mx-auto text-center`} data-reveal>
           <SectionEyebrow id="skills" />
           <h2 className={H2}>
-            What I <span className={GRAD}>work with</span>.
+            {heading.before}
+            <span className={GRAD}>{heading.accent}</span>
+            {heading.after}
           </h2>
-          <p>The stack I use day to day, plus what I have shipped with before.</p>
+          <p>{heading.blurb}</p>
         </div>
 
         <div className="grid gap-[clamp(1rem,2vw,1.35rem)] grid-cols-[repeat(auto-fit,minmax(min(255px,100%),1fr))]">
-          {GROUPS.map((group, index) => (
+          {SKILL_GROUPS.map((group, index) => (
             <article
               className={`${SKILL} ${REVEAL}`}
               key={group.title}

@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
 
+import { IconSprite } from "@/components/IconSprite";
 import { Ambient } from "@/components/front/Ambient";
 import { Footer } from "@/components/front/Footer";
-import { IconSprite } from "@/components/front/IconSprite";
+import { Interactions } from "@/components/front/Interactions";
 import { Navbar } from "@/components/front/Navbar";
 
 /*
@@ -16,8 +17,14 @@ import { Navbar } from "@/components/front/Navbar";
 export const revalidate = 86400;
 
 /**
- * Chrome shared by every public page: the ambient background, the icon
- * sprite everything points `<use>` at, the navbar and the footer.
+ * Chrome shared by every page of the desktop site: the ambient background,
+ * the icon sprite everything points `<use>` at, the navbar, the footer and
+ * the interaction script.
+ *
+ * This is the document half of the site. The phone app lives under
+ * `(mobile)` and shares none of it — see src/proxy.ts for how a request
+ * reaches one rather than the other, and src/lib/mobile.ts for why the two
+ * do not share a vocabulary.
  */
 export default function FrontLayout({ children }: { children: ReactNode }) {
   const year = new Date().getFullYear();
@@ -43,6 +50,11 @@ export default function FrontLayout({ children }: { children: ReactNode }) {
       </main>
 
       <Footer year={year} />
+
+      {/* Loaded here rather than in the root layout: main.js caches the
+          elements it finds at boot, which suits a document that is only ever
+          scrolled and would go stale under an app that swaps its screens. */}
+      <Interactions />
     </>
   );
 }

@@ -1,6 +1,8 @@
+import { Rich } from "@/components/Rich";
 import { SectionEyebrow } from "@/components/front/SectionEyebrow";
+import { HEADINGS, TIMELINE } from "@/lib/content";
 import { CARD, GRAD, H2, REVEAL, SECTION, SECTION_HEAD, SHELL, TAG } from "@/lib/styles";
-import { cssVars } from "@/lib/site";
+import { stagger } from "@/lib/site";
 
 /** Timeline card: nudges sideways on hover, towards its dot. */
 const TL_CARD =
@@ -35,15 +37,19 @@ const TL_DOT =
   "max-[640px]:top-[1.6rem] max-[640px]:left-[-1.4rem] max-[640px]:size-2.5";
 
 export function Experience() {
+  const heading = HEADINGS.experience;
+
   return (
     <section className={SECTION} id="experience">
       <div className={SHELL}>
         <div className={`${SECTION_HEAD} ${REVEAL}`} data-reveal>
           <SectionEyebrow id="experience" />
           <h2 className={H2}>
-            Two products, built <span className={GRAD}>in parallel</span>.
+            {heading.before}
+            <span className={GRAD}>{heading.accent}</span>
+            {heading.after}
           </h2>
-          <p>Where I have worked and what I owned there.</p>
+          <p>{heading.blurb}</p>
         </div>
 
         {/* The ::before is the spine, fading in at the top and out at the
@@ -56,92 +62,61 @@ export function Experience() {
             before:bg-[linear-gradient(180deg,transparent,color-mix(in_srgb,var(--brand-1)_55%,transparent)_12%,color-mix(in_srgb,var(--brand-2)_45%,transparent)_60%,transparent)]
             max-[640px]:pl-[1.4rem]"
         >
-          <li className={`${REVEAL} relative`} data-reveal>
-            {/* Only the current role breathes. */}
-            <span className={`${TL_DOT} animate-ping-dot`} aria-hidden="true" />
-            <article className={TL_CARD}>
-              <header className={TL_HEAD}>
-                <div>
-                  <h3 className="font-display text-[clamp(1.15rem,2.2vw,1.35rem)] font-bold leading-[1.1] tracking-[-.02em] text-ink">
-                    Junior Full-Stack Developer
-                  </h3>
-                  <p className={TL_ORG}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"
-                      strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><use href="#i-building" /></svg>
-                    Gendee.ai
-                  </p>
+          {TIMELINE.map((role, index) => (
+            <li className={`${REVEAL} relative`} key={role.title} style={stagger(index, 100)} data-reveal>
+              {/* Only the current role breathes. */}
+              <span
+                className={`${TL_DOT} ${role.current ? "animate-ping-dot" : ""}`}
+                aria-hidden="true"
+              />
+
+              <article className={TL_CARD}>
+                <header className={TL_HEAD}>
+                  <div>
+                    <h3 className="font-display text-[clamp(1.15rem,2.2vw,1.35rem)] font-bold leading-[1.1] tracking-[-.02em] text-ink">
+                      {role.title}
+                    </h3>
+                    <p className={TL_ORG}>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"
+                        strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><use href={`#${role.orgIcon}`} /></svg>
+                      {role.org}
+                    </p>
+                  </div>
+
+                  {/* One pill for the current role, two for the internship —
+                      the label and the dates. They share a row either way so
+                      the head keeps its two-child left/right split. */}
+                  <div className="flex flex-wrap items-baseline gap-[.4rem]">
+                    {role.when.map((when) => (
+                      <span className={TL_WHEN} key={when}>{when}</span>
+                    ))}
+                  </div>
+                </header>
+
+                <p className="text-[.94rem] short:text-[.88rem] short:leading-[1.5] text-ink-muted [&_strong]:font-semibold [&_strong]:text-ink-soft">
+                  <Rich parts={role.summary} />
+                </p>
+
+                {role.highlights.length > 0 ? (
+                  <ul className="my-[.8rem] short:my-[.55rem] grid gap-[.45rem] short:gap-[.3rem]">
+                    {role.highlights.map((point) => (
+                      <li className={TL_POINT} key={point}>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"
+                          strokeLinejoin="round" aria-hidden="true"><use href="#i-check" /></svg>
+                        {point}
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
+
+                <div className="mt-[.85rem] short:mt-[.6rem] flex flex-wrap gap-[.45rem]">
+                  {role.tags.map((tag) => (
+                    <span className={TAG} key={tag}>{tag}</span>
+                  ))}
                 </div>
-                <span className={TL_WHEN}>Jun 2026 &ndash; Present</span>
-              </header>
-
-              <p className="text-[.94rem] short:text-[.88rem] short:leading-[1.5] text-ink-muted [&_strong]:font-semibold [&_strong]:text-ink-soft">
-                Two platforms at once &mdash; <strong>Gendee.ai</strong>, an AI content studio, and{" "}
-                <strong>CIRCLE</strong>, a news app. 218 commits across six repositories.
-              </p>
-
-              <ul className="my-[.8rem] short:my-[.55rem] grid gap-[.45rem] short:gap-[.3rem]">
-                <li className={TL_POINT}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"
-                    strokeLinejoin="round" aria-hidden="true"><use href="#i-check" /></svg>
-                  Shipped three systems end to end &mdash; courses, notifications, and B2B organizations &mdash;
-                  each from schema through API to UI.
-                </li>
-                <li className={TL_POINT}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"
-                    strokeLinejoin="round" aria-hidden="true"><use href="#i-check" /></svg>
-                  Connected the CIRCLE reader app and editorial desk to their backend, then simplified the news
-                  schema behind them.
-                </li>
-                <li className={TL_POINT}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"
-                    strokeLinejoin="round" aria-hidden="true"><use href="#i-check" /></svg>
-                  Kept the details honest: mobile layouts, multi-language copy, accessibility, tests and handover docs.
-                </li>
-              </ul>
-
-              <div className="mt-[.85rem] short:mt-[.6rem] flex flex-wrap gap-[.45rem]">
-                <span className={TAG}>Angular</span>
-                <span className={TAG}>Ionic</span>
-                <span className={TAG}>Supabase</span>
-                <span className={TAG}>PostgreSQL</span>
-              </div>
-            </article>
-          </li>
-
-          <li className={`${REVEAL} relative`} style={cssVars({ "--d": "100ms" })} data-reveal>
-            <span className={TL_DOT} aria-hidden="true" />
-            <article className={TL_CARD}>
-              <header className={TL_HEAD}>
-                <div>
-                  <h3 className="font-display text-[clamp(1.15rem,2.2vw,1.35rem)] font-bold leading-[1.1] tracking-[-.02em] text-ink">
-                    Full Stack Developer Intern
-                  </h3>
-                  <p className={TL_ORG}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"
-                      strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><use href="#i-briefcase" /></svg>
-                    DoiTung
-                  </p>
-                </div>
-                {/* Two of them here — the label and the dates. They share a
-                    row so the head keeps its two-child left/right split. */}
-                <div className="flex flex-wrap items-baseline gap-[.4rem]">
-                  <span className={TL_WHEN}>Internship</span>
-                  <span className={TL_WHEN}>Jan 2026 &ndash; Apr 2026</span>
-                </div>
-              </header>
-
-              <p className="text-[.94rem] short:text-[.88rem] short:leading-[1.5] text-ink-muted [&_strong]:font-semibold [&_strong]:text-ink-soft">
-                Built <strong>MyTissue</strong>, an internal system tracking client wood inventory through every
-                processing stage &mdash; multi-step workflows with transactional consistency.
-              </p>
-
-              <div className="mt-[.85rem] short:mt-[.6rem] flex flex-wrap gap-[.45rem]">
-                <span className={TAG}>Next.js</span>
-                <span className={TAG}>Go / Fiber</span>
-                <span className={TAG}>MSSQL</span>
-              </div>
-            </article>
-          </li>
+              </article>
+            </li>
+          ))}
         </ol>
       </div>
     </section>

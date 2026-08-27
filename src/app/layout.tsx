@@ -3,7 +3,6 @@ import type { ReactNode } from "react";
 
 import "@/app/globals.css";
 
-import { Interactions } from "@/components/front/Interactions";
 import { AUTHOR, DESCRIPTION, OPEN_GRAPH, SITE_URL, TAB_TITLE, TWITTER } from "@/lib/site";
 import { THEME_BOOTSTRAP } from "@/lib/theme";
 
@@ -73,8 +72,16 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     /* THEME_BOOTSTRAP rewrites data-theme before React hydrates, so the value
-       the client finds is expected to differ from the one rendered here. */
-    <html lang="en" data-theme="dark" suppressHydrationWarning>
+       the client finds is expected to differ from the one rendered here.
+
+       data-scroll-behavior asks Next to suspend the `scroll-behavior: smooth`
+       in globals.css for the length of a route change, which it stopped doing
+       by default in 16. Without it every navigation animates its way back to
+       the top of the new page: on the desktop that is the jump to /about
+       scrolling itself, and in the app it is a tab tap gliding up a screen
+       the visitor has not seen yet instead of arriving at the top of it. The
+       smooth scroll is wanted for in-page jumps and nowhere else. */
+    <html lang="en" data-theme="dark" data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
         {/* The Metadata API cannot attach the id that THEME_BOOTSTRAP and
             main.js look up to repaint the browser chrome, so this one tag
@@ -100,9 +107,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           antialiased transition-colors duration-[450ms] ease-brand
           print:bg-white print:text-black"
       >
+        {/* The interaction layer is not here.
+            public/js/main.js drives the desktop document — the scroll spy,
+            the sliding nav pill, the eased in-page jumps, the reveals, the
+            cursor effects — and it measures the DOM once at boot. The app
+            under (mobile) replaces its screens on every tap and owns those
+            behaviours in React instead, so it must not load that file. Each
+            route group brings its own; see (front)/layout.tsx. */}
         {children}
-
-        <Interactions />
       </body>
     </html>
   );

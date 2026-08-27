@@ -7,7 +7,7 @@
    2.  Scroll bus (one listener, cached metrics)
    3.  Toast
    4.  Theme
-   5.  Navigation, tab bar, smooth scrolling
+   5.  Navigation and smooth scrolling
    6.  Progress bar
    7.  Reveal, typewriter, counters
    8.  Pointer flourishes
@@ -270,12 +270,14 @@
     var here = currentPath();
 
     /*
-     * One rail per navigation surface: the pill row in the header, and the
-     * tab bar along the bottom below 981px. They list the same sections and
-     * only one of them is visible at a time, but both are kept in step —
-     * measuring a hidden rail costs nothing (its boxes are all zero, which
-     * movePill reads as "no pill to place") and a resize across the
-     * breakpoint re-measures whichever one just appeared.
+     * One rail per navigation surface. There is one of them now — the pill
+     * row in the header — where there used to be two: a bottom tab bar
+     * appeared below 981px and was kept in step with this one. That bar has
+     * moved out of this document entirely, into the phone app under
+     * src/app/(mobile), where its entries navigate instead of scrolling and
+     * React owns the active state. The list stays a list because the spy,
+     * the pill and the measurement below are written against it, and a
+     * second surface would cost one line rather than a rewrite.
      */
     function makeRail(root, pill, selector) {
       if (!root) return null;
@@ -283,14 +285,13 @@
     }
 
     var rails = [
-      makeRail($("#navLinks"), $("#navPill"), ".nav__link"),
-      makeRail($("#tabbar"), $("#tabPill"), ".tab__link")
+      makeRail($("#navLinks"), $("#navPill"), ".nav__link")
     ].filter(Boolean);
 
     if (!rails.length) return;
 
     // Index-aligned with the first rail's links; a null marks an entry the
-    // spy skips. Both rails carry the same hrefs, so one pass covers them.
+    // spy skips. Every rail carries the same hrefs, so one pass covers them.
     var lead = rails[0].links;
     var targets = lead.map(function (link) {
       if (routeOf(link) !== here) return null;

@@ -1,4 +1,6 @@
+import { Rich } from "@/components/Rich";
 import { SectionEyebrow } from "@/components/front/SectionEyebrow";
+import { BIO, FACTS, HEADINGS, LIVE_LINKS, STATS } from "@/lib/content";
 import {
   CARD,
   GRAD,
@@ -72,6 +74,8 @@ const LIVE_META =
 const LIVE_DOT = "size-[6px] flex-none rounded-full bg-[#22c55e] animate-ping-live";
 
 export function About() {
+  const heading = HEADINGS.about;
+
   return (
     <section className={SECTION} id="about">
       <div className={SHELL}>
@@ -79,25 +83,25 @@ export function About() {
           <div>
             <SectionEyebrow id="about" />
             <h2 className={H2}>
-              I build features <span className={GRAD}>end to end</span>.
+              {heading.before}
+              <span className={GRAD}>{heading.accent}</span>
+              {heading.after}
             </h2>
-            <p>Who I am, where I studied, and the way I like to work.</p>
+            <p>{heading.blurb}</p>
           </div>
 
           {/* Beside the title on a wide screen, stacked under it below. */}
           <div className="grid w-[min(100%,26rem)] flex-none grid-cols-3 gap-[.55rem] max-[640px]:w-full max-[640px]:grid-cols-1">
-            <div className={STAT}>
-              <div className={STAT_NUM} data-count="2">2</div>
-              <div className={STAT_LABEL}>Platforms in production</div>
-            </div>
-            <div className={STAT}>
-              <div className={STAT_NUM} data-count="6">6</div>
-              <div className={STAT_LABEL}>Repositories contributed to</div>
-            </div>
-            <div className={STAT}>
-              <div className={STAT_NUM} data-count="218">218</div>
-              <div className={STAT_LABEL}>Commits authored</div>
-            </div>
+            {STATS.map((stat) => (
+              <div className={STAT} key={stat.label}>
+                {/* The real figure is in the markup; setupCounters only
+                    animates its way up to it. */}
+                <div className={STAT_NUM} data-count={stat.value}>
+                  {stat.value}
+                </div>
+                <div className={STAT_LABEL}>{stat.label}</div>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -116,22 +120,17 @@ export function About() {
               className="text-[clamp(1.02rem,1.6vw,1.16rem)]! font-display font-semibold
                 leading-normal tracking-[-.02em] text-ink!"
             >
-              Most features I take on start at the database and finish in the browser. I design the tables and
-              access rules, write the API, then build the screens that use them.
+              {BIO.lead}
             </p>
-            <p>
-              That is how I work at{" "}
-              <mark className="bg-transparent font-semibold text-brand-1">Gendee.ai</mark>, on two products at
-              once: <strong>Gendee.ai</strong>, an AI content generation platform, and <strong>CIRCLE</strong>, a
-              digital news app. Owning the whole path means the pieces actually fit — no guessing at a contract
-              someone else wrote.
-            </p>
-            <p>
-              I graduated in Software Engineering from Mae Fah Luang University, School of Applied Digital
-              Technology. My senior project and my internship both ran inside real operations, where accurate
-              records mattered more than clever code. That shaped how I build: get the data model right first,
-              keep the interface predictable, and write it down so the next person is not stuck.
-            </p>
+            {BIO.paragraphs.map((paragraph, index) => (
+              <p key={index}>
+                <Rich
+                  parts={paragraph}
+                  strongClass="font-semibold text-ink-soft"
+                  markClass="bg-transparent font-semibold text-brand-1"
+                />
+              </p>
+            ))}
           </article>
 
           <div className="grid gap-[clamp(.85rem,1.8vw,1.15rem)] grid-rows-[auto_1fr]">
@@ -140,46 +139,25 @@ export function About() {
               style={cssVars({ "--d": "80ms" })}
               data-reveal
             >
-              <li className={FACT}>
-                <span className={FACT_ICO}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"
-                    strokeLinejoin="round" aria-hidden="true"><use href="#i-briefcase" /></svg>
-                </span>
-                <div>
-                  <span className={FACT_K}>Currently</span>
-                  <span className={FACT_V}>Junior Full-Stack Developer at Gendee.ai</span>
-                </div>
-              </li>
-              <li className={FACT}>
-                <span className={FACT_ICO}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"
-                    strokeLinejoin="round" aria-hidden="true"><use href="#i-cap" /></svg>
-                </span>
-                <div>
-                  <span className={FACT_K}>Education</span>
-                  <span className={FACT_V}>B.Eng. Software Engineering<br />Mae Fah Luang University</span>
-                </div>
-              </li>
-              <li className={FACT}>
-                <span className={FACT_ICO}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"
-                    strokeLinejoin="round" aria-hidden="true"><use href="#i-code" /></svg>
-                </span>
-                <div>
-                  <span className={FACT_K}>Focus</span>
-                  <span className={FACT_V}>Next.js, Go (Fiber), PostgreSQL</span>
-                </div>
-              </li>
-              <li className={FACT}>
-                <span className={FACT_ICO}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"
-                    strokeLinejoin="round" aria-hidden="true"><use href="#i-pin" /></svg>
-                </span>
-                <div>
-                  <span className={FACT_K}>Based in</span>
-                  <span className={FACT_V}>Thailand — open to remote &amp; on-site</span>
-                </div>
-              </li>
+              {FACTS.map((fact) => (
+                <li className={FACT} key={fact.key}>
+                  <span className={FACT_ICO}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"
+                      strokeLinejoin="round" aria-hidden="true"><use href={`#${fact.icon}`} /></svg>
+                  </span>
+                  <div>
+                    <span className={FACT_K}>{fact.key}</span>
+                    {/* One line each: the education entry is two, and a
+                        block per line is the same break the markup used to
+                        spell out with <br>. */}
+                    {fact.value.map((line) => (
+                      <span className={FACT_V} key={line}>
+                        {line}
+                      </span>
+                    ))}
+                  </div>
+                </li>
+              ))}
             </ul>
 
             <div
@@ -192,51 +170,31 @@ export function About() {
               </span>
               {/* Stacked so the full host name fits without truncating. */}
               <div className="grid gap-2">
-                <a
-                  className={LIVE_LINK}
-                  style={cssVars({ "--tint": "var(--brand-1)" })}
-                  href="https://gendee.ai/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <span className={LIVE_ICO}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"
-                      strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><use href="#i-globe" /></svg>
-                  </span>
-                  <span className="min-w-0">
-                    <span className="flex items-center gap-[.4rem] font-display text-[.94rem] font-semibold tracking-[-.01em] text-ink">
-                      Gendee.ai
+                {LIVE_LINKS.map((live) => (
+                  <a
+                    className={LIVE_LINK}
+                    key={live.name}
+                    style={cssVars({ "--tint": live.tint })}
+                    href={live.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span className={LIVE_ICO}>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"
+                        strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><use href={`#${live.icon}`} /></svg>
                     </span>
-                    <span className={LIVE_META}><i className={LIVE_DOT} />gendee.ai</span>
-                  </span>
-                  <span className={LIVE_ARROW}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9"
-                      strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><use href="#i-external" /></svg>
-                  </span>
-                </a>
-
-                <a
-                  className={LIVE_LINK}
-                  style={cssVars({ "--tint": "var(--brand-4)" })}
-                  href="https://circle-th.com/tabs/home"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <span className={LIVE_ICO}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"
-                      strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><use href="#i-news" /></svg>
-                  </span>
-                  <span className="min-w-0">
-                    <span className="flex items-center gap-[.4rem] font-display text-[.94rem] font-semibold tracking-[-.01em] text-ink">
-                      CIRCLE
+                    <span className="min-w-0">
+                      <span className="flex items-center gap-[.4rem] font-display text-[.94rem] font-semibold tracking-[-.01em] text-ink">
+                        {live.name}
+                      </span>
+                      <span className={LIVE_META}><i className={LIVE_DOT} />{live.host}</span>
                     </span>
-                    <span className={LIVE_META}><i className={LIVE_DOT} />circle-th.com</span>
-                  </span>
-                  <span className={LIVE_ARROW}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9"
-                      strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><use href="#i-external" /></svg>
-                  </span>
-                </a>
+                    <span className={LIVE_ARROW}>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9"
+                        strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><use href="#i-external" /></svg>
+                    </span>
+                  </a>
+                ))}
               </div>
             </div>
           </div>

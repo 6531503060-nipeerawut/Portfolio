@@ -1,86 +1,7 @@
 import { SectionEyebrow } from "@/components/front/SectionEyebrow";
+import { HEADINGS, PROJECTS, REPOSITORIES_URL } from "@/lib/content";
 import { BTN_GHOST, CARD, GRAD, H2, REVEAL, SECTION, SECTION_HEAD_SPLIT, SHELL, TAG } from "@/lib/styles";
 import { cssVars, stagger } from "@/lib/site";
-
-type WorkItem = {
-  title: string;
-  /** Organisation and category line under the title. */
-  org: string;
-  blurb: string;
-  tags: string[];
-  /** Sprite id of the card icon, without the leading `#`. */
-  icon: string;
-  /**
-   * Corner badge. Given a `href` it renders as a link out; otherwise it is a
-   * plain label.
-   */
-  badge: { text: string; href?: string; ariaLabel?: string };
-};
-
-/** Card tints, cycled so no two neighbours share one. */
-const TINTS = [
-  "var(--brand-1)",
-  "var(--brand-2)",
-  "var(--brand-3)",
-  "var(--brand-4)",
-  "var(--brand-1)",
-  "var(--brand-3)",
-];
-
-const PROJECTS: WorkItem[] = [
-  {
-    title: "Gendee for Business",
-    org: "Gendee.ai · B2B",
-    blurb: "Shared credit pools, member limits and invite flows — schema through to the admin console.",
-    tags: ["Angular", "Deno", "PostgreSQL"],
-    icon: "i-building",
-    badge: { text: "End to end" },
-  },
-  {
-    title: "Course Platform",
-    org: "Gendee.ai · Commerce",
-    blurb: "Catalog, checkout, payment and classroom — plus the staff console behind it.",
-    tags: ["Angular", "Deno", "PostgreSQL"],
-    icon: "i-cap",
-    badge: { text: "End to end" },
-  },
-  {
-    title: "Notifications & Push",
-    org: "Gendee.ai · Platform",
-    blurb: "Database triggers fanning out to Firebase Cloud Messaging, plus an in-app bell.",
-    tags: ["Firebase FCM", "Deno", "PostgreSQL"],
-    icon: "i-bell",
-    badge: { text: "End to end" },
-  },
-  {
-    title: "CIRCLE News Platform",
-    org: "Formerly BCC24 News",
-    blurb: "Reader app and editorial desk wired to their backend, plus the rebrand across both.",
-    tags: ["Ionic", "Capacitor", "Supabase"],
-    icon: "i-news",
-    badge: { text: "Mobile app" },
-  },
-  {
-    title: "Operations Dashboard",
-    org: "Gendee.ai · Admin",
-    blurb: "Redeem codes, organizations and reporting, on shared components I wrote for it.",
-    tags: ["Angular", "Chart.js", "Supabase"],
-    icon: "i-gauge",
-    badge: { text: "Internal tool" },
-  },
-  {
-    title: "DoiTung Waste Management",
-    org: "Senior project · Mae Fah Luang University",
-    blurb: "Community waste tracking that surfaces generation patterns — published as a peer-reviewed IEEE paper.",
-    tags: ["React", "Node.js", "MySQL"],
-    icon: "i-leaf",
-    badge: {
-      text: "IEEE 2026",
-      href: "https://ieeexplore.ieee.org/document/11460046",
-      ariaLabel: "Read the IEEE conference paper on IEEE Xplore",
-    },
-  },
-];
 
 /**
  * Project card.
@@ -127,6 +48,8 @@ const BADGE_PUB =
   "[&_svg]:size-[11px] touch:py-2 max-[640px]:py-[.5rem]";
 
 export function Work() {
+  const heading = HEADINGS.work;
+
   return (
     <section className={SECTION} id="work">
       <div className={SHELL}>
@@ -134,14 +57,16 @@ export function Work() {
           <div>
             <SectionEyebrow id="work" />
             <h2 className={H2}>
-              Systems I have <span className={GRAD}>shipped</span>.
+              {heading.before}
+              <span className={GRAD}>{heading.accent}</span>
+              {heading.after}
             </h2>
-            <p>Six builds that reached real users — schema, API and interface where it says end to end.</p>
+            <p>{heading.blurb}</p>
           </div>
 
           <a
             className={`${BTN_GHOST} magnetic`}
-            href="https://github.com/6531503060-nipeerawut?tab=repositories"
+            href={REPOSITORIES_URL}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -162,8 +87,8 @@ export function Work() {
                  tint alone. */
               style={
                 index === 0
-                  ? cssVars({ "--tint": TINTS[index] })
-                  : { ...stagger(index, 80), ...cssVars({ "--tint": TINTS[index] }) }
+                  ? cssVars({ "--tint": project.tint })
+                  : { ...stagger(index, 80), ...cssVars({ "--tint": project.tint }) }
               }
               data-reveal
             >

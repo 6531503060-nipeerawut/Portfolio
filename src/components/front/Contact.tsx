@@ -1,6 +1,7 @@
 import { SectionEyebrow } from "@/components/front/SectionEyebrow";
+import { CHANNELS, EMAIL, HEADINGS } from "@/lib/content";
 import { CARD, GRAD, H2, REVEAL_SCALE, SECTION, SHELL } from "@/lib/styles";
-import { RESUME_HREF, cssVars } from "@/lib/site";
+import { cssVars } from "@/lib/site";
 
 /**
  * Contact channel. --tint carries the service's own colour, which every
@@ -29,6 +30,8 @@ const CHANNEL_ARROW =
   "[&_svg]:size-4";
 
 export function Contact() {
+  const heading = HEADINGS.contact;
+
   return (
     <section className={SECTION} id="contact">
       <div className={SHELL}>
@@ -46,12 +49,11 @@ export function Contact() {
         >
           <SectionEyebrow id="contact" />
           <h2 className={`${H2} mb-4`}>
-            Say <span className={GRAD}>hello</span>.
+            {heading.before}
+            <span className={GRAD}>{heading.accent}</span>
+            {heading.after}
           </h2>
-          <p className="mx-auto mb-6 max-w-[40rem] text-ink-muted">
-            Hiring, collaborating, or just comparing notes on something you are building &mdash; my inbox is open
-            and I reply to everything.
-          </p>
+          <p className="mx-auto mb-6 max-w-[40rem] text-ink-muted">{heading.blurb}</p>
 
           {/* main.js toggles .is-copied here for a beat after a successful
               copy, which is what swaps the icon inside the button. */}
@@ -82,7 +84,7 @@ export function Contact() {
                 text-ellipsis text-ink"
               id="emailValue"
             >
-              nipeerawutdev15@gmail.com
+              {EMAIL}
             </span>
             <button
               className="inline-flex min-h-0 touch:min-h-11 flex-none items-center gap-[.45rem] rounded-full
@@ -103,83 +105,33 @@ export function Contact() {
           </div>
 
           <div className="grid gap-[.9rem] text-left grid-cols-[repeat(auto-fit,minmax(min(190px,100%),1fr))]">
-            <a
-              className={CHANNEL}
-              style={cssVars({ "--tint": "#0a66c2" })}
-              href="https://www.linkedin.com/in/peerawut-nipakornpan-3550a131a"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span className={CHANNEL_ICO}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"
-                  strokeLinejoin="round" aria-hidden="true"><use href="#i-linkedin" /></svg>
-              </span>
-              <span className="min-w-0">
-                <span className={CHANNEL_LABEL}>LinkedIn</span>
-                <span className={CHANNEL_HANDLE}>peerawut-nipakornpan</span>
-              </span>
-              <span className={CHANNEL_ARROW}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round"
-                  strokeLinejoin="round" aria-hidden="true"><use href="#i-external" /></svg>
-              </span>
-            </a>
-
-            <a
-              className={CHANNEL}
-              style={cssVars({ "--tint": "var(--text)" })}
-              href="https://github.com/6531503060-nipeerawut"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span className={CHANNEL_ICO}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"
-                  strokeLinejoin="round" aria-hidden="true"><use href="#i-github" /></svg>
-              </span>
-              <span className="min-w-0">
-                <span className={CHANNEL_LABEL}>GitHub</span>
-                <span className={CHANNEL_HANDLE}>6531503060-nipeerawut</span>
-              </span>
-              <span className={CHANNEL_ARROW}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round"
-                  strokeLinejoin="round" aria-hidden="true"><use href="#i-external" /></svg>
-              </span>
-            </a>
-
-            <a
-              className={CHANNEL}
-              style={cssVars({ "--tint": "#1877f2" })}
-              href="https://www.facebook.com/nong.off.3"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span className={CHANNEL_ICO}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"
-                  strokeLinejoin="round" aria-hidden="true"><use href="#i-facebook" /></svg>
-              </span>
-              <span className="min-w-0">
-                <span className={CHANNEL_LABEL}>Facebook</span>
-                <span className={CHANNEL_HANDLE}>nong.off.3</span>
-              </span>
-              <span className={CHANNEL_ARROW}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round"
-                  strokeLinejoin="round" aria-hidden="true"><use href="#i-external" /></svg>
-              </span>
-            </a>
-
-            <a className={CHANNEL} style={cssVars({ "--tint": "var(--brand-2)" })} href={RESUME_HREF} download>
-              <span className={CHANNEL_ICO}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"
-                  strokeLinejoin="round" aria-hidden="true"><use href="#i-download" /></svg>
-              </span>
-              <span className="min-w-0">
-                <span className={CHANNEL_LABEL}>Resume</span>
-                <span className={CHANNEL_HANDLE}>PDF, one page</span>
-              </span>
-              <span className={CHANNEL_ARROW}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round"
-                  strokeLinejoin="round" aria-hidden="true"><use href="#i-arrow-down" /></svg>
-              </span>
-            </a>
+            {CHANNELS.map((channel) => (
+              <a
+                className={CHANNEL}
+                key={channel.label}
+                style={cssVars({ "--tint": channel.tint })}
+                href={channel.href}
+                {...(channel.download
+                  ? { download: true }
+                  : { target: "_blank", rel: "noopener noreferrer" })}
+              >
+                <span className={CHANNEL_ICO}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"
+                    strokeLinejoin="round" aria-hidden="true"><use href={`#${channel.icon}`} /></svg>
+                </span>
+                <span className="min-w-0">
+                  <span className={CHANNEL_LABEL}>{channel.label}</span>
+                  <span className={CHANNEL_HANDLE}>{channel.handle}</span>
+                </span>
+                {/* The résumé is a file, not a destination. */}
+                <span className={CHANNEL_ARROW}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round"
+                    strokeLinejoin="round" aria-hidden="true">
+                    <use href={channel.download ? "#i-arrow-down" : "#i-external"} />
+                  </svg>
+                </span>
+              </a>
+            ))}
           </div>
         </div>
       </div>

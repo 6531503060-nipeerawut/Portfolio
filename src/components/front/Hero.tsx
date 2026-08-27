@@ -1,18 +1,9 @@
 import Image from "next/image";
 
+import { Rich } from "@/components/Rich";
+import { MARQUEE, PROFILE, SOCIALS } from "@/lib/content";
 import { BTN_GHOST, BTN_PRIMARY, ENTER, EYEBROW, GRAD, SHELL } from "@/lib/styles";
 import { PROFILE_IMAGE, PROFILE_IMAGE_ALT, RESUME_HREF, cssVars } from "@/lib/site";
-
-const MARQUEE = [
-  "Web Development",
-  "Mobile Apps",
-  "API Design",
-  "Database Modelling",
-  "Full-Stack Engineering",
-  "System Design",
-  "Authentication & Access",
-  "Responsive Interfaces",
-];
 
 const SOCIAL =
   "grid size-10 place-items-center rounded-xl border border-line bg-glass text-ink-muted " +
@@ -27,8 +18,7 @@ export function Hero() {
         className="relative flex min-h-svh snap-start items-center
           overflow-x-clip pt-[clamp(5.5rem,12vh,8rem)] pb-[clamp(2.5rem,7vh,4.5rem)]
           short:pt-[5.5rem] short:pb-[2.25rem]
-          max-[1024px]:text-center
-          max-[980px]:pt-[calc(5rem+env(safe-area-inset-top,0px))] max-[980px]:pb-10"
+          max-[1024px]:text-center"
         id="home"
       >
         <div
@@ -39,14 +29,14 @@ export function Hero() {
           <div>
             <span className={`${EYEBROW} ${ENTER}`} style={cssVars({ "--d": "60ms" })}>
               <span className="size-[7px] rounded-full bg-brand-3 animate-ping-dot" />
-              Open to opportunities
+              {PROFILE.status}
             </span>
 
             <p
               className={`${ENTER} mb-[.55rem] block font-mono text-[.92rem] tracking-[.02em] text-ink-muted`}
               style={cssVars({ "--d": "140ms" })}
             >
-              Hello, my name is
+              {PROFILE.greeting}
             </p>
 
             <h1
@@ -54,8 +44,8 @@ export function Hero() {
                 font-extrabold leading-[1.1] tracking-[-.03em] text-balance`}
               style={cssVars({ "--d": "210ms" })}
             >
-              <span className={`${GRAD} animate-hue`}>Peerawut</span>
-              <span className="block text-ink-muted">Nipakornpan</span>
+              <span className={`${GRAD} animate-hue`}>{PROFILE.first}</span>
+              <span className="block text-ink-muted">{PROFILE.last}</span>
             </h1>
 
             <p
@@ -65,11 +55,10 @@ export function Hero() {
               style={cssVars({ "--d": "290ms" })}
             >
               <span className="text-brand-3">&gt;</span>
-              <span
-                id="roleText"
-                data-roles="Junior Full-Stack Developer|Web &amp; Mobile Developer|Frontend &amp; Backend Developer"
-              >
-                Junior Full-Stack Developer
+              {/* The first entry ships in the markup and is what a visitor
+                  without JavaScript reads; setupTypewriter cycles the list. */}
+              <span id="roleText" data-roles={PROFILE.roles.join("|")}>
+                {PROFILE.roles[0]}
               </span>
               <span
                 className="inline-block h-[1.15em] w-0.5 bg-brand-2 animate-caret"
@@ -82,9 +71,7 @@ export function Hero() {
                 max-[1024px]:mx-auto [&_strong]:font-semibold [&_strong]:text-ink-soft`}
               style={cssVars({ "--d": "360ms" })}
             >
-              I build features end to end — the database schema, the API behind it, and the screens on top.
-              Right now I do that across two production platforms at <strong>Gendee.ai</strong>: an AI content
-              studio and a digital news app.
+              <Rich parts={PROFILE.intro} />
             </p>
 
             <div
@@ -144,40 +131,22 @@ export function Hero() {
               <span className="mr-[.35rem] font-mono text-[.7rem] tracking-[.16em] uppercase text-ink-faint">
                 Find me
               </span>
-              <a
-                className={SOCIAL}
-                href="https://github.com/6531503060-nipeerawut"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="GitHub"
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"
-                  strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><use href="#i-github" /></svg>
-              </a>
-              <a
-                className={SOCIAL}
-                href="https://www.linkedin.com/in/peerawut-nipakornpan-3550a131a"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="LinkedIn"
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"
-                  strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><use href="#i-linkedin" /></svg>
-              </a>
-              <a
-                className={SOCIAL}
-                href="https://www.facebook.com/nong.off.3"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Facebook"
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"
-                  strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><use href="#i-facebook" /></svg>
-              </a>
-              <a className={SOCIAL} href="mailto:nipeerawutdev15@gmail.com" aria-label="Email">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"
-                  strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><use href="#i-mail" /></svg>
-              </a>
+              {SOCIALS.map((social) => (
+                <a
+                  className={SOCIAL}
+                  href={social.href}
+                  key={social.label}
+                  aria-label={social.label}
+                  {...(social.href.startsWith("http")
+                    ? { target: "_blank", rel: "noopener noreferrer" }
+                    : {})}
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"
+                    strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <use href={`#${social.icon}`} />
+                  </svg>
+                </a>
+              ))}
             </div>
           </div>
 
@@ -185,16 +154,12 @@ export function Hero() {
               drive the hero taller than the screen on a short laptop.
 
               The narrow cap keeps that height term rather than replacing it
-              with a flat 320px. On a phone held portrait 46vh is far past
-              320px, so nothing changes there — but held landscape it is
-              about 180px, and a flat cap would hand the whole first screen
-              to a photograph before a single word of the page.
-
-              A phone held upright is the one case none of that covers: 46vh
-              of an 844px screen is 388px, wider than the screen itself, so
-              the portrait fills it and the name lands below the fold. The
-              third cap is what keeps the first screen introducing someone
-              rather than just showing them. */}
+              with a flat 320px. In a window this narrow 46vh is usually far
+              past 320px, so nothing changes — but on a short, wide window it
+              is a couple of hundred pixels, and a flat cap would hand the
+              whole first screen to a photograph before a single word of the
+              page. The third cap covers the narrowest windows, where 46vh is
+              wider than the window itself. */}
           <div
             className={`${ENTER} relative mx-auto grid aspect-square w-full max-w-[min(400px,46vh)]
               place-items-center max-[1024px]:row-start-1 max-[1024px]:max-w-[min(320px,46vh)]
@@ -234,7 +199,7 @@ export function Hero() {
                 alt={PROFILE_IMAGE_ALT}
                 width={960}
                 height={960}
-                sizes="(max-width: 980px) 250px, 312px"
+                sizes="(max-width: 1024px) 250px, 312px"
                 priority
               />
             </div>
