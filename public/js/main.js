@@ -315,6 +315,15 @@
       }
     }
 
+    /* The entries the rail actually carries, so an eased jump aimed at
+       something that is not one of them — the skip link — leaves the spy
+       alone rather than emptying the rail for the length of the flight. */
+    var railIds = {};
+    for (var k = 0; k < lead.length; k++) {
+      var railId = lead[k].getAttribute("data-section");
+      if (railId) railIds[railId] = true;
+    }
+
     var tops = [];
     var lastActive = null;
     var stuck = null;
@@ -392,6 +401,11 @@
 
       if (staticId) { setActive(staticId); return; }
 
+      /* A jump owns the rail until it lands. Without this the spy walks the
+         pill through every section the page passes on the way, so clicking
+         Contact reads as four hops rather than one move. */
+      if (glideTargetId && railIds[glideTargetId]) { setActive(glideTargetId); return; }
+
       // The section occupying the viewport's upper third wins.
       var line = m.y + m.vh * 0.32;
       var current = sections.length ? sections[0].id : "";
@@ -428,29 +442,87 @@
    */
   var glideToken = 0;
 
+  /* Which nav entry a jump is heading for, where the caller knows. Read by
+     the scroll spy in setupNav so the rail holds the entry that was clicked
+     instead of chasing every section the page flies past. */
+  var glideTargetId = null;
+
+  /*
+   * Two of the browser's own scroll behaviours have to stand down for the
+   * length of a jump, because each of them drives the same property from
+   * the other side and what the visitor sees is the two pulling against
+   * each other.
+   *
+   *   scroll-behavior: smooth — every per-frame write below would be put
+   *   through the browser's own ease as well: two curves, one property.
+   *
+   *   scroll-snap-type: y proximity — this is the one that shows. The snap
+   *   engine re-runs after every *programmatic* scroll, not only at the end
+   *   of a gesture, so for as long as a jump is still inside the hero's
+   *   proximity range — Chrome counts roughly a third of the viewport —
+   *   each frame is dragged back towards the top before the next one is
+   *   written. That is the stutter the wheel never produces: a wheel
+   *   gesture is snapped once, when the visitor stops.
+   *
+   * Holding is idempotent and only the last owner hands the values back, so
+   * a jump that supersedes another cannot capture the suspended values as
+   * the ones to restore, and cannot have the jump it replaced restore them
+   * out from under it.
+   */
+  var glideHeld = false;
+  var heldBehavior = "";
+  var heldSnap = "";
+
+  function holdScrollEffects() {
+    if (glideHeld) return;
+    glideHeld = true;
+    heldBehavior = root.style.scrollBehavior;
+    heldSnap = root.style.scrollSnapType;
+    root.style.scrollBehavior = "auto";
+    root.style.scrollSnapType = "none";
+  }
+
+  function releaseScrollEffects() {
+    if (!glideHeld) return;
+    glideHeld = false;
+    glideTargetId = null;
+    root.style.scrollBehavior = heldBehavior;
+
+    /* Snapping comes back a frame after the last write rather than beside
+       it: restored in the same frame, the engine still sees a scroll that
+       has only just landed and re-snaps it, which is the twitch navOffset()
+       exists to avoid. Skipped if another jump has claimed the page since. */
+    requestAnimationFrame(function () {
+      if (!glideHeld) root.style.scrollSnapType = heldSnap;
+    });
+  }
+
   function cancelGlide() {
+    if (!glideHeld) return;
     glideToken++;
+    releaseScrollEffects();
   }
 
   function easeInOutQuint(t) {
     return t < 0.5 ? 16 * t * t * t * t * t : 1 - Math.pow(-2 * t + 2, 5) / 2;
   }
 
-  function glideTo(top) {
+  /* `activeId` is the section the jump is aimed at, where the caller knows
+     which one it is — the nav rail holds that entry for the whole flight. */
+  function glideTo(top, activeId) {
+    var to = Math.max(top, 0);
     var from = window.scrollY;
-    var delta = Math.max(top, 0) - from;
+    var delta = to - from;
 
     if (reduceMotion.matches || Math.abs(delta) < 2) {
-      window.scrollTo(0, Math.max(top, 0));
+      glideToken++; // Stop anything still in flight before overruling it.
+      window.scrollTo(0, to);
+      releaseScrollEffects();
       return;
     }
 
-    /* Each frame writes a new scroll position, and `scroll-behavior: smooth`
-       in the stylesheet would put every one of those writes through the
-       browser's own animation as well — two eases fighting over the same
-       property. Suspended for the duration and handed straight back. */
-    var declared = root.style.scrollBehavior;
-    root.style.scrollBehavior = "auto";
+    holdScrollEffects();
+    glideTargetId = activeId || null;
 
     // Long jumps must not take proportionally longer or crossing the page
     // becomes a wait; short ones must not be instant.
@@ -458,19 +530,18 @@
     var began = null;
     var token = ++glideToken;
 
-    function done() {
-      root.style.scrollBehavior = declared;
-    }
-
     requestAnimationFrame(function step(now) {
-      if (token !== glideToken) { done(); return; }
+      // Superseded, or the visitor has taken the page over. Whoever did
+      // that owns the restore; this frame simply stops writing.
+      if (token !== glideToken) return;
+
       if (began === null) began = now;
 
       var t = Math.min((now - began) / duration, 1);
       window.scrollTo(0, from + delta * easeInOutQuint(t));
 
       if (t < 1) requestAnimationFrame(step);
-      else done();
+      else releaseScrollEffects();
     });
   }
 
@@ -494,7 +565,9 @@
 
         e.preventDefault();
 
-        glideTo(target.getBoundingClientRect().top + window.pageYOffset - navOffset());
+        // The id doubles as the rail entry to hold: every nav href is
+        // "/#<section id>", and the spy ignores an id the rail does not carry.
+        glideTo(target.getBoundingClientRect().top + window.pageYOffset - navOffset(), id);
         focusTarget(target);
 
         // Keep the URL shareable without letting the browser jump the page.
@@ -523,7 +596,7 @@
     });
 
     if (toTop) {
-      toTop.addEventListener("click", function () { glideTo(0); });
+      toTop.addEventListener("click", function () { glideTo(0, "home"); });
     }
   }
 

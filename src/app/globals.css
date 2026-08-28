@@ -363,6 +363,12 @@
    * Desktop only. A phone scrolls with momentum, and snapping fights the
    * flick it is still carrying; the tab bar covers the same need there by
    * making every section one tap away.
+   *
+   * Suspended by main.js for the length of an eased in-page jump. The snap
+   * engine re-runs after every *programmatic* scroll rather than only at
+   * the end of a gesture, so left on it drags each frame of the jump back
+   * towards the nearest snap point and the move arrives in steps — see
+   * glideTo().
    */
   @media (min-width: 1024px) and (pointer: fine) {
     html {
