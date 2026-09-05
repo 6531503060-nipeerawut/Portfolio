@@ -3,7 +3,7 @@
 Personal portfolio of **Peerawut Nipakornpan**, a junior full-stack developer at Gendee.ai.
 Built with Next.js 16, React 19, TypeScript and Tailwind CSS v4.
 
-**Live site — [portfolio-offpeerawutt.vercel.app](https://portfolio-offpeerawutt.vercel.app/)** &nbsp;·&nbsp; **Résumé:** [`/Resume_PeerawutNi.pdf`](public/Resume_PeerawutNi.pdf)
+**Live site — [portfolio-offpeerawutt.vercel.app](https://portfolio-offpeerawutt.vercel.app/)**
 
 <sub>Next.js 16.3 · React 19.2 · TypeScript 5.9 · Tailwind CSS 4.3 · Deployed on Vercel</sub>
 
@@ -147,8 +147,6 @@ React instead and never loads this script — and all of it respects
 | Language | **TypeScript 5.9**, `strict` | The section registry, the content module and the site constants are typed, so a bad id fails the build |
 | Styling | **Tailwind CSS v4** | Utilities only — see below |
 | Interactions | **Vanilla JS** on the document, React in the app | No hydration cost for effects that are purely visual; real state where screens are replaced on every tap |
-| Fonts | Sora, Inter, JetBrains Mono | Display, body and mono, preconnected from Google Fonts |
-| Icons | Hand-built inline SVG sprite | One `<symbol>` set, referenced by `<use>` — no icon package |
 | Hosting | **Vercel** | Static output served from the edge |
 
 Runtime dependencies: `next`, `react`, `react-dom`. That is the whole list —
