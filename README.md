@@ -5,8 +5,6 @@ Built with Next.js 16 and Tailwind CSS v4.
 
 **Live site — [portfolio-offpeerawutt.vercel.app](https://portfolio-offpeerawutt.vercel.app/)**
 
-<sub>Next.js 16.3 · React 19.2 · TypeScript 5.9 · Tailwind CSS 4.3 · Deployed on Vercel</sub>
-
 ---
 
 ## Table of contents
