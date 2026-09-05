@@ -1,7 +1,7 @@
 # Portfolio — Peerawut Nipakornpan
 
 Personal portfolio of **Peerawut Nipakornpan**, a junior full-stack developer at Gendee.ai.
-Built with Next.js 16, React 19, TypeScript and Tailwind CSS v4.
+Built with Next.js 16 and Tailwind CSS v4.
 
 **Live site — [portfolio-offpeerawutt.vercel.app](https://portfolio-offpeerawutt.vercel.app/)**
 
