@@ -1,12 +1,12 @@
 /** The stored preference. Also read by public/js/main.js. */
-export const THEME_KEY = "portfolio-theme";
+export const THEME_KEY = 'portfolio-theme';
 
 /**
  * What the browser chrome is painted, per palette. These are `--bg` from
  * globals.css; the address bar and the page have to agree, so an explicit
  * override cannot desync them.
  */
-export const THEME_COLOR = { dark: "#05070f", light: "#eceff8" } as const;
+export const THEME_COLOR = { dark: '#05070f', light: '#eceff8' } as const;
 
 export type Theme = keyof typeof THEME_COLOR;
 

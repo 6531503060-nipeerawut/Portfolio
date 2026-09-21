@@ -2,17 +2,27 @@
   "name": "portfolio",
   "version": "1.0.0",
   "private": true,
-  "description": "",
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "description": "Portfolio and résumé of Peerawut Nipakornpan — a desktop document and a phone app, served from one Next.js project.",
   "engines": {
-    "node": ">=20.9.0"
+    "node": ">=20.9"
   },
   "scripts": {
-    "dev": "next dev",
+    "predev": "node scripts/free-port.mjs 3000",
+    "dev": "next dev --webpack --port 3000",
     "build": "next build",
-    "start": "next start"
+    "start": "next start --port 3000",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typegen": "next typegen",
+    "pretypecheck": "npm run typegen",
+    "typecheck": "tsc --noEmit",
+    "check:env": "node scripts/check-env.mjs",
+    "check:routes": "node scripts/check-routes.mjs",
+    "check:proxy": "node scripts/check-proxy.mjs",
+    "check:fold": "node scripts/check-fold.mjs",
+    "check": "npm run check:env && npm run check:routes && npm run check:proxy && npm run format:check && npm run lint && npm run typecheck && npm run build && npm run check:fold"
   },
   "dependencies": {
     "next": "16.3.3",
@@ -24,6 +34,13 @@
     "@types/node": "24.13.3",
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.4",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.3.4",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^3.10.1",
+    "eslint-plugin-boundaries": "^7.2.0",
+    "jiti": "^2.7.0",
+    "prettier": "^3.9.6",
     "tailwindcss": "^4.3.3",
     "typescript": "5.9.3"
   }

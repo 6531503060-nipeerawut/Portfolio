@@ -1,10 +1,10 @@
-import type { ReactNode } from "react";
+import type { ReactNode } from 'react';
 
-import { IconSprite } from "@/components/IconSprite";
-import { Ambient } from "@/components/front/Ambient";
-import { Footer } from "@/components/front/Footer";
-import { Interactions } from "@/components/front/Interactions";
-import { Navbar } from "@/components/front/Navbar";
+import { IconSprite } from '@/components/ui/IconSprite';
+import { Ambient } from '@/features/document/components/Ambient';
+import { Footer } from '@/features/document/components/Footer';
+import { Interactions } from '@/features/document/components/Interactions';
+import { Navbar } from '@/features/document/components/Navbar';
 
 /*
  * Prerendered, then rebuilt daily.
@@ -23,7 +23,7 @@ export const revalidate = 86400;
  *
  * This is the document half of the site. The phone app lives under
  * `(mobile)` and shares none of it — see src/proxy.ts for how a request
- * reaches one rather than the other, and src/lib/mobile.ts for why the two
+ * reaches one rather than the other, and src/components/ui/handheld.ts for why the two
  * do not share a vocabulary.
  */
 export default function FrontLayout({ children }: { children: ReactNode }) {

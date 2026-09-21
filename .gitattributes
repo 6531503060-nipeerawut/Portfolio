@@ -1,0 +1,17 @@
+# The working tree is LF on every machine, whatever core.autocrlf is set to.
+#
+# Prettier is configured with endOfLine: "lf". A Windows checkout with
+# autocrlf=true writes CRLF, and `npm run format:check` then fails on every
+# file in the repository before anyone has edited anything.
+* text=auto eol=lf
+
+# Binaries must not have their line endings touched.
+*.ico binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.svg text eol=lf
+*.pdf binary
+*.woff binary
+*.woff2 binary

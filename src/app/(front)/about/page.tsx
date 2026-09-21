@@ -1,18 +1,18 @@
-import type { Metadata } from "next";
+import type { Metadata } from 'next';
 
-import { About } from "@/components/front/About";
-import { APP_MEDIA } from "@/lib/mobile";
-import { OPEN_GRAPH, SHARE_DESCRIPTION } from "@/lib/site";
+import { About } from '@/features/document/components/About';
+import { APP_MEDIA } from '@/constants/navigation';
+import { OPEN_GRAPH, SHARE_DESCRIPTION } from '@/constants';
 
 export const metadata: Metadata = {
-  title: "About",
+  title: 'About',
   description: SHARE_DESCRIPTION,
-  alternates: { canonical: "/about", media: { [APP_MEDIA]: "/m/about" } },
+  alternates: { canonical: '/about', media: { [APP_MEDIA]: '/m/about' } },
   // These two sections are also on the home page, which is where the nav
   // points and where visitors actually read them. The route stays for a
   // direct link, but it should not compete with the home page in search.
   robots: { index: false, follow: true },
-  openGraph: { ...OPEN_GRAPH, url: "/about" },
+  openGraph: { ...OPEN_GRAPH, url: '/about' },
 };
 
 export default function AboutPage() {

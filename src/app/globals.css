@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* =====================================================================
    Peerawut Nipakornpan — Portfolio
@@ -20,10 +20,18 @@
  * Laptops are wide but short. Width-based sizing gives those screens the
  * roomiest spacing of all, which is exactly backwards — a 1440×800 laptop
  * gets more padding than it has room for and every section spills past the
- * fold. Below ~880px of viewport height the vertical rhythm tightens while
- * the layout stays put; large monitors keep the generous version.
+ * fold. Below this height the vertical rhythm tightens while the layout
+ * stays put; large monitors keep the generous version.
+ *
+ * The cutoff is 1000px, not the 880px it started at. 880 was measured
+ * against a 1440×900 *display*, which leaves a viewport near 800 — but a
+ * maximised window on a 1080p monitor is about 935px tall, and that fell
+ * just outside the query. Those windows got the roomy rhythm with a hundred
+ * pixels less room than it needs, and the Work section spilled past the fold
+ * on what is the most common desktop size there is. Found 2026-09-21 from a
+ * screenshot; scripts/check-fold.mjs now measures it instead of nobody.
  */
-@custom-variant short (@media (min-width: 1024px) and (max-height: 880px));
+@custom-variant short (@media (min-width: 1024px) and (max-height: 1000px));
 
 /*
  * Touch affordances. A finger is the same size whichever way the phone is
@@ -55,7 +63,13 @@
      the element using them sits in. */
   --gradient-brand: linear-gradient(115deg, var(--brand-1), var(--brand-2) 48%, var(--brand-3));
   --gradient-text: linear-gradient(100deg, var(--brand-1), var(--brand-2) 42%, var(--brand-3) 88%);
-  --gradient-line: linear-gradient(90deg, transparent, var(--line-strong) 18%, var(--line-strong) 82%, transparent);
+  --gradient-line: linear-gradient(
+    90deg,
+    transparent,
+    var(--line-strong) 18%,
+    var(--line-strong) 82%,
+    transparent
+  );
 
   --bg: #eceff8;
   --bg-deep: #dfe5f3;
@@ -96,7 +110,7 @@
   --noise-url: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-[data-theme="dark"] {
+[data-theme='dark'] {
   color-scheme: dark;
 
   --brand-1: #6d7cff;
@@ -166,9 +180,14 @@
 
 /* Fixed tokens: the same in both themes, so they need no indirection. */
 @theme {
-  --font-display: "Sora", "Poppins", ui-sans-serif, system-ui, sans-serif;
-  --font-body: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  /* The three --font-* variables below are written onto <html> by next/font
+     in src/app/layout.tsx, which is where the faces are declared and where
+     the weights are chosen. Naming them rather than the families keeps the
+     self-hosted files in play; the stacks after each one are what a browser
+     falls back to while the face loads, or if it never does. */
+  --font-display: var(--font-sora), 'Poppins', ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-inter), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, 'SFMono-Regular', Menlo, monospace;
 
   --radius-brand-sm: 10px;
   --radius-brand: 16px;
@@ -188,7 +207,11 @@
    * insets are zero — desktops, phones held upright — this is exactly the
    * clamp it was before.
    */
-  --spacing-gutter: max(clamp(1.15rem, 4vw, 2.5rem), env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px));
+  --spacing-gutter: max(
+    clamp(1.15rem, 4vw, 2.5rem),
+    env(safe-area-inset-left, 0px),
+    env(safe-area-inset-right, 0px)
+  );
   --spacing-section: clamp(2.5rem, 6vh, 5rem);
 
   --ease-brand: cubic-bezier(0.22, 1, 0.36, 1);
@@ -223,8 +246,14 @@
      in. The hero then stays 24px low forever. With both ends of the
      animation naming the same property there is nothing left to fold. */
   @keyframes enter-up {
-    from { opacity: 0; translate: 0 24px; }
-    to { opacity: 1; translate: 0 0; }
+    from {
+      opacity: 0;
+      translate: 0 24px;
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
   }
 
   /* This one cannot own its offset: the resting state has to exist as a
@@ -232,57 +261,107 @@
      direction rests somewhere different. So the reset is spelt out as real
      values — `none` is what invites the fold above. */
   @keyframes reveal-failsafe {
-    to { opacity: 1; translate: 0 0; scale: 1; rotate: 0deg; }
+    to {
+      opacity: 1;
+      translate: 0 0;
+      scale: 1;
+      rotate: 0deg;
+    }
   }
 
   @keyframes hue-shift {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
   }
 
   @keyframes ping-dot {
-    0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--brand-3) 55%, transparent); }
-    70% { box-shadow: 0 0 0 7px transparent; }
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--brand-3) 55%, transparent);
+    }
+    70% {
+      box-shadow: 0 0 0 7px transparent;
+    }
   }
 
   @keyframes ping-live {
-    0%, 100% { box-shadow: 0 0 0 0 rgb(34 197 94 / 0.5); }
-    70% { box-shadow: 0 0 0 5px rgb(34 197 94 / 0); }
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgb(34 197 94 / 0.5);
+    }
+    70% {
+      box-shadow: 0 0 0 5px rgb(34 197 94 / 0);
+    }
   }
 
   @keyframes caret {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
   }
 
   @keyframes orbit {
-    to { transform: rotate(360deg); }
+    to {
+      transform: rotate(360deg);
+    }
   }
 
   @keyframes wheel {
-    0% { opacity: 0; transform: translateY(0); }
-    35% { opacity: 1; }
-    100% { opacity: 0; transform: translateY(12px); }
+    0% {
+      opacity: 0;
+      transform: translateY(0);
+    }
+    35% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(12px);
+    }
   }
 
   /* Two identical groups sit in the track, so travelling exactly half of
      it lands on the copy and the loop is seamless. */
   @keyframes marquee {
-    to { transform: translateX(-50%); }
+    to {
+      transform: translateX(-50%);
+    }
   }
 
   @keyframes toast-in {
-    from { opacity: 0; transform: translateY(20px) scale(0.94); }
-    to { opacity: 1; transform: none; }
+    from {
+      opacity: 0;
+      transform: translateY(20px) scale(0.94);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
 
   @keyframes toast-out {
-    to { opacity: 0; transform: translateY(12px) scale(0.96); }
+    to {
+      opacity: 0;
+      transform: translateY(12px) scale(0.96);
+    }
   }
 
   @keyframes theme-wipe {
-    from { clip-path: circle(0% at var(--wx, 50%) var(--wy, 50%)); }
-    to { clip-path: circle(var(--wr, 150%) at var(--wx, 50%) var(--wy, 50%)); }
+    from {
+      clip-path: circle(0% at var(--wx, 50%) var(--wy, 50%));
+    }
+    to {
+      clip-path: circle(var(--wr, 150%) at var(--wx, 50%) var(--wy, 50%));
+    }
   }
 }
 
@@ -322,7 +401,7 @@
      * height.
      *
      * These belong to (mobile) alone. The document has no such bars — see
-     * the note in src/components/front/Navbar.tsx.
+     * the note in src/features/document/components/Navbar.tsx.
      */
     --app-bar-h: 56px;
     --app-tab-h: 64px;
@@ -429,8 +508,8 @@
    left the viewport, and this parks every loop inside it. It is a document
    level motion policy rather than component styling, which is why it sits
    here next to the reduced-motion block. */
-.anim-paused [class*="animate-"],
-.anim-paused [class*="animate-"]::after {
+.anim-paused [class*='animate-'],
+.anim-paused [class*='animate-']::after {
   animation-play-state: paused;
 }
 
@@ -476,7 +555,7 @@
      cleared anyway — the one element that sets it is a work card, and the
      pointer effects that drive it do not run under this query at all. */
   [data-reveal],
-  [class*="animate-enter-up"] {
+  [class*='animate-enter-up'] {
     opacity: 1 !important;
     translate: 0 0 !important;
     scale: 1 !important;

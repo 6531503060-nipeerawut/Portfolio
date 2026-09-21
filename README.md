@@ -19,6 +19,7 @@ Built with Next.js 16 and Tailwind CSS v4.
 - [Content](#content)
 - [Assets and documents](#assets-and-documents)
 - [Conventions](#conventions)
+- [Commands](#commands)
 - [Contact](#contact)
 
 ---
@@ -61,15 +62,15 @@ So the two are now separate builds that share data and nothing else.
 | Surfaces | Glass panels over an animated aurora, grid and film-grain background | Opaque cards over one static gradient — a blurred backdrop is the most expensive thing a phone composites while a finger is dragging |
 | Motion | Hover lifts, magnetic buttons, 3D card tilt, cursor spotlight, scroll reveals | Pressed states and a staggered rise on mount |
 | Behaviour | [`public/js/main.js`](public/js/main.js), measured once at boot | React — screens are replaced under the shell on every tap, so cached DOM would go stale |
-| Layer | [`src/app/(front)`](<src/app/(front)>) · [`src/components/front`](src/components/front) · [`src/lib/styles.ts`](src/lib/styles.ts) | [`src/app/(mobile)`](<src/app/(mobile)>) · [`src/components/mobile`](src/components/mobile) · [`src/lib/mobile.ts`](src/lib/mobile.ts) |
+| Layer | [`src/app/(front)`](<src/app/(front)>) · [`src/features/document`](src/features/document) · [`src/components/ui/document.ts`](src/components/ui/document.ts) | [`src/app/(mobile)`](<src/app/(mobile)>) · [`src/features/handheld`](src/features/handheld) · [`src/components/ui/handheld.ts`](src/components/ui/handheld.ts) |
 
 **What they share** is the content itself.
-[`src/lib/content.ts`](src/lib/content.ts) holds every word, link and ordering
+[`src/constants/content.ts`](src/constants/content.ts) holds every word, link and ordering
 on the site and imports neither React nor a Tailwind class; each front end
 decides what those look like. Without it the six projects, four skill groups
 and two roles would exist twice, and the first edit made to one of them would
 be a lie on the other.
-[`src/lib/sections.ts`](src/lib/sections.ts) is shared the same way: same six
+[`src/constants/navigation.ts`](src/constants/navigation.ts) is shared the same way: same six
 ids in the same order, addressed as `/#about` on one side and `/m/about` on
 the other.
 
@@ -105,7 +106,7 @@ order; in the app each row below is a screen of its own:
 | **Contact** | Email with a one-click copy control, LinkedIn, GitHub and a résumé download |
 
 Six navigation entries — one per section — are declared once in
-[`src/lib/sections.ts`](src/lib/sections.ts) and drive the desktop nav rail and
+[`src/constants/navigation.ts`](src/constants/navigation.ts) and drive the desktop nav rail and
 its scroll-spy, the app's tab bar, and the numbered eyebrow above each section.
 
 Further routes exist but are not in the nav: `/about` and `/contact` serve
@@ -144,12 +145,14 @@ React instead and never loads this script — and all of it respects
 | UI | **React 19** | Server Components by default; the client ones are the script loader and the app's shell |
 | Language | **TypeScript 5.9**, `strict` | The section registry, the content module and the site constants are typed, so a bad id fails the build |
 | Styling | **Tailwind CSS v4** | Utilities only — see below |
+| Type | **next/font/google** — Sora, Inter, JetBrains Mono | Self-hosted at build time: no third-party origin on the critical path, and fallback metrics matched so text does not reflow |
+| Enforcement | **ESLint 9** with `eslint-plugin-boundaries`, **Prettier 3**, three check scripts | The architecture is held by tooling rather than by review — see [Conventions](#conventions) |
 | Interactions | **Vanilla JS** on the document, React in the app | No hydration cost for effects that are purely visual; real state where screens are replaced on every tap |
 | Hosting | **Vercel** | Static output served from the edge |
 
 Runtime dependencies: `next`, `react`, `react-dom`. That is the whole list —
-no UI kit, no animation library, no icon package, no CSS framework beyond
-Tailwind.
+no UI kit, no animation library, no icon package, no HTTP client, and no CSS
+framework beyond Tailwind. Everything else is a dev dependency.
 
 ---
 
@@ -164,7 +167,7 @@ keyframes and a small `@layer base`. Nothing in it styles a component.
 
 Every visual decision lives in a Tailwind class on the element that owns it.
 Repeated patterns — the button, the glass card, the tag, the section shell —
-are written once as class strings in [`src/lib/styles.ts`](src/lib/styles.ts)
+are written once as class strings in [`src/components/ui/document.ts`](src/components/ui/document.ts)
 and imported where needed. They are exported constants, never assembled from
 fragments at runtime, because Tailwind has to be able to see each full class
 name in the source.
@@ -178,14 +181,18 @@ own, and the appearance of a state stays next to the element it applies to.
 
 | File | Owns |
 | --- | --- |
-| [`src/lib/content.ts`](src/lib/content.ts) | Every word, link and ordering on the site — read by both front ends, imports neither React nor a class name |
-| [`src/lib/site.ts`](src/lib/site.ts) | Titles, description, author, canonical origin, résumé path, portrait, Open Graph and Twitter cards |
-| [`src/lib/sections.ts`](src/lib/sections.ts) | The section registry and the numbering derived from it |
-| [`src/lib/styles.ts`](src/lib/styles.ts) | Shared Tailwind class strings — the document |
-| [`src/lib/mobile.ts`](src/lib/mobile.ts) | App routes and shared class strings — the phone build |
+| [`src/constants/content.ts`](src/constants/content.ts) | Every word, link and ordering on the site — read by both front ends, imports neither React nor a class name |
+| [`src/types/content.ts`](src/types/content.ts) | The shapes that content is written in |
+| [`src/constants/index.ts`](src/constants/index.ts) | Titles, description, author, canonical origin, résumé paths, portrait, Open Graph and Twitter cards |
+| [`src/constants/navigation.ts`](src/constants/navigation.ts) | The section registry, its numbering, and both front ends' addresses for it |
+| [`src/constants/routes.ts`](src/constants/routes.ts) | The table pairing a desktop route with its phone screen, in both directions |
+| [`src/components/ui/document.ts`](src/components/ui/document.ts) | Shared Tailwind class strings — the document |
+| [`src/components/ui/handheld.ts`](src/components/ui/handheld.ts) | Shared Tailwind class strings — the phone app |
 | [`src/lib/theme.ts`](src/lib/theme.ts) | The inline palette bootstrap, the storage key and the two chrome colours |
-| [`src/lib/github.ts`](src/lib/github.ts) | How the GitHub profile is read, for both profile routes |
-| [`src/proxy.ts`](src/proxy.ts) | Which build a request gets |
+| [`src/lib/api-client.ts`](src/lib/api-client.ts) | The only module allowed to speak HTTP |
+| [`src/features/account/api.ts`](src/features/account/api.ts) | How the GitHub profile is read, for both profile routes |
+| [`src/lib/device-route.ts`](src/lib/device-route.ts) | Which build a request should get, as a pure function |
+| [`src/proxy.ts`](src/proxy.ts) | The adapter that applies that decision to a request |
 | [`src/app/globals.css`](src/app/globals.css) | Design tokens, keyframes, base layer |
 
 Renaming the résumé, rewording a project, reordering a section or retuning the
@@ -318,14 +325,17 @@ the reveals and the scroll snapping.
 │   ├── resume.html                  # Designed version
 │   ├── resume-ats.html              # Plain, ATS-parseable version
 │   └── photo.png
+├── scripts/                         # The checks `npm run check` runs
+│   ├── check-env.mjs                # Env files complete and consistent
+│   ├── check-proxy.mjs              # The device split: tables, matcher, 18 routing cases
+│   ├── check-routes.mjs             # No dynamic segments under src/app
+│   └── free-port.mjs                # predev — frees port 3000, clears a stale .next-dev
 ├── src/
-│   ├── app/
+│   ├── app/                         # ROUTING ONLY — every page.tsx is metadata + one Screen
 │   │   ├── (front)/                 # The document — navbar, footer, ambient background
 │   │   │   ├── about/page.tsx
 │   │   │   ├── contact/page.tsx
-│   │   │   ├── user/
-│   │   │   │   ├── User.tsx
-│   │   │   │   └── page.tsx
+│   │   │   ├── user/page.tsx
 │   │   │   ├── layout.tsx
 │   │   │   └── page.tsx
 │   │   ├── (mobile)/                # The app — one screen per navigation entry
@@ -343,41 +353,42 @@ the reveals and the scroll snapping.
 │   │   │   └── layout.tsx
 │   │   ├── favicon.ico
 │   │   ├── globals.css              # The only stylesheet in the project
-│   │   ├── layout.tsx               # <html>, metadata, theme bootstrap
+│   │   ├── layout.tsx               # <html>, fonts, metadata, theme bootstrap
 │   │   └── not-found.tsx
-│   ├── components/
+│   ├── features/                    # Split by what a thing IS, not what it looks like
+│   │   ├── document/components/     # DocumentScreen, Hero, About, Skills, Experience,
+│   │   │                            #   Work, Contact, Navbar, Footer, Ambient,
+│   │   │                            #   Interactions, SectionEyebrow
+│   │   ├── handheld/components/     # HomeScreen, AboutScreen, SkillsScreen,
+│   │   │                            #   ExperienceScreen, WorkScreen, ContactScreen,
+│   │   │                            #   AppBar, TabBar, ScreenHead, CopyEmail
+│   │   ├── account/                 # The GitHub profile — one feature, two renderings
+│   │   │   ├── api.ts               # The only place this feature reaches the network
+│   │   │   ├── types.ts
+│   │   │   └── components/          # AccountCard, AccountScreen, AccountAppScreen
+│   │   └── console/components/      # ConsoleScreen, StatCard
+│   ├── components/ui/               # Shared, and forbidden from knowing a feature exists
 │   │   ├── IconSprite.tsx           # The <symbol> set every <use> points at
 │   │   ├── Rich.tsx                 # Renders the emphasis carried in content.ts
-│   │   ├── admin/
-│   │   │   └── StatCard.tsx
-│   │   ├── front/                   # The document's sections and chrome
-│   │   │   ├── About.tsx
-│   │   │   ├── Ambient.tsx          # Aurora, grid and noise background
-│   │   │   ├── Contact.tsx
-│   │   │   ├── Experience.tsx
-│   │   │   ├── Footer.tsx
-│   │   │   ├── Hero.tsx
-│   │   │   ├── Interactions.tsx     # Loads main.js
-│   │   │   ├── Navbar.tsx
-│   │   │   ├── SectionEyebrow.tsx
-│   │   │   ├── Skills.tsx
-│   │   │   └── Work.tsx
-│   │   └── mobile/                  # The app's shell — all client components but one
-│   │       ├── AppBar.tsx           # Where you are, and the theme switch
-│   │       ├── CopyEmail.tsx
-│   │       ├── ScreenHead.tsx
-│   │       └── TabBar.tsx           # Active state from usePathname
-│   ├── lib/
+│   │   ├── document.ts              # The document's class strings
+│   │   └── handheld.ts              # The app's class strings
+│   ├── constants/
+│   │   ├── index.ts                 # Titles, URLs, share cards, résumé paths
 │   │   ├── content.ts               # Every word and link on the site — shared
-│   │   ├── github.ts                # How both profile routes read the API
-│   │   ├── mobile.ts                # App routes and the app's class strings
-│   │   ├── sections.ts              # Navigation registry and section numbering
-│   │   ├── site.ts                  # Titles, URLs, share cards, CSS-var helpers
-│   │   ├── styles.ts                # The document's class strings
-│   │   └── theme.ts                 # Inline palette bootstrap
-│   ├── proxy.ts                     # Which build a request gets
-│   └── types/
-│       └── user.d.ts                # Shape of the GitHub profile response
+│   │   ├── navigation.ts            # Section registry + both front ends' addresses
+│   │   └── routes.ts                # Desktop route ↔ phone screen, both ways
+│   ├── hooks/                       # Empty on purpose — the space is prepared
+│   ├── lib/
+│   │   ├── api-client.ts            # The only module allowed to speak HTTP
+│   │   ├── device-route.ts          # Which build a request gets, as a pure function
+│   │   ├── theme.ts                 # Inline palette bootstrap
+│   │   └── utils.ts                 # cssVars, stagger, cn
+│   ├── types/
+│   │   └── content.ts               # The shapes content is written in
+│   └── proxy.ts                     # Applies the device decision to a request
+├── CLAUDE.md                        # Project handbook: the rules and the traps
+├── portfolio.md                     # What this project has done, round by round
+├── eslint.config.mjs                # Where R3, R6 and R9 are actually enforced
 ├── next.config.ts
 ├── postcss.config.mjs               # Tailwind v4 — the whole build config
 ├── tsconfig.json                    # `@/*` → `./src/*`
@@ -391,10 +402,19 @@ the two to drift into each other; the app has a different *medium*, and sharing
 components would pull it back towards being a narrow copy of the document,
 which is the thing it exists to stop being.
 
-`src/components/IconSprite.tsx` and `src/components/Rich.tsx` sit above both
-front ends because they are genuinely neutral: one is the glyph set, the other
-turns the emphasis stored in `content.ts` back into elements using whichever
-classes the caller passes.
+`src/components/ui/` sits above both front ends because what is in it is
+genuinely neutral: `IconSprite` is the glyph set, `Rich` turns the emphasis
+stored in `content.ts` back into elements using whichever classes the caller
+passes, and `document.ts` / `handheld.ts` are two vocabularies that share a
+folder and nothing else.
+
+The two front ends are separate **features**, not separate component folders,
+which is what makes the separation hold: `eslint-plugin-boundaries` refuses an
+import from one into the other, so the phone build cannot quietly start
+borrowing the document's parts and drifting back towards being a narrow copy of
+it. What they do share — the words, the links, the ordering — lives in
+`src/constants/`, where both can read it without either knowing the other
+exists.
 
 ---
 
@@ -420,7 +440,8 @@ Three gradients are derived from them — `--gradient-brand` for filled surfaces
 `line-strong`. Each is a single class name that resolves per theme.
 
 **Type** — Sora (`font-display`), Inter (`font-body`), JetBrains Mono
-(`font-mono`). Headings are fluid `clamp()` scales with negative tracking.
+(`font-mono`), loaded through `next/font/google` and served from this origin.
+Headings are fluid `clamp()` scales with negative tracking.
 
 **Spacing and shape** — `--spacing-shell` (1180 px reading column),
 `--spacing-gutter` and `--spacing-section` are fluid; four brand radii from
@@ -445,34 +466,45 @@ in the favicon and the apple-touch icon.
 
 **Experience** — Junior Full-Stack Developer at Gendee.ai, building two
 products in parallel: Gendee.ai, an AI content generation platform, and CIRCLE,
-a news platform. Preceded by a Full Stack Developer internship,
-January – April 2026. B.Eng. in Software Engineering, Mae Fah Luang University,
-School of Applied Digital Technology.
+a news service that ships as a website, an iOS and Android app, and an
+editorial desk against one backend. Preceded by a Full Stack Developer
+internship, January – April 2026. B.Eng. in Software Engineering, Mae Fah Luang
+University, School of Applied Digital Technology.
 
-**Work** — six systems, each with the stack it was built on:
+**Work** — eight systems, each with the stack it was built on:
 
 | Project | Context | Stack |
 | --- | --- | --- |
-| Gendee for Business | B2B — shared credit pools, member limits, invite flows | Angular, Deno, PostgreSQL |
-| Course Platform | Catalog, checkout, payment, classroom and staff console | Angular, Deno, PostgreSQL |
+| Gendee for Business | B2B — one credit wallet per organization, roles, live quotas, org-billed top-ups | Angular, Deno, PostgreSQL, Realtime |
+| Course Platform | Catalog, enrolment rounds, live-payment checkout, expiring seat holds, classroom | Angular, Deno, PostgreSQL |
 | Notifications & Push | Database triggers fanning out to Firebase Cloud Messaging | Firebase FCM, Deno, PostgreSQL |
-| CIRCLE News Platform | Reader app, editorial desk and the rebrand across both | Ionic, Capacitor, Supabase |
-| Operations Dashboard | Redeem codes, organizations and reporting | Angular, Chart.js, Supabase |
+| CIRCLE Web Platform | The news site, written from an empty repository | Next.js 16, TanStack Query, Tailwind v4, Supabase |
+| CIRCLE News App | The reader app wired to its backend, then rebranded | Ionic, Capacitor, Angular, Supabase |
+| Editorial Desk | Article workflow, categories, breaking flags, slugs, staff access | Angular, Supabase, TypeScript |
+| Operations Dashboard | Redeem codes, organizations, per-model success and failure rates | Angular, Signals, Supabase |
 | DoiTung Waste Management | Senior project — published as a peer-reviewed IEEE paper | React, Node.js, MySQL |
 
-**Skills** — grouped as Frontend (Angular, React, Next.js, Tailwind CSS,
-Flutter), Backend (Go/Fiber, Node.js/Express, Java/Spring Boot, Edge
-Functions), Database (MSSQL, MySQL, PostgreSQL, Supabase) and Tools (Git,
-GitHub, Swagger, Postman, Figma). Every entry links to its official
-documentation and carries its own brand colour, tuned separately for each
-theme.
+**Skills** — grouped as Frontend (Angular, Next.js, React, Ionic, Tailwind
+CSS, Flutter), Backend (Supabase/Edge Functions, Go/Fiber, Node.js/Express,
+Java/Spring Boot), Database (PostgreSQL, MSSQL, MySQL) and Tools (Git, GitHub,
+Firebase, Swagger, Postman, Figma). Frontend is languages and frameworks only
+— a native runtime like Capacitor is listed against the project that uses it
+instead. Every entry links to its official documentation and carries its own
+brand colour, tuned separately for each theme.
+
+**The counters** — two platforms, seven repositories, 306 commits. They are
+counted from the repositories themselves rather than estimated; the commands
+that produce them, and the branch each figure is taken on, are recorded in
+[`CLAUDE.md`](CLAUDE.md) §6.
 
 ---
 
 ## Assets and documents
 
-Two résumés are served from `/public`, both generated from the HTML sources in
-[`resume/`](resume/) and kept in step with what the site says:
+Two résumés are served from `/public`, both printed by headless Chrome from the
+HTML sources in [`resume/`](resume/) and kept in step with what the site says.
+Both are laid out to fill exactly one page, so any edit has to be re-printed
+and re-counted — the command and the page check are in [`CLAUDE.md`](CLAUDE.md) §6.2.
 
 - **`Resume_PeerawutNi.pdf`** — the designed version, linked from the hero and
   the contact page
@@ -489,8 +521,11 @@ Icons ship as one hand-built SVG sprite rendered once per page; `favicon.svg`,
 
 ## Conventions
 
-- **Imports** — every internal reference uses the `@/` alias. No `./`, no
-  `../`, anywhere in `src`.
+- **Imports** — crossing a folder uses the `@/` alias; inside one feature,
+  relative (`./ScreenHead`, `../api`) is fine. A feature may never import
+  another feature, and shared code may never import a feature — `eslint-plugin-boundaries`
+  fails the lint if either happens, and a new top-level folder under `src/`
+  has to be declared in `eslint.config.mjs` before it can be used at all.
 - **Comments** — they explain *why*, not *what*. Where a decision looks
   arbitrary, the comment next to it says what would break otherwise.
 - **Class strings** — shared Tailwind patterns are exported constants, always
@@ -498,8 +533,45 @@ Icons ship as one hand-built SVG sprite rendered once per page; `favicon.svg`,
 - **JS hooks** — class names the script toggles (`is-active`, `is-open`,
   `is-in`, `is-copied`, `magnetic`, `tilt`, `spotlight`) carry no styling
   themselves; the appearance of each state is a Tailwind variant on the element.
-- **Naming** — components in `PascalCase`, modules in `lib/` in `camelCase`,
-  section ids in `kebab-case` and declared only in `sections.ts`.
+- **Naming** — components in `PascalCase`, a route's top-level component ends
+  in `Screen`, modules in `lib/` in `camelCase`, constants in
+  `UPPER_SNAKE_CASE`, section ids in `kebab-case` and declared only in
+  `constants/navigation.ts`.
+- **Routes** — `page.tsx` carries metadata and composes; everything else lives
+  in a feature. No dynamic segments: a route addressed by a value is a fixed
+  path plus a query parameter, so the device proxy's tables can name it.
+- **Network** — every request goes through `src/lib/api-client.ts`. `fetch`,
+  `window.fetch` and `XMLHttpRequest` are lint errors everywhere else.
+
+---
+
+## Commands
+
+```bash
+npm install
+cp .env.example .env.local        # PowerShell: Copy-Item .env.example .env.local
+
+npm run dev                       # http://localhost:3000 (webpack — see CLAUDE.md §7.5)
+npm run build && npm start        # production build, then serve it
+
+npm run check                     # everything below, in order
+npm run check:env                 # env files complete and consistent
+npm run check:routes              # no dynamic segments under src/app
+npm run check:proxy               # the device split: tables, matcher, 18 routing cases
+npm run check:fold                # every section still fits one screen (needs a build)
+npm run format:check              # Prettier
+npm run lint                      # ESLint — the architecture rules
+npm run typecheck                 # next typegen, then tsc --noEmit
+```
+
+`npm run check` is the gate: it is what a change has to pass before it is
+considered done. There is no CI — the checks run on the machine that made the
+change, and Vercel builds what is pushed.
+
+Two further documents live at the root: [`CLAUDE.md`](CLAUDE.md) is the
+handbook — the rules, why each exists, and the traps that fail silently —
+and [`portfolio.md`](portfolio.md) is the record of what has been done to this
+project and where each fact on the site came from.
 
 ---
 

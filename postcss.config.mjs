@@ -3,8 +3,10 @@
  * `@theme` inside src/app/globals.css, and the content it scans is inferred
  * from the project. This file is the whole build-side configuration.
  */
-export default {
+const config = {
   plugins: {
-    "@tailwindcss/postcss": {},
+    '@tailwindcss/postcss': {},
   },
 };
+
+export default config;

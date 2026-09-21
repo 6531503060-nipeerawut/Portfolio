@@ -1,11 +1,11 @@
-import type { Metadata } from "next";
-import type { ReactNode } from "react";
+import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
 
-import { IconSprite } from "@/components/IconSprite";
-import { AppBar } from "@/components/mobile/AppBar";
-import { TabBar } from "@/components/mobile/TabBar";
-import { SCREEN } from "@/lib/mobile";
-import { AUTHOR } from "@/lib/site";
+import { IconSprite } from '@/components/ui/IconSprite';
+import { AppBar } from '@/features/handheld/components/AppBar';
+import { TabBar } from '@/features/handheld/components/TabBar';
+import { SCREEN } from '@/components/ui/handheld';
+import { AUTHOR } from '@/constants';
 
 /*
  * Prerendered, then rebuilt daily — the same deal the document gets, and

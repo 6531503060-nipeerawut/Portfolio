@@ -1,10 +1,50 @@
-import type { Metadata, Viewport } from "next";
-import type { ReactNode } from "react";
+import type { Metadata, Viewport } from 'next';
+import { Inter, JetBrains_Mono, Sora } from 'next/font/google';
+import type { ReactNode } from 'react';
 
-import "@/app/globals.css";
+import '@/app/globals.css';
 
-import { AUTHOR, DESCRIPTION, OPEN_GRAPH, SITE_URL, TAB_TITLE, TWITTER } from "@/lib/site";
-import { THEME_BOOTSTRAP } from "@/lib/theme";
+import { AUTHOR, DESCRIPTION, OPEN_GRAPH, SITE_URL, TAB_TITLE, TWITTER } from '@/constants';
+import { THEME_BOOTSTRAP } from '@/lib/theme';
+
+/*
+ * The three faces, self-hosted.
+ *
+ * They used to be a <link> to fonts.googleapis.com, which costs a DNS lookup,
+ * a TLS handshake and a render-blocking stylesheet on a third-party origin
+ * before a single glyph is requested. next/font downloads them at build time
+ * and serves them from this origin with the right preload tags, so the round
+ * trip disappears and the fallback metrics are matched for us — the text does
+ * not reflow when the real face arrives.
+ *
+ * Each weight is a separate file for all three, so only the weights the
+ * stylesheet actually uses are listed: the display face goes up to 800 for the
+ * hero, the body face stops at 700, and the mono face only ever sets labels.
+ * The variables are consumed by --font-display / --font-body / --font-mono in
+ * globals.css, which is still the one place a face is chosen (R11).
+ */
+const sora = Sora({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-sora',
+  display: 'swap',
+});
+
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-inter',
+  display: 'swap',
+});
+
+const jetBrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  variable: '--font-jetbrains-mono',
+  display: 'swap',
+});
+
+const FONT_VARIABLES = `${sora.variable} ${inter.variable} ${jetBrainsMono.variable}`;
 
 /*
  * Scroll-reveal is driven by an observer; without JS, show everything.
@@ -46,17 +86,17 @@ export const metadata: Metadata = {
    * show the .ico soft, and a square bitmap for the iOS home screen.
    */
   icons: {
-    icon: [{ url: "/images/favicon.svg", type: "image/svg+xml" }],
-    apple: [{ url: "/images/apple-touch-icon.png", sizes: "180x180" }],
+    icon: [{ url: '/images/favicon.svg', type: 'image/svg+xml' }],
+    apple: [{ url: '/images/apple-touch-icon.png', sizes: '180x180' }],
   },
   openGraph: OPEN_GRAPH,
   twitter: TWITTER,
 };
 
 export const viewport: Viewport = {
-  width: "device-width",
+  width: 'device-width',
   initialScale: 1,
-  colorScheme: "light dark",
+  colorScheme: 'light dark',
   /*
    * Let the page fill the screen edge to edge on a phone, notch and home
    * indicator included, the way a native app does — the alternative is two
@@ -66,7 +106,7 @@ export const viewport: Viewport = {
    * indicator, and --spacing-gutter keeps text clear of a landscape camera
    * housing. See globals.css.
    */
-  viewportFit: "cover",
+  viewportFit: 'cover',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -81,7 +121,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
        scrolling itself, and in the app it is a tab tap gliding up a screen
        the visitor has not seen yet instead of arriving at the top of it. The
        smooth scroll is wanted for in-page jumps and nowhere else. */
-    <html lang="en" data-theme="dark" data-scroll-behavior="smooth" suppressHydrationWarning>
+    <html
+      lang="en"
+      className={FONT_VARIABLES}
+      data-theme="dark"
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+    >
       <head>
         {/* The Metadata API cannot attach the id that THEME_BOOTSTRAP and
             main.js look up to repaint the browser chrome, so this one tag
@@ -91,12 +137,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             report and recover from by re-rendering the tree. */}
         <meta name="theme-color" id="themeColor" content="#05070f" suppressHydrationWarning />
 
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-          rel="stylesheet"
-        />
+        {/* The faces are declared above with next/font and preloaded by Next
+            itself — there is nothing to link here any more. */}
 
         <noscript dangerouslySetInnerHTML={{ __html: NOSCRIPT_STYLE }} />
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP }} />

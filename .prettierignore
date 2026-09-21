@@ -1,0 +1,16 @@
+.next/
+.next-dev/
+out/
+build/
+node_modules/
+next-env.d.ts
+package-lock.json
+public/
+
+# The two résumé documents are laid out by hand: their print CSS depends on
+# exact line boxes, and reflowing the markup moves text across page breaks.
+resume/
+
+# Markdown tables are aligned by hand — Thai text inside a cell is counted by
+# Prettier in code units, not display columns, so it re-aligns them wrongly.
+*.md

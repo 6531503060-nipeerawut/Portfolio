@@ -1,5 +1,7 @@
-import { NextResponse, userAgent } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextResponse, userAgent } from 'next/server';
+import type { NextRequest } from 'next/server';
+
+import { resolveDeviceTarget } from '@/lib/device-route';
 
 /**
  * Sends every request to the build made for the device asking.
@@ -16,37 +18,17 @@ import type { NextRequest } from "next/server";
  * never had to think about into a question, and puts it on the one screen
  * size where the other layout is the wrong one. A phone gets the app; a
  * desktop gets the document; nothing asks.
- */
-
-const APP_ROOT = "/m";
-
-/**
- * Desktop path to the screen that carries the same content.
  *
- * Only the four routes that exist on both sides are listed. Everything else
- * — the console, the résumé, the assets — is shared and left alone.
+ * What is left here is the adapter. The tables live in
+ * `constants/routes.ts` and the decision in `lib/device-route.ts`, both of
+ * which are plain data and a pure function so that `npm run check:proxy` can
+ * exercise them without a server.
+ *
+ * 📌 This is the one place the sibling front ends' R2 — no server-side code
+ *    at all — does not apply, and the reason is in CLAUDE.md §4: there is no
+ *    separate back end here to move the decision into, and the decision has
+ *    to be made before the first byte of HTML.
  */
-const TO_APP: Record<string, string> = {
-  "/": "/m",
-  "/about": "/m/about",
-  "/contact": "/m/contact",
-  "/user": "/m/user",
-};
-
-/**
- * And back the other way. The four screens with no desktop route of their
- * own land on their section of the single page, which is where that
- * content lives over there.
- */
-const TO_WEB: Record<string, string> = {
-  "/m": "/",
-  "/m/about": "/about",
-  "/m/skills": "/#skills",
-  "/m/experience": "/#experience",
-  "/m/work": "/#work",
-  "/m/contact": "/contact",
-  "/m/user": "/user",
-};
 
 /**
  * A phone, as opposed to a tablet or a desktop.
@@ -57,7 +39,7 @@ const TO_WEB: Record<string, string> = {
  * user-agent anyway.
  */
 function isPhone(request: NextRequest): boolean {
-  return userAgent(request).device.type === "mobile";
+  return userAgent(request).device.type === 'mobile';
 }
 
 /**
@@ -76,21 +58,12 @@ function isPhone(request: NextRequest): boolean {
  * replacing them would break client-side navigation.
  */
 function varyOnDevice<T extends NextResponse>(response: T): T {
-  response.headers.append("Vary", "User-Agent");
+  response.headers.append('Vary', 'User-Agent');
   return response;
 }
 
 export function proxy(request: NextRequest) {
-  /* A trailing slash would otherwise miss both tables and fall through to
-     whichever build the URL happens to name. Next normalises it a step
-     later, so this only has to hold until then — but "later" is not a thing
-     to depend on when the cost of being wrong is serving the wrong site. */
-  const pathname = request.nextUrl.pathname.replace(/(.)\/+$/, "$1");
-  const onApp = pathname === APP_ROOT || pathname.startsWith(`${APP_ROOT}/`);
-
-  const target = isPhone(request)
-    ? (onApp ? undefined : TO_APP[pathname])
-    : (onApp ? TO_WEB[pathname] : undefined);
+  const target = resolveDeviceTarget(request.nextUrl.pathname, isPhone(request));
 
   // Already on the right side.
   if (!target) return varyOnDevice(NextResponse.next());
@@ -101,16 +74,20 @@ export function proxy(request: NextRequest) {
 
   /* A 307 is not cacheable by default, but "by default" is doing a lot of
      work for a decision that must be re-made per visitor. */
-  response.headers.set("Cache-Control", "no-store");
+  response.headers.set('Cache-Control', 'no-store');
 
   return varyOnDevice(response);
 }
 
 /*
- * Only the routes that have two sides, plus everything under /m. Written
- * out rather than expressed as a negative lookahead so the console, the
- * assets and the résumé never enter this file at all.
+ * Only the routes that have two sides, plus everything under /m. Written out
+ * rather than expressed as a negative lookahead so the console, the assets and
+ * the résumé never enter this file at all.
+ *
+ * It has to be a literal: Next reads this by parsing the file at build time,
+ * so an imported constant would not be seen. `npm run check:proxy` compares it
+ * against the tables in `constants/routes.ts` instead.
  */
 export const config = {
-  matcher: ["/", "/about", "/contact", "/user", "/m", "/m/:path*"],
+  matcher: ['/', '/about', '/contact', '/user', '/m', '/m/:path*'],
 };

@@ -1,5 +1,5 @@
-import type { NextConfig } from "next";
-import { PHASE_DEVELOPMENT_SERVER } from "next/constants";
+import type { NextConfig } from 'next';
+import { PHASE_DEVELOPMENT_SERVER } from 'next/constants';
 
 /*
  * Config is a function of the phase so that `next dev` and `next build` can
@@ -20,7 +20,7 @@ import { PHASE_DEVELOPMENT_SERVER } from "next/constants";
  */
 const nextConfig = (phase: string): NextConfig => ({
   // `next build` and `next start` share `.next`; only the dev server moves.
-  distDir: phase === PHASE_DEVELOPMENT_SERVER ? ".next-dev" : ".next",
+  distDir: phase === PHASE_DEVELOPMENT_SERVER ? '.next-dev' : '.next',
 
   // Hides the floating Next.js dev-tools badge in the corner during
   // `next dev`. Compile and runtime errors are still reported.
@@ -30,7 +30,7 @@ const nextConfig = (phase: string): NextConfig => ({
     // The optimizer only ever serves the portrait in /images. Leaving it open
     // would let anyone hand it arbitrary local paths and query strings to
     // transcode.
-    localPatterns: [{ pathname: "/images/**", search: "" }],
+    localPatterns: [{ pathname: '/images/**', search: '' }],
   },
 
   // The stylesheet, the interaction script and the CV PDFs are plain files in

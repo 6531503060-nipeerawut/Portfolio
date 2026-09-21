@@ -1,18 +1,18 @@
-import type { Metadata } from "next";
+import type { Metadata } from 'next';
 
-import { Contact } from "@/components/front/Contact";
-import { APP_MEDIA } from "@/lib/mobile";
-import { OPEN_GRAPH, SHARE_DESCRIPTION } from "@/lib/site";
+import { Contact } from '@/features/document/components/Contact';
+import { APP_MEDIA } from '@/constants/navigation';
+import { OPEN_GRAPH, SHARE_DESCRIPTION } from '@/constants';
 
 export const metadata: Metadata = {
-  title: "Contact",
+  title: 'Contact',
   description: SHARE_DESCRIPTION,
-  alternates: { canonical: "/contact", media: { [APP_MEDIA]: "/m/contact" } },
+  alternates: { canonical: '/contact', media: { [APP_MEDIA]: '/m/contact' } },
   // These two sections are also on the home page, which is where the nav
   // points and where visitors actually read them. The route stays for a
   // direct link, but it should not compete with the home page in search.
   robots: { index: false, follow: true },
-  openGraph: { ...OPEN_GRAPH, url: "/contact" },
+  openGraph: { ...OPEN_GRAPH, url: '/contact' },
 };
 
 export default function ContactPage() {

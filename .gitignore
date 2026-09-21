@@ -1,24 +1,37 @@
-# ไม่ให้ Git track ไฟล์ .env
+# ─────────────────────────────────────────────────────────────────────────────
+# Environment
+# ─────────────────────────────────────────────────────────────────────────────
+# .env.example is the list of keys and is tracked; the files holding real
+# values are not. `npm run check:env` compares the two.
 .env
+.env.local
+.env.production
 .env*.local
 
-# ไม่ให้ Git track โฟลเดอร์ node_modules
+# ─────────────────────────────────────────────────────────────────────────────
+# Dependencies
+# ─────────────────────────────────────────────────────────────────────────────
 node_modules/
-
-# ไม่ให้ Git track package-lock.json
 package-lock.json
 
-# ผลลัพธ์จากการ build ของ Next.js
-# .next = next build / next start, .next-dev = next dev (แยกกันใน next.config.ts)
+# ─────────────────────────────────────────────────────────────────────────────
+# Build output
+# ─────────────────────────────────────────────────────────────────────────────
+# .next = next build / next start, .next-dev = next dev. They are kept apart in
+# next.config.ts; see the comment there for why.
 /.next/
 /.next-dev/
 /out/
+/build/
 next-env.d.ts
 *.tsbuildinfo
 
-# โฟลเดอร์ของ Vercel CLI
+# ─────────────────────────────────────────────────────────────────────────────
+# Tooling
+# ─────────────────────────────────────────────────────────────────────────────
 .vercel
+.eslintcache
 
-# ไฟล์แนะนำสำหรับ AI agent ที่ next dev สร้างขึ้นมาเองทุกครั้ง
+# The agent instructions `next dev` writes for itself. CLAUDE.md is this
+# project's own handbook and is tracked — do not add it back here.
 AGENTS.md
-CLAUDE.md
